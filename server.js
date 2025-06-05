@@ -80,6 +80,7 @@ app.use(
         "'self'",
         "https://code.jivosite.com",
         "https://translate.googleapis.com",
+        "https://node-ya-10.jivosite.com",
         "https://node-ya-3.jivosite.com",
         "https://translate-pa.googleapis.com"
       ],
