@@ -10,7 +10,7 @@
 />
 <link
       rel="shortcut icon"
-      href="<%= appSettings.siteFavicon %>"
+      href="<%= (appSettings && appSettings[0] && appSettings[0].siteLogo) ? appSettings[0].siteLogo : '' %>"
       type="image/x-icon"
     />
 <link
@@ -25,3 +25,5 @@
 
 <link href="/global/css/iziToast.min.css" rel="stylesheet" />
 <link href="/global/css/iziToast_custom.css" rel="stylesheet" />
+
+<title><%= (appSettings && appSettings[0] && appSettings[0].siteName) ? appSettings[0].siteName : '' %></title>
