@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="zxx" class="js">
+  <head>
+    <!-- ========Headers meta======== -->
+    <%- include('../snippets/adminSnippets/header_meta.ejs') %>
+
+    <title>EXNESTRADE | User Profile</title>
+  </head>
+  <body class="nk-body bg-lighter npc-general has-sidebar">
+    <div class="nk-app-root">
+      <div class="nk-main">
+        <!-- ==========Sidebar======= -->
+        <%- include('../snippets/adminSnippets/sidebar.ejs') %>
+
+        <div class="nk-wrap">
+          <!-- ============Navbar======== -->
+          <%- include('../snippets/adminSnippets/navbar.ejs') %>
+
+          <!-- ============Content======== -->
+          <div class="nk-content">
+            <div class="container-fluid">
+              <div class="nk-content-inner">
+                <div class="nk-content-body">
+                  <div class="nk-block-head nk-block-head-sm">
+                    <div class="nk-block-between g-3">
+                      <div class="nk-block-head-content">
+                        <h3 class="nk-block-title page-title">Profile</h3>
+                      </div>
+                      <div class="nk-block-head-content">
+                        <a
+                          href="/user/dashboard"
+                          class="btn btn-outline-light bg-white d-none d-sm-inline-flex"
+                        >
+                          <em class="icon ni ni-arrow-left"></em>
+                          <span>Back</span>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="nk-block">
+                    <div class="card card-bordered">
+                      <div class="card-aside-wrap">
+                        <div class="card-content">
+                          <ul
+                            class="nav nav-tabs nav-tabs-mb-icon nav-tabs-card"
+                          >
+                            <li class="nav-item">
+                              <a
+                                class="nav-link active"
+                                href="#personal"
+                                data-toggle="tab"
+                              >
+                                <em class="icon ni ni-user-circle"></em>
+                                <span>Personal</span>
+                              </a>
+                            </li>
+                            <li class="nav-item">
+                              <a
+                                class="nav-link"
+                                href="#security"
+                                data-toggle="tab"
+                              >
+                                <em class="icon ni ni-lock-alt"></em>
+                                <span>Security</span>
+                              </a>
+                            </li>
+                            <li class="nav-item">
+                              <a class="nav-link" href="#kyc" data-toggle="tab">
+                                <em class="icon ni ni-file-text"></em>
+                                <span>KYC</span>
+                              </a>
+                            </li>
+                            <li class="nav-item">
+                              <a
+                                class="nav-link"
+                                href="#notifications"
+                                data-toggle="tab"
+                              >
+                                <em class="icon ni ni-bell"></em>
+                                <span>Notifications</span>
+                              </a>
+                            </li>
+                          </ul>
+
+                          <div class="tab-content">
+                            <!-- Personal Information Tab -->
+                            <div class="tab-pane active" id="personal">
+                              <div class="card-inner">
+                                <div class="nk-block">
+                                  <div class="nk-block-head">
+                                    <h5 class="title">Personal Information</h5>
+                                    <p>
+                                      Your personal information is securely
+                                      stored
+                                    </p>
+                                  </div>
+                                  <form
+                                    id="personal-info-form"
+                                    class="form-validate"
+                                  >
+                                    <div class="profile-ud-list">
+                                      <div class="profile-ud-item">
+                                        <div class="profile-ud wider">
+                                          <span class="profile-ud-label"
+                                            >Full Name</span
+                                          >
+                                          <span class="profile-ud-value"
+                                            ><%= user.fullName %></span
+                                          >
+                                        </div>
+                                      </div>
+                                      <div class="profile-ud-item">
+                                        <div class="profile-ud wider">
+                                          <span class="profile-ud-label"
+                                            >Email</span
+                                          >
+                                          <span class="profile-ud-value"
+                                            ><%= user.email %></span
+                                          >
+                                        </div>
+                                      </div>
+                                      <div class="profile-ud-item">
+                                        <div class="profile-ud wider">
+                                          <span class="profile-ud-label"
+                                            >Country</span
+                                          >
+                                          <span class="profile-ud-value"
+                                            ><%= user.country %></span
+                                          >
+                                        </div>
+                                      </div>
+                                      <div class="profile-ud-item">
+                                        <div class="profile-ud wider">
+                                          <span class="profile-ud-label"
+                                            >Email Verified</span
+                                          >
+                                          <span class="profile-ud-value">
+                                            <% if (user.isEmailVerified) { %>
+                                            <span class="badge badge-success"
+                                              >Verified</span
+                                            >
+                                            <% } else { %>
+                                            <span class="badge badge-warning"
+                                              >Not Verified</span
+                                            >
+                                            <% } %>
+                                          </span>
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    <div
+                                      class="nk-divider divider md mt-4"
+                                    ></div>
+
+                                    <div class="nk-block-head mt-4">
+                                      <h5 class="title">
+                                        Edit Personal Information
+                                      </h5>
+                                    </div>
+
+                                    <div class="row g-3">
+                                      <div class="col-md-6">
+                                        <div class="form-group">
+                                          <label
+                                            class="form-label"
+                                            for="fullName"
+                                            >Full Name</label
+                                          >
+                                          <input
+                                            type="text"
+                                            class="form-control"
+                                            id="fullName"
+                                            name="fullName"
+                                            value="<%= user.fullName %>"
+                                            required
+                                          />
+                                        </div>
+                                      </div>
+                                      <div class="col-md-6">
+                                        <div class="form-group">
+                                          <label
+                                            class="form-label"
+                                            for="country"
+                                            >Country</label
+                                          >
+                                          <input
+                                            type="text"
+                                            class="form-control"
+                                            id="country"
+                                            name="country"
+                                            value="<%= user.country %>"
+                                          />
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    <div class="form-group mt-3">
+                                      <button
+                                        type="submit"
+                                        class="btn btn-primary"
+                                      >
+                                        Update Profile
+                                      </button>
+                                    </div>
+                                  </form>
+                                </div>
+                              </div>
+                            </div>
+
+                            <!-- Security Tab -->
+                            <div class="tab-pane" id="security">
+                              <div class="card-inner">
+                                <div class="nk-block">
+                                  <div class="nk-block-head">
+                                    <h5 class="title">Account Security</h5>
+                                    <p>
+                                      Change your password and secure your
+                                      account
+                                    </p>
+                                  </div>
+
+                                  <form
+                                    id="password-change-form"
+                                    class="form-validate"
+                                  >
+                                    <div class="row g-3">
+                                      <div class="col-md-12">
+                                        <div class="form-group">
+                                          <label
+                                            class="form-label"
+                                            for="current-password"
+                                            >Current Password</label
+                                          >
+                                          <div class="form-control-wrap">
+                                            <input
+                                              type="password"
+                                              class="form-control"
+                                              id="current-password"
+                                              name="currentPassword"
+                                              required
+                                            />
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="col-md-6">
+                                        <div class="form-group">
+                                          <label
+                                            class="form-label"
+                                            for="new-password"
+                                            >New Password</label
+                                          >
+                                          <div class="form-control-wrap">
+                                            <input
+                                              type="password"
+                                              class="form-control"
+                                              id="new-password"
+                                              name="newPassword"
+                                              required
+                                            />
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="col-md-6">
+                                        <div class="form-group">
+                                          <label
+                                            class="form-label"
+                                            for="confirm-password"
+                                            >Confirm New Password</label
+                                          >
+                                          <div class="form-control-wrap">
+                                            <input
+                                              type="password"
+                                              class="form-control"
+                                              id="confirm-password"
+                                              name="confirmPassword"
+                                              required
+                                            />
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    <div class="form-group mt-3">
+                                      <button
+                                        type="submit"
+                                        class="btn btn-primary"
+                                      >
+                                        Change Password
+                                      </button>
+                                    </div>
+                                  </form>
+                                </div>
+                              </div>
+                            </div>
+
+                            <!-- KYC Tab -->
+                            <div class="tab-pane" id="kyc">
+                              <div class="card-inner">
+                                <div class="nk-block">
+                                  <div class="nk-block-head">
+                                    <h5 class="title">KYC Information</h5>
+                                    <p>
+                                      Verify your identity to enable all
+                                      platform features
+                                    </p>
+                                  </div>
+
+                                  <div class="kyc-status mb-4">
+                                    <div class="d-flex align-items-center mb-3">
+                                      <span class="flex-grow-1 mr-2"
+                                        >KYC Status:</span
+                                      >
+                                      <div>
+                                        <% if (user.kycStatus === 'approved') {
+                                        %>
+                                        <span class="badge badge-success"
+                                          >Approved</span
+                                        >
+                                        <% } else if (user.kycStatus ===
+                                        'pending') { %>
+                                        <span class="badge badge-warning"
+                                          >Pending Review</span
+                                        >
+                                        <% } else if (user.kycStatus ===
+                                        'rejected') { %>
+                                        <span class="badge badge-danger"
+                                          >Rejected</span
+                                        >
+                                        <% } else { %>
+                                        <span class="badge badge-info"
+                                          >Not Submitted</span
+                                        >
+                                        <% } %>
+                                      </div>
+                                    </div>
+
+                                    <% if (user.kycStatus === 'rejected') { %>
+                                    <div class="alert alert-danger">
+                                      <p>
+                                        Your KYC verification was rejected.
+                                        Please resubmit with valid documents.
+                                      </p>
+                                    </div>
+                                    <% } else if (user.kycStatus === 'pending')
+                                    { %>
+                                    <div class="alert alert-info">
+                                      <p>
+                                        Your KYC verification is pending review.
+                                        This process typically takes 1-3
+                                        business days.
+                                      </p>
+                                    </div>
+                                    <% } else if (user.kycStatus === 'approved')
+                                    { %>
+                                    <div class="alert alert-success">
+                                      <p>
+                                        Your KYC verification is approved. You
+                                        have full access to all platform
+                                        features.
+                                      </p>
+                                    </div>
+                                    <% } %>
+                                  </div>
+
+                                  <% if (user.kycStatus !== 'approved' &&
+                                  user.kycStatus !== 'pending') { %>
+                                  <div
+                                    id="kyc-requirements-loading"
+                                    class="text-center"
+                                  >
+                                    <div
+                                      class="spinner-border text-primary"
+                                      role="status"
+                                    >
+                                      <span class="sr-only">Loading...</span>
+                                    </div>
+                                    <p class="mt-2">
+                                      Loading KYC requirements...
+                                    </p>
+                                  </div>
+
+                                  <div
+                                    id="kyc-requirements"
+                                    class="mb-4"
+                                    style="display: none"
+                                  >
+                                    <div class="alert alert-info">
+                                      <div id="kyc-description"></div>
+                                      <div
+                                        id="kyc-instructions"
+                                        class="mt-2"
+                                      ></div>
+                                    </div>
+                                  </div>
+
+                                  <form
+                                    id="kyc-form"
+                                    class="form-validate"
+                                    enctype="multipart/form-data"
+                                    style="display: none"
+                                  >
+                                    <div class="row g-3">
+                                      <div class="col-md-6">
+                                        <div class="form-group">
+                                          <label
+                                            class="form-label"
+                                            for="document-type"
+                                            >ID Document Type</label
+                                          >
+                                          <select
+                                            class="form-control"
+                                            id="document-type"
+                                            name="documentType"
+                                            required
+                                          >
+                                            <option value="">
+                                              Select Document Type
+                                            </option>
+                                            <!-- Options will be populated dynamically based on KYC settings -->
+                                          </select>
+                                        </div>
+                                      </div>
+                                      <div class="col-md-6">
+                                        <div class="form-group">
+                                          <label class="form-label" for="dob"
+                                            >Date of Birth</label
+                                          >
+                                          <input
+                                            type="date"
+                                            class="form-control"
+                                            id="dob"
+                                            name="dob"
+                                            required
+                                          />
+                                        </div>
+                                      </div>
+                                      <div class="col-md-6">
+                                        <div class="form-group">
+                                          <label
+                                            class="form-label"
+                                            for="phone-number"
+                                            >Phone Number</label
+                                          >
+                                          <input
+                                            type="text"
+                                            class="form-control"
+                                            id="phone-number"
+                                            name="phoneNumber"
+                                            required
+                                          />
+                                        </div>
+                                      </div>
+
+                                      <!-- Document upload sections will be shown dynamically based on selected document type -->
+                                      <div
+                                        class="col-12 document-upload idCard-upload"
+                                        style="display: none"
+                                      >
+                                        <div class="form-group">
+                                          <label class="form-label"
+                                            >Upload ID Card (Front)</label
+                                          >
+                                          <div class="form-control-wrap">
+                                            <div class="custom-file">
+                                              <input
+                                                type="file"
+                                                class="custom-file-input"
+                                                id="idCard"
+                                                name="idCard"
+                                                accept=".jpg,.jpeg,.png,.pdf"
+                                              />
+                                              <label
+                                                class="custom-file-label"
+                                                for="idCard"
+                                                >Choose file</label
+                                              >
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+
+                                      <div
+                                        class="col-12 document-upload passport-upload"
+                                        style="display: none"
+                                      >
+                                        <div class="form-group">
+                                          <label class="form-label"
+                                            >Upload Passport</label
+                                          >
+                                          <div class="form-control-wrap">
+                                            <div class="custom-file">
+                                              <input
+                                                type="file"
+                                                class="custom-file-input"
+                                                id="passport"
+                                                name="passport"
+                                                accept=".jpg,.jpeg,.png,.pdf"
+                                              />
+                                              <label
+                                                class="custom-file-label"
+                                                for="passport"
+                                                >Choose file</label
+                                              >
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+
+                                      <div
+                                        class="col-12 document-upload utilityBill-upload"
+                                        style="display: none"
+                                      >
+                                        <div class="form-group">
+                                          <label class="form-label"
+                                            >Upload Utility Bill</label
+                                          >
+                                          <div class="form-control-wrap">
+                                            <div class="custom-file">
+                                              <input
+                                                type="file"
+                                                class="custom-file-input"
+                                                id="utilityBill"
+                                                name="utilityBill"
+                                                accept=".jpg,.jpeg,.png,.pdf"
+                                              />
+                                              <label
+                                                class="custom-file-label"
+                                                for="utilityBill"
+                                                >Choose file</label
+                                              >
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+
+                                      <div
+                                        class="col-12 document-upload selfie-upload"
+                                        style="display: none"
+                                      >
+                                        <div class="form-group">
+                                          <label class="form-label"
+                                            >Upload Selfie with ID</label
+                                          >
+                                          <div class="form-control-wrap">
+                                            <div class="custom-file">
+                                              <input
+                                                type="file"
+                                                class="custom-file-input"
+                                                id="selfie"
+                                                name="selfie"
+                                                accept=".jpg,.jpeg,.png"
+                                              />
+                                              <label
+                                                class="custom-file-label"
+                                                for="selfie"
+                                                >Choose file</label
+                                              >
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    <div class="form-group mt-3">
+                                      <button
+                                        type="submit"
+                                        class="btn btn-primary"
+                                      >
+                                        Submit KYC
+                                      </button>
+                                    </div>
+                                  </form>
+                                  <% } %>
+                                </div>
+                              </div>
+                            </div>
+
+                            <!-- Notifications Tab -->
+                            <div class="tab-pane" id="notifications">
+                              <div class="card-inner">
+                                <div class="nk-block">
+                                  <div
+                                    class="nk-block-head d-flex justify-content-between align-items-center"
+                                  >
+                                    <div>
+                                      <h5 class="title">Notifications</h5>
+                                      <p>View and manage your notifications</p>
+                                    </div>
+                                    <div>
+                                      <button
+                                        id="mark-all-read"
+                                        class="btn btn-sm btn-outline-primary"
+                                      >
+                                        Mark All as Read
+                                      </button>
+                                    </div>
+                                  </div>
+
+                                  <div
+                                    id="notification-list"
+                                    class="notification-list"
+                                  >
+                                    <!-- Notifications will be loaded here -->
+                                  </div>
+
+                                  <div class="text-center mt-4">
+                                    <button
+                                      id="load-more-notifications"
+                                      class="btn btn-dim btn-outline-primary"
+                                    >
+                                      Load More
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ========Footer========== -->
+          <%- include('../snippets/adminSnippets/footer.ejs') %>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================Scripts========== -->
+    <%- include('../snippets/adminSnippets/scripts.ejs') %>
+
+    <%- include('../snippets/live_chat.ejs') %>
+
+    <script src="/apiClient/apiClient.js"></script>
+    <script src="/apiClient/profileClient.js"></script>
+
+    <script>
+      $(document).ready(function () {
+        // Variables for notification pagination
+        let currentPage = 1;
+        const notificationsPerPage = 10;
+        let hasMoreNotifications = true;
+        let kycSettings = null;
+
+        // Initialize tabs
+        $('a[data-toggle="tab"]').on("click", function (e) {
+          e.preventDefault();
+          $(this).tab("show");
+        });
+
+        // Handle active tab from URL hash
+        let hash = window.location.hash;
+        if (hash) {
+          $('.nav-tabs a[href="' + hash + '"]').tab("show");
+        }
+
+        // Personal info form submission
+        $("#personal-info-form").on("submit", function (e) {
+          e.preventDefault();
+
+          const profileData = {
+            fullName: $("#fullName").val(),
+            country: $("#country").val(),
+          };
+
+          updateUserProfile(profileData)
+            .then((response) => {
+              showToast("Profile updated successfully", "success");
+              setTimeout(() => {
+                window.location.reload();
+              }, 1500);
+            })
+            .catch((error) => {
+              console.error("Error updating profile:", error);
+            });
+        });
+
+        // Password change form submission
+        $("#password-change-form").on("submit", function (e) {
+          e.preventDefault();
+
+          const newPassword = $("#new-password").val();
+          const confirmPassword = $("#confirm-password").val();
+
+          if (newPassword !== confirmPassword) {
+            showToast("New passwords do not match", "error");
+            return;
+          }
+
+          const passwordData = {
+            currentPassword: $("#current-password").val(),
+            newPassword: newPassword,
+          };
+
+          changePassword(passwordData)
+            .then((response) => {
+              showToast("Password changed successfully", "success");
+              $("#password-change-form")[0].reset();
+            })
+            .catch((error) => {
+              console.error("Error changing password:", error);
+            });
+        });
+
+        // Load KYC settings and requirements
+        $('a[href="#kyc"]').on("shown.bs.tab", function (e) {
+          if (
+            "<%= user.kycStatus %>" !== "approved" &&
+            "<%= user.kycStatus %>" !== "pending"
+          ) {
+            loadKycSettings();
+          }
+        });
+
+        // Load KYC settings
+        function loadKycSettings() {
+          getKycStatus()
+            .then((response) => {
+              if (response.success) {
+                kycSettings = response;
+
+                // Display KYC description and instructions
+                $("#kyc-description").text(
+                  response.kycDescription ||
+                    "Please complete your KYC verification by uploading the required documents."
+                );
+                $("#kyc-instructions").text(
+                  response.kycInstructions ||
+                    "Upload clear, high-resolution images of your documents. All information must be clearly visible."
+                );
+
+                // Populate document type dropdown based on required documents
+                const documentType = $("#document-type");
+                documentType.empty();
+                documentType.append(
+                  '<option value="">Select Document Type</option>'
+                );
+
+                const requiredDocs = response.requiredDocuments || {};
+
+                if (requiredDocs.idCard) {
+                  documentType.append(
+                    '<option value="idCard">ID Card</option>'
+                  );
+                }
+                if (requiredDocs.passport) {
+                  documentType.append(
+                    '<option value="passport">Passport</option>'
+                  );
+                }
+                if (requiredDocs.utilityBill) {
+                  documentType.append(
+                    '<option value="utilityBill">Utility Bill</option>'
+                  );
+                }
+
+                // Show the KYC form and hide the loading spinner
+                $("#kyc-requirements-loading").hide();
+                $("#kyc-requirements").show();
+                $("#kyc-form").show();
+              } else {
+                $("#kyc-requirements-loading").html(
+                  '<div class="alert alert-danger">Failed to load KYC requirements. Please try again later.</div>'
+                );
+              }
+            })
+            .catch((error) => {
+              console.error("Error loading KYC settings:", error);
+              $("#kyc-requirements-loading").html(
+                '<div class="alert alert-danger">Failed to load KYC requirements. Please try again later.</div>'
+              );
+            });
+        }
+
+        // Show relevant document upload fields based on selected document type
+        $("#document-type").on("change", function () {
+          const selectedType = $(this).val();
+
+          // Hide all upload sections first
+          $(".document-upload").hide();
+
+          if (selectedType) {
+            // Show the selected document type upload section
+            $(`.${selectedType}-upload`).show();
+
+            // Always show selfie upload if required
+            const requiredDocs = kycSettings?.requiredDocuments || {};
+            if (requiredDocs.selfie) {
+              $(".selfie-upload").show();
+            }
+          }
+        });
+
+        // KYC form submission
+        $("#kyc-form").on("submit", function (e) {
+          e.preventDefault();
+
+          const documentType = $("#document-type").val();
+          if (!documentType) {
+            showToast("Please select a document type", "error");
+            return;
+          }
+
+          // Check if document file is selected
+          const documentFile = $(`#${documentType}`)[0].files[0];
+          if (!documentFile) {
+            showToast(
+              `Please upload your ${documentType
+                .replace(/([A-Z])/g, " $1")
+                .toLowerCase()}`,
+              "error"
+            );
+            return;
+          }
+
+          // Check if selfie is required and selected
+          const requiredDocs = kycSettings?.requiredDocuments || {};
+          if (requiredDocs.selfie) {
+            const selfieFile = $("#selfie")[0].files[0];
+            if (!selfieFile) {
+              showToast("Please upload a selfie with your ID", "error");
+              return;
+            }
+          }
+
+          const formData = new FormData();
+          formData.append("documentType", documentType);
+          formData.append("dob", $("#dob").val());
+          formData.append("phoneNumber", $("#phone-number").val());
+
+          // Append document file
+          formData.append(documentType, documentFile);
+
+          // Append selfie if required and selected
+          if (requiredDocs.selfie) {
+            const selfieFile = $("#selfie")[0].files[0];
+            if (selfieFile) {
+              formData.append("selfie", selfieFile);
+            }
+          }
+
+          // Show loading state
+          const submitBtn = $(this).find('button[type="submit"]');
+          const originalText = submitBtn.text();
+          submitBtn.html(
+            '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...'
+          );
+          submitBtn.prop("disabled", true);
+
+          submitKyc(formData)
+            .then((response) => {
+              showToast("KYC documents submitted successfully", "success");
+              setTimeout(() => {
+                window.location.reload();
+              }, 1500);
+            })
+            .catch((error) => {
+              console.error("Error submitting KYC:", error);
+              // Reset button state
+              submitBtn.text(originalText);
+              submitBtn.prop("disabled", false);
+            });
+        });
+
+        // Custom file input
+        $(".custom-file-input").on("change", function () {
+          let fileName = $(this).val().split("\\").pop();
+          $(this)
+            .next(".custom-file-label")
+            .html(fileName || "Choose file");
+        });
+
+        // Load notifications
+        function loadNotifications(page = 1) {
+          getUserNotifications(page, notificationsPerPage)
+            .then((response) => {
+              if (response.success) {
+                const notifications = response.notifications;
+                const notificationList = $("#notification-list");
+
+                if (page === 1) {
+                  notificationList.empty();
+                }
+
+                if (notifications.length === 0) {
+                  if (page === 1) {
+                    notificationList.html(
+                      '<div class="alert alert-info">No notifications found.</div>'
+                    );
+                  }
+                  hasMoreNotifications = false;
+                  $("#load-more-notifications").hide();
+                  return;
+                }
+
+                notifications.forEach((notification) => {
+                  const date = new Date(notification.createdAt);
+                  const formattedDate =
+                    date.toLocaleDateString() + " " + date.toLocaleTimeString();
+
+                  let typeClass = "bg-info";
+                  if (notification.type === "transaction")
+                    typeClass = "bg-success";
+                  if (notification.type === "security") typeClass = "bg-danger";
+
+                  const notificationItem = `
+                    <div class="notification-item ${
+                      notification.isRead ? "read" : ""
+                    }" data-id="${notification._id}">
+                      <hr>
+                      <div class="notification-content">
+                        <div class="notification-header">
+                          <h6 class="title">${notification.title}</h6>
+                          <span class="time">${formattedDate}</span>
+                        </div>
+                        <div class="notification-text">
+                          <p>${notification.message}</p>
+                        </div>
+                      </div>
+                      ${
+                        !notification.isRead
+                          ? '<button class="mark-read-btn btn btn-sm btn-icon btn-trigger"><em class="icon ni ni-check"></em></button>'
+                          : ""
+                      }
+                    </div>
+                  `;
+
+                  notificationList.append(notificationItem);
+                });
+
+                // Update pagination status
+                if (notifications.length < notificationsPerPage) {
+                  hasMoreNotifications = false;
+                  $("#load-more-notifications").hide();
+                } else {
+                  $("#load-more-notifications").show();
+                }
+
+                // Update current page
+                currentPage = page;
+              }
+            })
+            .catch((error) => {
+              console.error("Error loading notifications:", error);
+              $("#notification-list").html(
+                '<div class="alert alert-danger">Failed to load notifications.</div>'
+              );
+            });
+        }
+
+        // Load initial notifications when the notifications tab is shown
+        $('a[href="#notifications"]').on("shown.bs.tab", function (e) {
+          loadNotifications();
+        });
+
+        // Load more notifications
+        $("#load-more-notifications").on("click", function () {
+          if (hasMoreNotifications) {
+            loadNotifications(currentPage + 1);
+          }
+        });
+
+        // Mark individual notification as read
+        $(document).on("click", ".mark-read-btn", function () {
+          const notificationItem = $(this).closest(".notification-item");
+          const notificationId = notificationItem.data("id");
+
+          markNotificationAsRead(notificationId)
+            .then((response) => {
+              if (response.success) {
+                notificationItem.addClass("read");
+                $(this).remove();
+              }
+            })
+            .catch((error) => {
+              console.error("Error marking notification as read:", error);
+            });
+        });
+
+        // Mark all notifications as read
+        $("#mark-all-read").on("click", function () {
+          markAllNotificationsAsRead()
+            .then((response) => {
+              if (response.success) {
+                $(".notification-item").addClass("read");
+                $(".mark-read-btn").remove();
+                showToast("All notifications marked as read", "success");
+              }
+            })
+            .catch((error) => {
+              console.error("Error marking all notifications as read:", error);
+            });
+        });
+      });
+    </script>
+  </body>
+</html>

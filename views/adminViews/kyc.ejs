@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="zxx" class="js">
+  <head>
+    <!-- ========Headers meta======== -->
+    <%- include('../snippets/adminSnippets/header_meta.ejs') %>
+
+    <title>EXNESTRADE | KYC Management</title>
+  </head>
+  <body class="nk-body bg-lighter npc-general has-sidebar">
+    <div class="nk-app-root">
+      <div class="nk-main">
+        <!-- ==========Sidebar======= -->
+        <%- include('../snippets/adminSnippets/sidebar.ejs') %>
+
+        <div class="nk-wrap">
+          <!-- ============Navbar======== -->
+          <%- include('../snippets/adminSnippets/navbar.ejs') %>
+
+          <!-- ============Content======== -->
+          <div class="nk-content">
+            <div class="container-fluid">
+              <div class="nk-content-inner">
+                <div class="nk-content-body">
+                  <div class="nk-block-head nk-block-head-sm">
+                    <div class="nk-block-between">
+                      <div class="nk-block-head-content">
+                        <h3 class="nk-block-title page-title">KYC Verification</h3>
+                        <div class="nk-block-des text-soft">
+                          <p>You have total <%= typeof totalUsers !== 'undefined' ? totalUsers : 0 %> users.</p>
+                        </div>
+                      </div>
+                      <div class="nk-block-head-content">
+                        <div class="toggle-wrap nk-block-tools-toggle">
+                          <a
+                            href="#"
+                            class="btn btn-icon btn-trigger toggle-expand me-n1"
+                            data-target="pageMenu"
+                            ><em class="icon ni ni-menu-alt-r"></em
+                          ></a>
+                          <div
+                            class="toggle-expand-content"
+                            data-content="pageMenu"
+                          >
+                            <ul class="nk-block-tools g-3">
+                              <li>
+                                <div class="form-control-wrap">
+                                  <div class="form-icon form-icon-right">
+                                    <em class="icon ni ni-search"></em>
+                                  </div>
+                                  <input
+                                    type="text"
+                                    class="form-control"
+                                    id="searchInput"
+                                    placeholder="Search"
+                                    value="<%= typeof search !== 'undefined' ? search : '' %>"
+                                  />
+                                </div>
+                              </li>
+                              <li>
+                                <div class="drodown">
+                                  <a
+                                    href="#"
+                                    class="dropdown-toggle btn btn-outline-light btn-white"
+                                    data-bs-toggle="dropdown"
+                                    ><span>View</span
+                                    ><em class="icon ni ni-chevron-down"></em
+                                  ></a>
+                                  <div class="dropdown-menu dropdown-menu-end">
+                                    <ul class="link-list-opt no-bdr">
+                                      <li>
+                                        <a href="?view=applications<%= typeof search !== 'undefined' && search ? '&search=' + search : '' %>">
+                                          <em class="icon ni ni-file-docs"></em>
+                                          <span>KYC Applications</span>
+                                        </a>
+                                      </li>
+                                      <li>
+                                        <a href="?view=users<%= typeof search !== 'undefined' && search ? '&search=' + search : '' %>">
+                                          <em class="icon ni ni-users"></em>
+                                          <span>Users Status</span>
+                                        </a>
+                                      </li>
+                                    </ul>
+                                  </div>
+                                </div>
+                              </li>
+                              <li class="nk-block-tools-opt">
+                                <a
+                                  href="#"
+                                  class="btn btn-primary"
+                                  data-bs-toggle="modal"
+                                  data-bs-target="#modalKycSettings"
+                                  ><em class="icon ni ni-setting"></em
+                                  ><span>KYC Settings</span></a
+                                >
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- KYC Stats Cards -->
+                  <div class="nk-block">
+                    <div class="row g-gs">
+                      <div class="col-xxl-3 col-md-6">
+                        <div class="card is-dark h-100">
+                            <div class="nk-ecwg nk-ecwg1">
+                                <div class="card-inner">
+                                    <div class="card-title-group">
+                                        <div class="card-title">
+                                            <h6 class="title text-light">Total KYC Required</h6>
+                                        </div>
+                                    </div>
+                                    <div class="data">
+                                        <div class="amount">
+                                            <%= typeof usersByKycStatus !== 'undefined' ? (usersByKycStatus.pending || 0) + (usersByKycStatus.approved || 0) + (usersByKycStatus.rejected || 0) : 0 %>
+                                        </div>
+                                        <div class="info">
+                                            <span class="text-success">
+                                                <em class="icon ni ni-users"></em>
+                                                <span>Total with KYC status</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                      </div>
+                      <div class="col-xxl-3 col-md-6">
+                        <div class="card is-dark h-100">
+                            <div class="nk-ecwg nk-ecwg1">
+                                <div class="card-inner">
+                                    <div class="card-title-group">
+                                        <div class="card-title">
+                                            <h6 class="title text-light">Pending Review</h6>
+                                        </div>
+                                    </div>
+                                    <div class="data">
+                                        <div class="amount text-warning">
+                                            <%= typeof usersByKycStatus !== 'undefined' ? usersByKycStatus.pending || 0 : 0 %>
+                                        </div>
+                                        <div class="info">
+                                            <span class="text-warning">
+                                                <em class="icon ni ni-clock"></em>
+                                                <span>Awaiting verification</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                      </div>
+                      <div class="col-xxl-3 col-md-6">
+                        <div class="card is-dark h-100">
+                            <div class="nk-ecwg nk-ecwg1">
+                                <div class="card-inner">
+                                    <div class="card-title-group">
+                                        <div class="card-title">
+                                            <h6 class="title text-light">Approved</h6>
+                                        </div>
+                                    </div>
+                                    <div class="data">
+                                        <div class="amount text-success">
+                                            <%= typeof usersByKycStatus !== 'undefined' ? usersByKycStatus.approved || 0 : 0 %>
+                                        </div>
+                                        <div class="info">
+                                            <span class="text-success">
+                                                <em class="icon ni ni-check-circle"></em>
+                                                <span>Verified accounts</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                      </div>
+                      <div class="col-xxl-3 col-md-6">
+                        <div class="card is-dark h-100">
+                            <div class="nk-ecwg nk-ecwg1">
+                                <div class="card-inner">
+                                    <div class="card-title-group">
+                                        <div class="card-title">
+                                            <h6 class="title text-light">Rejected</h6>
+                                        </div>
+                                    </div>
+                                    <div class="data">
+                                        <div class="amount text-danger">
+                                            <%= typeof usersByKycStatus !== 'undefined' ? usersByKycStatus.rejected || 0 : 0 %>
+                                        </div>
+                                        <div class="info">
+                                            <span class="text-danger">
+                                                <em class="icon ni ni-cross-circle"></em>
+                                                <span>Failed verification</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- View switching tabs -->
+                  <div class="nk-block">
+                    <div class="nk-block-head">
+                      <div class="nk-block-head-content">
+                        <ul class="nk-nav nav nav-tabs">
+                          <li class="nav-item">
+                            <a class="nav-link <%= view !== 'users' ? 'active' : '' %>" href="?view=applications">KYC Applications</a>
+                          </li>
+                          <li class="nav-item">
+                            <a class="nav-link <%= view === 'users' ? 'active' : '' %>" href="?view=users">Users KYC Status</a>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+
+                    <!-- Filter area -->
+                    <div class="card card-bordered">
+                      <div class="card-inner border-bottom">
+                        <div class="row g-3 align-center">
+                          <div class="col-lg-4">
+                            <div class="form-group">
+                              <label class="form-label">Filter by Status</label>
+                              <div class="form-control-wrap">
+                                <select class="form-select" id="statusFilter">
+                                  <option value="">All Status</option>
+                                  <% if (view === 'users') { %>
+                                    <option value="not_required" <%= kycStatus === 'not_required' ? 'selected' : '' %>>Not Required</option>
+                                  <% } %>
+                                  <option value="pending" <%= (view === 'users' ? kycStatus : status) === 'pending' ? 'selected' : '' %>>Pending</option>
+                                  <option value="approved" <%= (view === 'users' ? kycStatus : status) === 'approved' ? 'selected' : '' %>>Approved</option>
+                                  <option value="rejected" <%= (view === 'users' ? kycStatus : status) === 'rejected' ? 'selected' : '' %>>Rejected</option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-lg-4">
+                            <div class="form-group">
+                              <label class="form-label">Search</label>
+                              <div class="form-control-wrap">
+                                <div class="form-icon form-icon-right">
+                                  <em class="icon ni ni-search"></em>
+                                </div>
+                                <input
+                                  type="text"
+                                  class="form-control"
+                                  id="searchFilter"
+                                  placeholder="Search by name, email or country"
+                                  value="<%= typeof search !== 'undefined' ? search : '' %>"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-lg-4">
+                            <div class="form-group">
+                              <label class="form-label">&nbsp;</label>
+                              <div class="form-control-wrap">
+                                <button class="btn btn-primary" id="applyFilter">Apply Filter</button>
+                                <button class="btn btn-outline-light" id="resetFilter">Reset</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <% if (view === 'users') { %>
+                      <!-- Users with KYC Status View -->
+                      <div class="card card-bordered card-preview">
+                        <div class="card-inner">
+                          <table class="datatable-init nowrap table">
+                            <thead>
+                              <tr>
+                                <th>User</th>
+                                <th>Status</th>
+                                <th>Country</th>
+                                <th>Date Registered</th>
+                                <th>Documents</th>
+                                <th>Actions</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <% if (typeof data !== 'undefined' && data.docs && data.docs.length > 0) { %>
+                                <% data.docs.forEach(function(user) { %>
+                                  <tr>
+                                    <td>
+                                      <div class="user-card">
+                                        <div class="user-avatar <%= user.isBlocked ? 'bg-danger' : 'bg-primary' %> sm">
+                                          <% if (user.fullName) { %>
+                                            <span><%= user.fullName.charAt(0) %></span>
+                                          <% } else { %>
+                                            <span>U</span>
+                                          <% } %>
+                                        </div>
+                                        <div class="user-info">
+                                          <span class="tb-lead"><%= user.fullName %></span>
+                                          <span><%= user.email %></span>
+                                        </div>
+                                      </div>
+                                    </td>
+                                    <td>
+                                      <span class="tb-status text-<%= 
+                                        user.kycStatus === 'approved' ? 'success' : 
+                                        (user.kycStatus === 'rejected' ? 'danger' : 
+                                        (user.kycStatus === 'pending' ? 'warning' : 'gray')) 
+                                      %>">
+                                        <%= user.kycStatus === 'not_required' ? 'Not Required' : 
+                                           (user.kycStatus.charAt(0).toUpperCase() + user.kycStatus.slice(1)) %>
+                                      </span>
+                                    </td>
+                                    <td><%= user.country || 'Not specified' %></td>
+                                    <td><%= user.formattedDate || new Date(user.createdAt).toLocaleDateString() %></td>
+                                    <td>
+                                      <% if (user.hasKycSubmission) { %>
+                                        <span class="badge bg-success">Submitted</span>
+                                      <% } else { %>
+                                        <span class="badge bg-light text-dark">Not Submitted</span>
+                                      <% } %>
+                                    </td>
+                                    <td>
+                                      <div class="dropdown">
+                                        <a class="dropdown-toggle btn btn-icon btn-trigger" data-bs-toggle="dropdown">
+                                          <em class="icon ni ni-more-h"></em>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-end">
+                                          <ul class="link-list-opt no-bdr">
+                                            <% if (user.hasKycSubmission) { %>
+                                              <li>
+                                                <a href="#" class="view-kyc-btn" data-kyc-id="<%= user.kyc._id %>">
+                                                  <em class="icon ni ni-eye"></em>
+                                                  <span>View KYC Documents</span>
+                                                </a>
+                                              </li>
+                                              <% if (user.kycStatus === 'pending') { %>
+                                                <li>
+                                                  <a href="#" class="approve-kyc-btn" data-kyc-id="<%= user.kyc._id %>">
+                                                    <em class="icon ni ni-check"></em>
+                                                    <span>Approve</span>
+                                                  </a>
+                                                </li>
+                                                <li>
+                                                  <a href="#" class="reject-kyc-btn" data-kyc-id="<%= user.kyc._id %>">
+                                                    <em class="icon ni ni-cross"></em>
+                                                    <span>Reject</span>
+                                                  </a>
+                                                </li>
+                                              <% } %>
+                                            <% } %>
+                                            <li>
+                                              <a href="/admin/users/<%= user._id %>">
+                                                <em class="icon ni ni-user"></em>
+                                                <span>View User Profile</span>
+                                              </a>
+                                            </li>
+                                          </ul>
+                                        </div>
+                                      </div>
+                                    </td>
+                                  </tr>
+                                <% }); %>
+                              <% } else { %>
+                                <tr>
+                                  <td colspan="6" class="text-center">No users found matching the criteria.</td>
+                                </tr>
+                              <% } %>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    <% } else { %>
+                      <!-- KYC Applications View -->
+                      <div class="card card-bordered card-preview">
+                        <div class="card-inner">
+                          <table class="datatable-init nowrap table">
+                            <thead>
+                              <tr>
+                                <th>User</th>
+                                <th>KYC Status</th>
+                                <th>Documents</th>
+                                <th>Country</th>
+                                <th>Submitted At</th>
+                                <th>Actions</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <% if (typeof data !== 'undefined' && data.docs && data.docs.length > 0) { %>
+                                <% data.docs.forEach(function(kyc) { %>
+                                  <tr>
+                                    <td>
+                                      <div class="user-card">
+                                        <div class="user-avatar <%= kyc.user && kyc.user.isBlocked ? 'bg-danger' : 'bg-primary' %> sm">
+                                          <% if (kyc.user && kyc.user.fullName) { %>
+                                            <span><%= kyc.user.fullName.charAt(0) %></span>
+                                          <% } else { %>
+                                            <span>U</span>
+                                          <% } %>
+                                        </div>
+                                        <div class="user-info">
+                                          <span class="tb-lead"><%= kyc.user ? kyc.user.fullName : 'Unknown' %></span>
+                                          <span><%= kyc.user ? kyc.user.email : 'Unknown' %></span>
+                                        </div>
+                                      </div>
+                                    </td>
+                                    <td>
+                                      <span class="tb-status text-<%= kyc.status === 'approved' ? 'success' : (kyc.status === 'rejected' ? 'danger' : 'warning') %>">
+                                        <%= kyc.status.charAt(0).toUpperCase() + kyc.status.slice(1) %>
+                                      </span>
+                                    </td>
+                                    <td>
+                                      <% let docCount = kyc.documents ? kyc.documents.length : 0; %>
+                                      <span class="badge bg-primary"><%= docCount %> Document<%= docCount !== 1 ? 's' : '' %></span>
+                                    </td>
+                                    <td><%= kyc.user && kyc.user.country ? kyc.user.country : 'Not specified' %></td>
+                                    <td><%= kyc.formattedDate || (kyc.requestedAt ? new Date(kyc.requestedAt).toLocaleDateString() : 'Unknown') %></td>
+                                    <td>
+                                      <div class="dropdown">
+                                        <a class="dropdown-toggle btn btn-icon btn-trigger" data-bs-toggle="dropdown">
+                                          <em class="icon ni ni-more-h"></em>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-end">
+                                          <ul class="link-list-opt no-bdr">
+                                            <li>
+                                              <a href="#" class="view-kyc-btn" data-kyc-id="<%= kyc._id %>">
+                                                <em class="icon ni ni-eye"></em>
+                                                <span>View Documents</span>
+                                              </a>
+                                            </li>
+                                            <% if (kyc.status === 'pending') { %>
+                                              <li>
+                                                <a href="#" class="approve-kyc-btn" data-kyc-id="<%= kyc._id %>">
+                                                  <em class="icon ni ni-check"></em>
+                                                  <span>Approve</span>
+                                                </a>
+                                              </li>
+                                              <li>
+                                                <a href="#" class="reject-kyc-btn" data-kyc-id="<%= kyc._id %>">
+                                                  <em class="icon ni ni-cross"></em>
+                                                  <span>Reject</span>
+                                                </a>
+                                              </li>
+                                            <% } %>
+                                            <li>
+                                              <a href="/admin/users/<%= kyc.user ? kyc.user._id : '#' %>">
+                                                <em class="icon ni ni-user"></em>
+                                                <span>View User Profile</span>
+                                              </a>
+                                            </li>
+                                          </ul>
+                                        </div>
+                                      </div>
+                                    </td>
+                                  </tr>
+                                <% }); %>
+                              <% } else { %>
+                                <tr>
+                                  <td colspan="6" class="text-center">No KYC applications found matching the criteria.</td>
+                                </tr>
+                              <% } %>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    <% } %>
+                    
+                    <!-- Pagination -->
+                    <% if (typeof data !== 'undefined' && data.totalPages > 0) { %>
+                      <div class="card-inner">
+                        <div class="nk-block-between-md g-3">
+                          <div class="g">
+                            <ul class="pagination justify-content-center justify-content-md-start">
+                              <% if (data.hasPrevPage) { %>
+                                <li class="page-item">
+                                  <a class="page-link" href="?view=<%= view %>&page=<%= data.prevPage %><%= search ? '&search=' + search : '' %><%= view === 'users' ? (kycStatus ? '&kycStatus=' + kycStatus : '') : (status ? '&status=' + status : '') %>">Prev</a>
+                                </li>
+                              <% } else { %>
+                                <li class="page-item disabled">
+                                  <a class="page-link" href="#">Prev</a>
+                                </li>
+                              <% } %>
+                              
+                              <% 
+                                let startPage = Math.max(1, currentPage - 2);
+                                let endPage = Math.min(data.totalPages, currentPage + 2);
+                                
+                                // Always show first page
+                                if (startPage > 1) { %>
+                                  <li class="page-item">
+                                    <a class="page-link" href="?view=<%= view %>&page=1<%= search ? '&search=' + search : '' %><%= view === 'users' ? (kycStatus ? '&kycStatus=' + kycStatus : '') : (status ? '&status=' + status : '') %>">1</a>
+                                  </li>
+                                  <% if (startPage > 2) { %>
+                                    <li class="page-item">
+                                      <span class="page-link"><em class="icon ni ni-more-h"></em></span>
+                                    </li>
+                                  <% } %>
+                                <% } %>
+                                
+                                <% for (let i = startPage; i <= endPage; i++) { %>
+                                  <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                                    <a class="page-link" href="?view=<%= view %>&page=<%= i %><%= search ? '&search=' + search : '' %><%= view === 'users' ? (kycStatus ? '&kycStatus=' + kycStatus : '') : (status ? '&status=' + status : '') %>"><%= i %></a>
+                                  </li>
+                                <% } %>
+                                
+                                <% if (endPage < data.totalPages) { %>
+                                  <% if (endPage < data.totalPages - 1) { %>
+                                    <li class="page-item">
+                                      <span class="page-link"><em class="icon ni ni-more-h"></em></span>
+                                    </li>
+                                  <% } %>
+                                  <li class="page-item">
+                                    <a class="page-link" href="?view=<%= view %>&page=<%= data.totalPages %><%= search ? '&search=' + search : '' %><%= view === 'users' ? (kycStatus ? '&kycStatus=' + kycStatus : '') : (status ? '&status=' + status : '') %>"><%= data.totalPages %></a>
+                                  </li>
+                                <% } %>
+                              
+                              <% if (data.hasNextPage) { %>
+                                <li class="page-item">
+                                  <a class="page-link" href="?view=<%= view %>&page=<%= data.nextPage %><%= search ? '&search=' + search : '' %><%= view === 'users' ? (kycStatus ? '&kycStatus=' + kycStatus : '') : (status ? '&status=' + status : '') %>">Next</a>
+                                </li>
+                              <% } else { %>
+                                <li class="page-item disabled">
+                                  <a class="page-link" href="#">Next</a>
+                                </li>
+                              <% } %>
+                            </ul>
+                          </div>
+                          <div class="g">
+                            <div class="pagination-goto d-flex justify-content-center justify-content-md-start gx-3">
+                              <div>Page</div>
+                              <div>
+                                <select class="form-select js-select2" id="pageSwitcher" data-search="on">
+                                  <% for (let i = 1; i <= data.totalPages; i++) { %>
+                                    <option value="<%= i %>" <%= i === currentPage ? 'selected' : '' %>><%= i %></option>
+                                  <% } %>
+                                </select>
+                              </div>
+                              <div>OF <%= data.totalPages %></div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    <% } %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ========Footer========== -->
+          <%- include('../snippets/adminSnippets/footer.ejs') %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal for KYC Document View -->
+    <div class="modal fade" tabindex="-1" id="modalViewKyc">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">KYC Documents</h5>
+            <a href="#" class="close" data-bs-dismiss="modal" aria-label="Close">
+              <em class="icon ni ni-cross"></em>
+            </a>
+          </div>
+          <div class="modal-body" id="kycDetailsContent">
+            <div class="d-flex justify-content-center">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer bg-light">
+            <div class="row gy-2 gx-3 align-items-center justify-content-between w-100">
+              <div class="col-md-6">
+                <div id="statusBadge" class="badge text-start"></div>
+              </div>
+              <div class="col-md-6 text-end" id="kycActionButtons">
+                <!-- Action buttons will be added here dynamically -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal for Reject Reason -->
+    <div class="modal fade" tabindex="-1" id="modalRejectReason">
+      <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Reject KYC</h5>
+            <a href="#" class="close" data-bs-dismiss="modal" aria-label="Close">
+              <em class="icon ni ni-cross"></em>
+            </a>
+          </div>
+          <div class="modal-body">
+            <form id="rejectReasonForm">
+              <input type="hidden" id="rejectKycId" value="">
+              <div class="form-group">
+                <label class="form-label" for="rejectReason">Rejection Reason</label>
+                <div class="form-control-wrap">
+                  <textarea class="form-control" id="rejectReason" placeholder="Enter reason for rejection" required></textarea>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer bg-light">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-danger" id="confirmRejectBtn">Reject KYC</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal for KYC Settings -->
+    <div class="modal fade" tabindex="-1" id="modalKycSettings">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">KYC Settings</h5>
+            <a href="#" class="close" data-bs-dismiss="modal" aria-label="Close">
+              <em class="icon ni ni-cross"></em>
+            </a>
+          </div>
+          <div class="modal-body">
+            <form id="kycSettingsForm">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="form-label">KYC Verification</label>
+                    
+                    <div class="custom-control custom-switch mt-2">
+                      <input type="checkbox" class="custom-control-input" id="enableKYCAllUsers" 
+                        <%= typeof kycSettings !== 'undefined' && kycSettings.enableKYCAllUsers ? 'checked' : '' %>>
+                      <label class="custom-control-label" for="enableKYCAllUsers">Make KYC mandatory for all users</label>
+                    </div>
+                    
+                    <div class="custom-control custom-switch mt-1">
+                      <input type="checkbox" class="custom-control-input" id="enableKYCSingleUser"
+                        <%= typeof kycSettings !== 'undefined' && kycSettings.enableKYCSingleUser ? 'checked' : '' %>>
+                      <label class="custom-control-label" for="enableKYCSingleUser">Allow enabling KYC for specific users</label>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="form-label">Withdrawal Limits</label>
+                    <div class="row g-3">
+                      <div class="col-sm-6">
+                        <div class="form-group">
+                          <label class="form-label" for="withdrawalLimitWithoutKYC">Without KYC</label>
+                          <div class="form-control-wrap">
+                            <input type="number" class="form-control" id="withdrawalLimitWithoutKYC" 
+                              value="<%= typeof kycSettings !== 'undefined' ? kycSettings.withdrawalLimitWithoutKYC : 0 %>">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-sm-6">
+                        <div class="form-group">
+                          <label class="form-label" for="withdrawalLimitWithKYC">With KYC</label>
+                          <div class="form-control-wrap">
+                            <input type="number" class="form-control" id="withdrawalLimitWithKYC" 
+                              value="<%= typeof kycSettings !== 'undefined' ? kycSettings.withdrawalLimitWithKYC : 1000000000 %>">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="form-group mt-4">
+                <label class="form-label">Required Documents</label>
+                <div class="row g-3">
+                  <div class="col-6 col-md-3">
+                    <div class="custom-control custom-checkbox">
+                      <input type="checkbox" class="custom-control-input" id="requireIdCard"
+                        <%= typeof kycSettings !== 'undefined' && kycSettings.requiredDocuments && kycSettings.requiredDocuments.idCard ? 'checked' : '' %>>
+                      <label class="custom-control-label" for="requireIdCard">ID Card</label>
+                    </div>
+                  </div>
+                  <div class="col-6 col-md-3">
+                    <div class="custom-control custom-checkbox">
+                      <input type="checkbox" class="custom-control-input" id="requirePassport"
+                        <%= typeof kycSettings !== 'undefined' && kycSettings.requiredDocuments && kycSettings.requiredDocuments.passport ? 'checked' : '' %>>
+                      <label class="custom-control-label" for="requirePassport">Passport</label>
+                    </div>
+                  </div>
+                  <div class="col-6 col-md-3">
+                    <div class="custom-control custom-checkbox">
+                      <input type="checkbox" class="custom-control-input" id="requireUtilityBill"
+                        <%= typeof kycSettings !== 'undefined' && kycSettings.requiredDocuments && kycSettings.requiredDocuments.utilityBill ? 'checked' : '' %>>
+                      <label class="custom-control-label" for="requireUtilityBill">Utility Bill</label>
+                    </div>
+                  </div>
+                  <div class="col-6 col-md-3">
+                    <div class="custom-control custom-checkbox">
+                      <input type="checkbox" class="custom-control-input" id="requireSelfie"
+                        <%= typeof kycSettings !== 'undefined' && kycSettings.requiredDocuments && kycSettings.requiredDocuments.selfie ? 'checked' : '' %>>
+                      <label class="custom-control-label" for="requireSelfie">Selfie with ID</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+            </form>
+          </div>
+          <div class="modal-footer bg-light">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-primary" id="saveKycSettings">Save Settings</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================Scripts========== -->
+    <%- include('../snippets/adminSnippets/scripts.ejs') %>
+    
+    <script src="/apiClient/apiClient.js"></script>
+    <script src="/apiClient/kycClient.js"></script>
+    
+    <script>
+      $(document).ready(function() {
+        // Initialize select2 
+        $('.js-select2').each(function() {
+          $(this).select2({
+            minimumResultsForSearch: 20,
+            dropdownParent: $(this).parent()
+          });
+        });
+        
+        // Initialize Bootstrap toggles and dropdowns
+        $('[data-bs-toggle="dropdown"]').dropdown();
+        
+        // Initialize the toggle-expand functionality
+        $('.toggle-expand').on('click', function(e) {
+          e.preventDefault();
+          const target = $(this).data('target');
+          const $toggle = $(this).closest('.toggle-wrap');
+          const $content = $toggle.find(`[data-content="${target}"]`);
+          
+          $toggle.toggleClass('active');
+          $content.slideToggle();
+        });
+        
+        // Fix for sidebar menu toggle
+        $('.nk-menu-toggle').on('click', function(e) {
+          e.preventDefault();
+          const $parent = $(this).parent();
+          
+          // Toggle the active class
+          $parent.toggleClass('active');
+          
+          // Toggle the submenu with slide animation
+          const $subMenu = $parent.children('.nk-menu-sub');
+          if ($parent.hasClass('active')) {
+            $subMenu.slideDown();
+          } else {
+            $subMenu.slideUp();
+          }
+        });
+
+
+        
+        // Status filter change
+        $('#statusFilter').on('change', function() {
+          // Reset filter is handled separately
+        });
+
+        // Apply filter
+        $('#applyFilter').on('click', function() {
+          const status = $('#statusFilter').val();
+          const searchTerm = $('#searchFilter').val().trim();
+          const currentUrl = new URL(window.location.href);
+          const view = currentUrl.searchParams.get('view') || 'applications';
+          
+          // Construct new URL
+          let newUrl = `?view=${view}&page=1`;
+          
+          if (searchTerm) {
+            newUrl += `&search=${encodeURIComponent(searchTerm)}`;
+          }
+          
+          if (status) {
+            if (view === 'users') {
+              newUrl += `&kycStatus=${encodeURIComponent(status)}`;
+            } else {
+              newUrl += `&status=${encodeURIComponent(status)}`;
+            }
+          }
+          
+          window.location.href = newUrl;
+        });
+
+        // Reset filter
+        $('#resetFilter').on('click', function() {
+          const currentUrl = new URL(window.location.href);
+          const view = currentUrl.searchParams.get('view') || 'applications';
+          window.location.href = `?view=${view}`;
+        });
+
+        // Search input in header
+        $('#searchInput').on('keypress', function(e) {
+          if (e.keyCode === 13) { // Enter key
+            const searchTerm = $(this).val().trim();
+            const currentUrl = new URL(window.location.href);
+            const view = currentUrl.searchParams.get('view') || 'applications';
+            
+            // Construct new URL
+            let newUrl = `?view=${view}&page=1`;
+            
+            if (searchTerm) {
+              newUrl += `&search=${encodeURIComponent(searchTerm)}`;
+            }
+            
+            if (view === 'users') {
+              const kycStatus = currentUrl.searchParams.get('kycStatus');
+              if (kycStatus) {
+                newUrl += `&kycStatus=${encodeURIComponent(kycStatus)}`;
+              }
+            } else {
+              const status = currentUrl.searchParams.get('status');
+              if (status) {
+                newUrl += `&status=${encodeURIComponent(status)}`;
+              }
+            }
+            
+            window.location.href = newUrl;
+          }
+        });
+
+        // Page switcher
+        $('#pageSwitcher').on('change', function() {
+          const page = $(this).val();
+          const currentUrl = new URL(window.location.href);
+          
+          currentUrl.searchParams.set('page', page);
+          window.location.href = currentUrl.toString();
+        });
+
+        // View KYC documents
+        $(document).on('click', '.view-kyc-btn', function(e) {
+          e.preventDefault();
+          const kycId = $(this).data('kyc-id');
+          loadKycDetails(kycId);
+          $('#modalViewKyc').modal('show');
+        });
+
+        // Approve KYC
+        $(document).on('click', '.approve-kyc-btn', function(e) {
+          e.preventDefault();
+          const kycId = $(this).data('kyc-id');
+          
+          if (confirm('Are you sure you want to approve this KYC application?')) {
+            updateKycStatus(kycId, 'approved')
+              .then(response => {
+                if (response.success) {
+                  showToast('KYC application approved successfully', 'success');
+                  setTimeout(() => window.location.reload(), 1000);
+                } else {
+                  showToast(`Failed: ${response.message}`, 'error');
+                }
+              })
+              .catch(error => {
+                showToast(`Error: ${error.message || 'Unknown error'}`, 'error');
+              });
+          }
+        });
+
+        // Reject KYC - open modal for reason
+        $(document).on('click', '.reject-kyc-btn', function(e) {
+          e.preventDefault();
+          const kycId = $(this).data('kyc-id');
+          $('#rejectKycId').val(kycId);
+          $('#rejectReason').val('');
+          $('#modalRejectReason').modal('show');
+        });
+
+        // Confirm reject with reason
+        $('#confirmRejectBtn').on('click', function() {
+          const kycId = $('#rejectKycId').val();
+          const reason = $('#rejectReason').val();
+          
+          if (!reason.trim()) {
+            showToast('Please provide a reason for rejection', 'error');
+            return;
+          }
+          
+          updateKycStatus(kycId, 'rejected', reason)
+            .then(response => {
+              if (response.success) {
+                showToast('KYC application rejected successfully', 'success');
+                $('#modalRejectReason').modal('hide');
+                setTimeout(() => window.location.reload(), 1000);
+              } else {
+                showToast(`Failed: ${response.message}`, 'error');
+              }
+            })
+            .catch(error => {
+              showToast(`Error: ${error.message || 'Unknown error'}`, 'error');
+            });
+        });
+
+        // Save KYC settings
+        $('#saveKycSettings').on('click', function() {
+          const settings = {
+            enableKYCAllUsers: $('#enableKYCAllUsers').is(':checked'),
+            enableKYCSingleUser: $('#enableKYCSingleUser').is(':checked'),
+            withdrawalLimitWithoutKYC: parseFloat($('#withdrawalLimitWithoutKYC').val()),
+            withdrawalLimitWithKYC: parseFloat($('#withdrawalLimitWithKYC').val()),
+            requiredDocuments: {
+              idCard: $('#requireIdCard').is(':checked'),
+              passport: $('#requirePassport').is(':checked'),
+              utilityBill: $('#requireUtilityBill').is(':checked'),
+              selfie: $('#requireSelfie').is(':checked')
+            }
+          };
+          
+          updateKycSettings(settings)
+            .then(response => {
+              if (response.success) {
+                showToast('KYC settings updated successfully', 'success');
+                $('#modalKycSettings').modal('hide');
+              } else {
+                showToast(`Failed: ${response.message}`, 'error');
+              }
+            })
+            .catch(error => {
+              showToast(`Error: ${error.message || 'Unknown error'}`, 'error');
+            });
+        });
+
+        // Function to show toast messages
+        function showToast(message, type = 'info') {
+          let bgColor;
+          switch(type) {
+            case 'success': bgColor = '#1ee0ac'; break;
+            case 'error': bgColor = '#e85347'; break;
+            case 'warning': bgColor = '#f4bd0e'; break;
+            default: bgColor = '#09c2de';
+          }
+          
+          iziToast.show({
+            message: message,
+            position: 'topRight',
+            backgroundColor: bgColor,
+            theme: 'dark',
+            timeout: 5000
+          });
+        }
+
+        // Function to load KYC details
+        function loadKycDetails(kycId) {
+          $('#kycDetailsContent').html(`
+            <div class="d-flex justify-content-center">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
+          `);
+          
+          $('#statusBadge').removeClass().addClass('badge');
+          $('#kycActionButtons').html('');
+          
+          getKycDetails(kycId)
+            .then(response => {
+              if (response.success) {
+                const kyc = response.data;
+                
+                // Set status badge
+                let statusClass = 'bg-warning';
+                if (kyc.status === 'approved') statusClass = 'bg-success';
+                if (kyc.status === 'rejected') statusClass = 'bg-danger';
+                
+                $('#statusBadge').addClass(statusClass).text(`Status: ${kyc.status.charAt(0).toUpperCase() + kyc.status.slice(1)}`);
+                
+                // Generate KYC details HTML
+                let html = `
+                  <div class="nk-block">
+                    <div class="nk-block-head">
+                      <h5 class="title">User Details</h5>
+                      <p>Verification submitted at ${new Date(kyc.requestedAt || kyc.createdAt).toLocaleString()}</p>
+                    </div>
+                    <div class="profile-ud-list">
+                      <div class="profile-ud-item">
+                        <div class="profile-ud larger">
+                          <span class="profile-ud-label">Full Name</span>
+                          <span class="profile-ud-value">${kyc.user.fullName}</span>
+                        </div>
+                      </div>
+                      <div class="profile-ud-item">
+                        <div class="profile-ud larger">
+                          <span class="profile-ud-label">Email</span>
+                          <span class="profile-ud-value">${kyc.user.email}</span>
+                        </div>
+                      </div>
+                      <div class="profile-ud-item">
+                        <div class="profile-ud larger">
+                          <span class="profile-ud-label">Country</span>
+                          <span class="profile-ud-value">${kyc.user.country || 'Not provided'}</span>
+                        </div>
+                      </div>
+                      <div class="profile-ud-item">
+                        <div class="profile-ud larger">
+                          <span class="profile-ud-label">Status</span>
+                          <span class="profile-ud-value">
+                            <span class="badge bg-${
+                              kyc.status === 'approved' ? 'success' : 
+                              (kyc.status === 'rejected' ? 'danger' : 'warning')
+                            }">
+                              ${kyc.status.charAt(0).toUpperCase() + kyc.status.slice(1)}
+                            </span>
+                          </span>
+                        </div>
+                      </div>
+                      ${kyc.status === 'rejected' ? `
+                        <div class="profile-ud-item col-lg-12">
+                          <div class="profile-ud larger">
+                            <span class="profile-ud-label">Rejection Reason</span>
+                            <span class="profile-ud-value text-danger">
+                              ${kyc.rejectReason || 'No reason provided'}
+                            </span>
+                          </div>
+                        </div>
+                      ` : ''}
+                    </div>
+                  </div>
+                  
+                  <div class="nk-divider divider md"></div>
+                  
+                  <div class="nk-block">
+                    <div class="nk-block-head">
+                      <h5 class="title">Submitted Documents</h5>
+                    </div>
+                    
+                    <div class="row g-3">
+                `;
+                
+                if (kyc.documents && kyc.documents.length > 0) {
+                  kyc.documents.forEach((doc, index) => {
+                    html += `
+                      <div class="col-md-6">
+                        <div class="card card-bordered">
+                          <div class="card-inner">
+                            <div class="card-head">
+                              <h6 class="card-title">${doc.documentType || `Document ${index + 1}`}</h6>
+                            </div>
+                            <div class="card-media">
+                              ${doc.documentUrl ? 
+                                `<a href="${doc.documentUrl}" target="_blank">
+                                  <img src="${doc.documentUrl}" class="w-100" alt="${doc.documentType}" style="max-height: 200px; object-fit: contain;">
+                                </a>` :
+                                '<div class="alert alert-warning">No document file uploaded</div>'
+                              }
+                            </div>
+                            <ul class="list-group list-group-flush mt-2">
+                              ${doc.dob ? `<li class="list-group-item">Date of Birth: ${doc.dob}</li>` : ''}
+                              ${doc.phoneNumber ? `<li class="list-group-item">Phone: ${doc.phoneNumber}</li>` : ''}
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    `;
+                  });
+                } else {
+                  html += `
+                    <div class="col-12">
+                      <div class="alert alert-warning">
+                        <p>No documents have been submitted yet.</p>
+                      </div>
+                    </div>
+                  `;
+                }
+                
+                html += `
+                    </div>
+                  </div>
+                `;
+                
+                // Add action buttons
+                if (kyc.status === 'pending') {
+                  $('#kycActionButtons').html(`
+                    <button type="button" class="btn btn-dim btn-light" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger reject-kyc-btn" data-kyc-id="${kyc._id}">Reject</button>
+                    <button type="button" class="btn btn-success approve-kyc-btn" data-kyc-id="${kyc._id}">Approve</button>
+                  `);
+                } else {
+                  $('#kycActionButtons').html(`
+                    <button type="button" class="btn btn-dim btn-light" data-bs-dismiss="modal">Close</button>
+                  `);
+                }
+                
+                $('#kycDetailsContent').html(html);
+              } else {
+                $('#kycDetailsContent').html(`
+                  <div class="alert alert-danger">
+                    Failed to load KYC details: ${response.message}
+                  </div>
+                `);
+              }
+            })
+            .catch(error => {
+              $('#kycDetailsContent').html(`
+                <div class="alert alert-danger">
+                  Error: ${error.message || 'Failed to load KYC details'}
+                </div>
+              `);
+            });
+        }
+      });
+
+
+
+
+      // Document ready function
+$(document).ready(function() {
+  // Function to toggle sidebar
+  function toggleSidebar() {
+    const $sidebar = $('.nk-sidebar');
+    $sidebar.toggleClass('sidebar-active');
+    
+    // Optional: Add body class to handle overlay or adjust main content
+    $('body').toggleClass('sidebar-open');
+  }
+  
+  // Handle click on mobile toggle button
+  $('.nk-nav-toggle').on('click', function(e) {
+    e.preventDefault();
+    toggleSidebar();
+  });
+  
+  // Handle click on desktop compact toggle button
+  $('.nk-nav-compact').on('click', function(e) {
+    e.preventDefault();
+    toggleSidebar();
+  });
+  
+  // Add CSS class to handle the styling
+  if (!$('head').find('#sidebar-toggle-styles').length) {
+    $('head').append(`
+      <style id="sidebar-toggle-styles">
+        /* Mobile sidebar handling */
+        @media (max-width: 1199px) {
+          .nk-sidebar {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+          }
+          
+          .nk-sidebar.sidebar-active {
+            transform: translateX(0);
+          }
+          
+          /* Optional overlay when sidebar is open */
+          body.sidebar-open::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 999;
+          }
+        }
+        
+        /* Desktop sidebar handling - for compact mode */
+        @media (min-width: 1200px) {
+          .nk-sidebar {
+            transition: width 0.3s ease;
+          }
+          
+          .nk-sidebar.sidebar-active {
+            width: 80px; /* Compact width */
+          }
+          
+          .nk-sidebar.sidebar-active .nk-menu-text {
+            display: none;
+          }
+          
+          .nk-sidebar.sidebar-active .nk-menu-icon {
+            margin-right: 0;
+          }
+          
+          /* Adjust main content when sidebar is toggled */
+          .nk-wrap .nk-content {
+            transition: margin-left 0.3s ease;
+          }
+          
+          body.sidebar-open .nk-wrap .nk-content {
+            margin-left: 80px;
+          }
+        }
+      </style>
+    `);
+  }
+  
+  // Close sidebar when clicking outside on mobile
+  $(document).on('click', function(e) {
+    if (
+      $(window).width() < 1200 &&
+      !$(e.target).closest('.nk-sidebar').length &&
+      !$(e.target).closest('.nk-nav-toggle').length &&
+      $('.nk-sidebar').hasClass('sidebar-active')
+    ) {
+      toggleSidebar();
+    }
+  });
+});
+    </script>
+  </body>
+</html>

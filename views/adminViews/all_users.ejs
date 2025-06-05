@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="zxx" class="js">
+  <head>
+    <!-- ========Headers meta======== -->
+    <%- include('../snippets/adminSnippets/header_meta.ejs') %>
+
+    <title>EXNESTRADE | Admin Dashboard</title>
+  </head>
+  <body class="nk-body bg-lighter npc-general has-sidebar">
+    <div class="nk-app-root">
+      <div class="nk-main">
+        <!-- ==========Sidebar======= -->
+        <%- include('../snippets/adminSnippets/sidebar.ejs') %>
+
+        <div class="nk-wrap">
+          <!-- ============Navbar======== -->
+          <%- include('../snippets/adminSnippets/navbar.ejs') %>
+
+          <!-- ============Content======== -->
+          <div class="nk-content">
+            <div class="container-fluid">
+              <div class="nk-content-inner">
+                <div class="nk-content-body">
+                  <div class="nk-block-head nk-block-head-sm">
+                    <div class="nk-block-between">
+                      <div class="nk-block-head-content">
+                        <h3 class="nk-block-title page-title">All Users</h3>
+                        <div class="nk-block-des text-soft">
+                          <p>
+                            You have total
+                            <span id="all-user-count">0</span> users on your
+                            platform.
+                          </p>
+                        </div>
+                      </div>
+                      <div class="nk-block-head-content">
+                        <div class="toggle-wrap nk-block-tools-toggle">
+                          <a
+                            href="#"
+                            class="btn btn-icon btn-trigger toggle-expand me-n1"
+                            data-target="pageMenu"
+                            ><em class="icon ni ni-menu-alt-r"></em
+                          ></a>
+                          <div
+                            class="toggle-expand-content"
+                            data-content="pageMenu"
+                          >
+                            <ul class="nk-block-tools g-3">
+                              <li>
+                                <div class="form-control-wrap">
+                                  <div class="form-icon form-icon-right">
+                                    <em class="icon ni ni-search"></em>
+                                  </div>
+                                  <input
+                                    type="text"
+                                    class="form-control"
+                                    id="search-all-users"
+                                    placeholder="Search by name or email"
+                                  />
+                                </div>
+                              </li>
+                              <li class="nk-block-tools-opt">
+                                <div class="drodown">
+                                  <a
+                                    href="#"
+                                    class="dropdown-toggle btn btn-primary bulk-action-btn disabled"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                                  >
+                                    <span>Bulk Action</span>
+                                    <em class="icon ni ni-chevron-down"></em>
+                                  </a>
+                                  <div class="dropdown-menu dropdown-menu-end">
+                                    <ul class="link-list-opt no-bdr">
+                                      <li>
+                                        <a
+                                          href="#"
+                                          class="bulk-action"
+                                          data-action="block"
+                                        >
+                                          <em class="icon ni ni-na"></em
+                                          ><span>Block Selected</span>
+                                        </a>
+                                      </li>
+                                      <li>
+                                        <a
+                                          href="#"
+                                          class="bulk-action"
+                                          data-action="unblock"
+                                        >
+                                          <em class="icon ni ni-unlock"></em
+                                          ><span>Unblock Selected</span>
+                                        </a>
+                                      </li>
+                                     
+                                      <li>
+                                        <a
+                                          href="#"
+                                          class="bulk-action"
+                                          data-action="email"
+                                          data-bs-toggle="modal"
+                                          data-bs-target="#bulkEmailModal"
+                                        >
+                                          <em class="icon ni ni-mail"></em
+                                          ><span>Email Selected</span>
+                                        </a>
+                                      </li>
+                                      <li>
+                                        <a
+                                          href="#"
+                                          class="bulk-action"
+                                          data-action="invite"
+                                          data-bs-toggle="modal"
+                                          data-bs-target="#planInviteModal"
+                                        >
+                                          <em class="icon ni ni-invest"></em
+                                          ><span>Invite to Invest</span>
+                                        </a>
+                                      </li>
+                                    </ul>
+                                  </div>
+                                </div>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="nk-block">
+                    <div class="card card-bordered card-stretch">
+                      <div class="card-inner-group">
+                        <div class="card-inner p-0">
+                          <div class="nk-tb-list nk-tb-ulist">
+                            <table
+                              class="table table-hover"
+                              id="all-users-table"
+                            >
+                              <thead>
+                                <tr>
+                                  <th>
+                                    <div
+                                      class="custom-control custom-control-sm custom-checkbox notext"
+                                    >
+                                      <input
+                                        type="checkbox"
+                                        class="custom-control-input"
+                                        id="select-all"
+                                      />
+                                      <label
+                                        class="custom-control-label"
+                                        for="select-all"
+                                      ></label>
+                                    </div>
+                                  </th>
+                                  <th>Full Name</th>
+                                  <th>Email</th>
+                                  <th>Country</th>
+                                  <th>Registered Date</th>
+                                  <th>Status</th>
+                                  <th>Action</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <!-- User data will be loaded dynamically here -->
+                                <tr>
+                                  <td colspan="8" class="text-center">
+                                    Loading users...
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                        <!-- Pagination Container -->
+                        <div class="card-inner">
+                          <div class="nk-block-between-md g-3">
+                            <div class="g">
+                              <div
+                                id="all-users-table-pagination"
+                                class="pagination justify-content-center"
+                              ></div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ===========Footer=========== -->
+          <%- include('../snippets/adminSnippets/footer.ejs') %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modals for bulk actions -->
+    <!-- Bulk Email Modal -->
+    <div class="modal fade" id="bulkEmailModal">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Send Email to Selected Users</h5>
+            <a
+              href="#"
+              class="close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            >
+              <em class="icon ni ni-cross"></em>
+            </a>
+          </div>
+          <div class="modal-body">
+            <form action="#">
+              <div class="form-group">
+                <label class="form-label" for="emailSubject"
+                  >Email Subject</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="emailSubject"
+                  placeholder="Enter email subject"
+                />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="emailBody">Email Content</label>
+                <textarea
+                  class="form-control"
+                  id="emailBody"
+                  rows="6"
+                  placeholder="Enter email content"
+                ></textarea>
+              </div>
+              <div class="form-group">
+                <button type="submit" class="btn btn-primary">
+                  Send Email
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Plan Invitation Modal -->
+    <div class="modal fade" id="planInviteModal">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Invite Users to Investment Plan</h5>
+            <a
+              href="#"
+              class="close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            >
+              <em class="icon ni ni-cross"></em>
+            </a>
+          </div>
+          <div class="modal-body">
+            <form action="#">
+              <div class="form-group">
+                <label class="form-label" for="planSelect"
+                  >Select Investment Plan</label
+                >
+                <select class="form-select" id="planSelect">
+                  <option value="">Loading plans...</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <button type="submit" class="btn btn-primary">
+                  Send Invitations
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- =========Scripts========= -->
+    <%- include('../snippets/adminSnippets/scripts.ejs') %>
+    <script src="/apiClient/apiClient.js"></script>
+    <script src="/apiClient/userAdminClient.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // Load all users with pagination
+        loadUserTable("all-users-table", getUsers).then((response) => {
+          if (response && response.count) {
+            document.getElementById("all-user-count").textContent =
+              response.count;
+          }
+        });
+
+        // Handle search functionality
+        const searchInput = document.getElementById("search-all-users");
+        if (searchInput) {
+          searchInput.addEventListener("keyup", (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const table = document.getElementById("all-users-table");
+            const rows = table.querySelectorAll("tbody tr");
+
+            rows.forEach((row) => {
+              const nameCell = row.querySelector("td:nth-child(2)");
+              const emailCell = row.querySelector("td:nth-child(3)");
+
+              if (!nameCell || !emailCell) return;
+
+              const name = nameCell.textContent.toLowerCase();
+              const email = emailCell.textContent.toLowerCase();
+
+              if (name.includes(searchTerm) || email.includes(searchTerm)) {
+                row.style.display = "";
+              } else {
+                row.style.display = "none";
+              }
+            });
+          });
+        }
+      });
+    </script>
+  </body>
+</html>

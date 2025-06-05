@@ -1,0 +1,321 @@
+
+
+<div class="nk-sidebar nk-sidebar-fixed is-dark" data-content="sidebarMenu">
+  <div class="nk-sidebar-element nk-sidebar-head">
+    <div class="nk-menu-trigger">
+      <a
+        href="#"
+        class="nk-nav-toggle nk-quick-nav-icon d-xl-none"
+        data-target="sidebarMenu"
+        ><em class="icon ni ni-arrow-left"></em></a
+      ><a
+        href="#"
+        class="nk-nav-compact nk-quick-nav-icon d-none d-xl-inline-flex"
+        data-target="sidebarMenu"
+        ><em class="icon ni ni-menu"></em
+      ></a>
+    </div>
+    <div class="nk-sidebar-brand">
+      <a href="/admin/dashboard" class="logo-link nk-sidebar-logo">
+        <img class="logo-light logo-img" 
+        src="<%= (appSettings && appSettings[0] && appSettings[0].siteLogo) ? appSettings[0].siteLogo : '' %>"
+        alt="logo"/>
+        <span class="text-white"><%= (appSettings && appSettings[0] && appSettings[0].siteName) ? appSettings[0].siteName : '' %> %></span>
+        <img
+          class="logo-dark logo-img"
+          src="<%= (appSettings && appSettings[0] && appSettings[0].siteLogo) ? appSettings[0].siteLogo : '' %>"
+          src="<%= (appSettings && appSettings[0] && appSettings[0].siteLogo) ? appSettings[0].siteLogo : '' %>"
+          alt="logo-dark"
+        />
+      </a>
+    </div>
+  </div>
+  <div class="nk-sidebar-element nk-sidebar-body">
+    <div class="nk-sidebar-content">
+      <div class="nk-sidebar-menu" data-simplebar>
+        <ul class="nk-menu"> 
+
+          <% if (user && user.role === 'admin') { %>
+
+
+          <!-- -============Admin Dashboard========== -->
+          <li class="nk-menu-item">
+            <a href="/admin/dashboard" class="nk-menu-link">
+              <span class="nk-menu-icon">
+                <em class="icon ni ni-dashlite"></em>
+              </span>
+              <span class="nk-menu-text">Dashboard</span>
+            </a>
+          </li>
+          <li class="nk-menu-item">
+            <a href="/admin/transaction/pending" class="nk-menu-link">
+              <span class="nk-menu-icon">
+                <em class="icon ni ni-wallet-out"></em>
+              </span>
+              <span class="nk-menu-text">Deposit</span>
+              <span class="nk-menu-badge"></span>
+            </a>
+          </li>
+          <li class="nk-menu-item">
+            <a href="/admin/transaction/withdraw" class="nk-menu-link">
+              <span class="nk-menu-icon">
+                <em class="icon ni ni-wallet-in"></em>
+              </span>
+              <span class="nk-menu-text">Withdraw</span>
+              <span class="nk-menu-badge"></span>
+            </a>
+          </li>
+          <li class="nk-menu-item">
+            <a
+              href="/admin/referral/referral-earning-history"
+              class="nk-menu-link"
+            >
+              <span class="nk-menu-icon">
+                <em class="icon ni ni-network"></em>
+              </span>
+              <span class="nk-menu-text">Referral</span>
+              <span class="nk-menu-badge"></span>
+            </a>
+          </li>
+
+          <li class="nk-menu-item has-sub">
+            <a href="#" class="nk-menu-link nk-menu-toggle">
+              <span class="nk-menu-icon">
+                <em class="icon ni ni-swap-alt"></em>
+              </span>
+              <span class="nk-menu-text">Transaction</span>
+            </a>
+            <ul class="nk-menu-sub">
+              <li class="nk-menu-item">
+                <a href="/admin/transaction/pending" class="nk-menu-link">
+                  <span class="nk-menu-text">Pending</span>
+                </a>
+              </li>
+              <li class="nk-menu-item">
+                <a href="/admin/transaction/refund" class="nk-menu-link">
+                  <span class="nk-menu-text">Refund </span>
+                </a>
+              </li>
+              <li class="nk-menu-item">
+                <a href="/admin/transaction/confirmed" class="nk-menu-link">
+                  <span class="nk-menu-text">Confirmed</span>
+                </a>
+              </li>
+              <li class="nk-menu-item">
+                <a
+                  href="/admin/transaction/deposit-history"
+                  class="nk-menu-link"
+                >
+                  <span class="nk-menu-text">Deposit</span>
+                </a>
+              </li>
+              <li class="nk-menu-item">
+                <a
+                  href="/admin/transaction/withdrawal-history"
+                  class="nk-menu-link"
+                >
+                  <span class="nk-menu-text">Withdrawal</span>
+                </a>
+              </li>
+              <li class="nk-menu-item">
+                <a
+                  href="/admin/transaction/reinvestment-history"
+                  class="nk-menu-link"
+                >
+                  <span class="nk-menu-text">Reinvestment</span>
+                </a>
+              </li>
+            </ul>
+          </li>
+
+          <li class="nk-menu-heading">
+            <h6 class="overline-title text-primary-alt">INVESTMENT</h6>
+          </li>
+          <li class="nk-menu-item">
+            <a href="/admin/investment/currencies" class="nk-menu-link">
+              <span class="nk-menu-icon">
+                <em class="icon ni ni-dashlite"></em>
+              </span>
+              <span class="nk-menu-text">Manage Currency</span>
+            </a>
+          </li>
+          <li class="nk-menu-item has-sub">
+            <a href="#" class="nk-menu-link nk-menu-toggle">
+              <span class="nk-menu-icon">
+                <em class="icon ni ni-user-list"></em>
+              </span>
+              <span class="nk-menu-text">Invested Plans</span>
+            </a>
+            <ul class="nk-menu-sub">
+              <li class="nk-menu-item">
+                <a href="/admin/investment/active" class="nk-menu-link">
+                  <span class="nk-menu-text">Active Invest</span>
+                </a>
+              </li>
+              <li class="nk-menu-item">
+                <a href="/admin/investment/completed" class="nk-menu-link">
+                  <span class="nk-menu-text">Completed Invest</span>
+                </a>
+              </li>
+              <li class="nk-menu-item">
+                <a href="/admin/investment/all" class="nk-menu-link">
+                  <span class="nk-menu-text">All Invested Plans</span>
+                </a>
+              </li>
+              <li class="nk-menu-item">
+                <a href="/admin/investment/plan-scheme" class="nk-menu-link">
+                  <span class="nk-menu-text">Plan Schemes</span>
+                </a>
+              </li>
+            </ul>
+          </li>
+
+          <li class="nk-menu-heading">
+            <h6 class="overline-title text-primary-alt">User Management</h6>
+          </li>
+          <li class="nk-menu-item has-sub">
+            <a href="#" class="nk-menu-link nk-menu-toggle">
+              <span class="nk-menu-icon">
+                <em class="icon ni ni-users"></em>
+              </span>
+              <span class="nk-menu-text">Manage Users</span>
+            </a>
+            <ul class="nk-menu-sub">
+              <li class="nk-menu-item">
+                <a href="/admin/users/active" class="nk-menu-link">
+                  <span class="nk-menu-text">Active</span>
+                </a>
+              </li>
+              <li class="nk-menu-item">
+                <a href="/admin/users/inactive" class="nk-menu-link">
+                  <span class="nk-menu-text"
+                    >Inactive
+                    <span>(348)</span>
+                  </span>
+                </a>
+              </li>
+              <li class="nk-menu-item">
+                <a href="/admin/users/suspended" class="nk-menu-link">
+                  <span class="nk-menu-text"
+                    >Suspended
+                    <span>(348)</span>
+                  </span>
+                </a>
+              </li>
+              <li class="nk-menu-item">
+                <a href="/admin/users/all" class="nk-menu-link">
+                  <span class="nk-menu-text">All Users</span>
+                </a>
+              </li>
+              <li class="nk-menu-item">
+                <a href="/admin/users/admin" class="nk-menu-link">
+                  <span class="nk-menu-text"
+                    >Administrators
+                    <span>(3)</span>
+                  </span>
+                </a>
+              </li>
+            </ul>
+          </li>
+
+          <li class="nk-menu-item">
+            <a href="/admin/kyc/applications" class="nk-menu-link">
+              <span class="nk-menu-icon">
+                <em class="icon ni ni-dashlite"></em>
+              </span>
+              <span class="nk-menu-text">Verification Dashboard</span>
+            </a>
+          </li>
+
+          <li class="nk-menu-heading">
+            <h6 class="overline-title text-primary-alt">Settings</h6>
+          </li>
+
+          <li class="nk-menu-item">
+            <a href="/admin/application-settings" class="nk-menu-link">
+              <span class="nk-menu-icon">
+                <em class="icon ni ni-setting"></em>
+              </span>
+              <span class="nk-menu-text">Application Settings</span>
+            </a>
+          </li>
+
+          <li class="nk-menu-item has-sub">
+            <a href="#" class="nk-menu-link nk-menu-toggle">
+              <span class="nk-menu-icon">
+                <em class="icon ni ni-users"></em>
+              </span>
+              <span class="nk-menu-text">Manage Content</span>
+            </a>
+            <ul class="nk-menu-sub">
+              <li class="nk-menu-item">
+                <a href="/admin/pages/page-manager" class="nk-menu-link">
+                  <span class="nk-menu-text">Mange Pages</span>
+                </a>
+              </li>
+              <li class="nk-menu-item">
+                <a href="/" class="nk-menu-link">
+                  <span class="nk-menu-text">View Site</span>
+                </a>
+              </li>
+            </ul>
+          </li>
+          
+          <% } %> <% if (user && (user.role === 'user')) { %>
+            <!-- -============User Dashboard========== -->
+          <li class="nk-menu-item">
+            <a href="/user/dashboard" class="nk-menu-link">
+              <span class="nk-menu-icon">
+                <em class="icon ni ni-dashlite"></em>
+              </span>
+              <span class="nk-menu-text">Dashboard</span>
+            </a>
+          </li>
+          <li class="nk-menu-item">
+            <a href="/user/investment-plans" class="nk-menu-link">
+              <span class="nk-menu-icon">
+                <em class="icon ni ni-wallet-out"></em>
+              </span>
+              <span class="nk-menu-text">Out Plans</span>
+            </a>
+          </li>
+          <li class="nk-menu-item">
+            <a href="/user/withdrawal" class="nk-menu-link">
+              <span class="nk-menu-icon">
+                <em class="icon ni ni-swap-alt"></em>
+              </span>
+              <span class="nk-menu-text">Withdraw</span>
+            </a>
+          </li>
+          <li class="nk-menu-item">
+            <a href="/user/investments" class="nk-menu-link">
+              <span class="nk-menu-icon">
+                <em class="icon ni ni-swap-alt"></em>
+              </span>
+              <span class="nk-menu-text">Investments</span>
+            </a>
+          </li>
+          <li class="nk-menu-item">
+            <a href="/user/transactions" class="nk-menu-link">
+              <span class="nk-menu-icon">
+                <em class="icon ni ni-history"></em>
+              </span>
+              <span class="nk-menu-text">History</span>
+            </a>
+          </li>
+         
+          <li class="nk-menu-item">
+            <a href="/user/profile" class="nk-menu-link">
+              <span class="nk-menu-icon">
+                <em class="icon ni ni-user"></em>
+              </span>
+              <span class="nk-menu-text">Profile</span>
+            </a>
+          </li>
+          <!-- -============User Dashboard ends========== -->
+          <% } %>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

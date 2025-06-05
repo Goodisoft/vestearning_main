@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Investment Plan Invitation</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      .header {
+        text-align: center;
+        padding: 20px 0;
+        background-color: #f8f9fa;
+        border-radius: 5px;
+        margin-bottom: 20px;
+      }
+      .logo {
+        max-width: 150px;
+        margin-bottom: 15px;
+      }
+      .content {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+      .plan-details {
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 5px;
+        margin: 20px 0;
+      }
+      .plan-details table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .plan-details td {
+        padding: 8px 0;
+        border-bottom: 1px solid #ddd;
+      }
+      .plan-details td:first-child {
+        font-weight: bold;
+        width: 40%;
+      }
+      .cta-button {
+        display: inline-block;
+        background-color: #4caf50;
+        color: white !important;
+        text-decoration: none;
+        padding: 12px 25px;
+        border-radius: 5px;
+        font-weight: bold;
+        margin-top: 20px;
+      }
+      .footer {
+        text-align: center;
+        margin-top: 30px;
+        font-size: 12px;
+        color: #777;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h2>Special Investment Opportunity</h2>
+    </div>
+
+    <div class="content">
+      <p>Hello <%= userName %>,</p>
+
+      <p>
+        We hope this email finds you well. As a valued member of our platform,
+        we're excited to share a special investment opportunity that we believe
+        would be a great fit for your investment portfolio.
+      </p>
+
+      <div class="plan-details">
+        <h3><%= planName %></h3>
+        <table>
+          <tr>
+            <td>Plan Type:</td>
+            <td><%= planType %></td>
+          </tr>
+          <tr>
+            <td>Investment Range:</td>
+            <td><%= minAmount %> - <%= maxAmount %></td>
+          </tr>
+          <tr>
+            <td>ROI:</td>
+            <td><%= roi %>%</td>
+          </tr>
+          <tr>
+            <td>Duration:</td>
+            <td><%= duration %></td>
+          </tr>
+        </table>
+      </div>
+
+      <p>
+        This exclusive plan offers competitive returns and is available for a
+        limited time. We've selected you based on your previous investment
+        activities and believe this opportunity aligns with your financial
+        goals.
+      </p>
+
+      <p>
+        To learn more about this plan or to start investing, simply click the
+        button below:
+      </p>
+
+      <div style="text-align: center">
+        <a href="<%= planUrl %>" class="cta-button">View Plan Details</a>
+      </div>
+
+      <p>
+        If you have any questions about this investment opportunity, please
+        don't hesitate to contact our support team.
+      </p>
+
+      <p>Thank you for your continued trust in our platform.</p>
+
+      <p>
+        Best regards,<br />
+        The ExNestrade Team
+      </p>
+    </div>
+
+    <div class="footer">
+      <p>
+        This email was sent to you because you're a registered user on our
+        platform. If you believe this was sent in error, please contact support.
+      </p>
+      <p>
+        &copy; <%= new Date().getFullYear() %> ExNestrade. All rights reserved.
+      </p>
+    </div>
+  </body>
+</html>

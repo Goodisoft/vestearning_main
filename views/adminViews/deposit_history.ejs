@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="zxx" class="js">
+  <head>
+    <!-- ========Headers meta======== -->
+    <%- include('../snippets/adminSnippets/header_meta.ejs') %>
+
+    <title>EXNESTRADE | Investment Deposit History</title>
+  </head>
+  <body class="nk-body bg-lighter npc-general has-sidebar">
+    <div class="nk-app-root">
+      <div class="nk-main">
+        <!-- ==========Sidebar======= -->
+        <%- include('../snippets/adminSnippets/sidebar.ejs') %>
+
+        <div class="nk-wrap">
+          <!-- ============Navbar======== -->
+          <%- include('../snippets/adminSnippets/navbar.ejs') %>
+
+          <div class="nk-content">
+            <div class="container-fluid">
+              <div class="nk-content-inner">
+                <div class="nk-content-body">
+                  <div class="nk-block-head nk-block-head-sm">
+                    <div class="nk-block-between g-3">
+                      <div class="nk-block-head-content">
+                        <h5 class="nk-block-title page-title">
+                          Investment History
+                        </h5>
+                        <div class="nk-block-des text-soft">
+                          <p>
+                            You have total <%= investments ? investments.length
+                            : 0 %> investments.
+                          </p>
+                        </div>
+                      </div>
+                      <div class="nk-block-head-content">
+                        <div class="toggle-wrap nk-block-tools-toggle">
+                          <a
+                            href="#"
+                            class="btn btn-icon btn-trigger toggle-expand me-n1"
+                            data-target="pageMenu"
+                            ><em class="icon ni ni-menu-alt-r"></em
+                          ></a>
+                          <div
+                            class="toggle-expand-content"
+                            data-content="pageMenu"
+                          >
+                            <ul class="nk-block-tools g-3">
+                              <li class="nk-block-tools-opt">
+                                <div class="drodown">
+                                  <a
+                                    href="#"
+                                    class="dropdown-toggle btn btn-icon btn-primary"
+                                    data-bs-toggle="dropdown"
+                                    ><em class="icon ni ni-plus"></em
+                                  ></a>
+                                  <div class="dropdown-menu dropdown-menu-end">
+                                    <ul class="link-list-opt no-bdr">
+                                      <li>
+                                        <a
+                                          href="#addTranxModal"
+                                          data-bs-toggle="modal"
+                                          ><span>Add New Transaction</span></a
+                                        >
+                                      </li>
+                                      <li>
+                                        <a href="#"
+                                          ><span>Import Transactions</span></a
+                                        >
+                                      </li>
+                                    </ul>
+                                  </div>
+                                </div>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="nk-block">
+                    <div class="card card-bordered card-stretch">
+                      <div class="card-inner-group">
+                        <div class="card-inner">
+                          <div class="card-title-group">
+                            <div class="card-title">
+                              <h5 class="title">All Investments</h5>
+                            </div>
+                            <div class="card-tools me-n1">
+                              <ul class="btn-toolbar gx-1">
+                                <li>
+                                  <a
+                                    href="#"
+                                    class="search-toggle toggle-search btn btn-icon"
+                                    data-target="search"
+                                    ><em class="icon ni ni-search"></em
+                                  ></a>
+                                </li>
+                                <li class="btn-toolbar-sep"></li>
+                                <li>
+                                  <div class="dropdown">
+                                    <a
+                                      href="#"
+                                      class="btn btn-trigger btn-icon dropdown-toggle"
+                                      data-bs-toggle="dropdown"
+                                    >
+                                      <em class="icon ni ni-filter-alt"></em>
+                                    </a>
+                                    <div
+                                      class="filter-wg dropdown-menu dropdown-menu-xl dropdown-menu-end"
+                                    >
+                                      <div class="dropdown-head">
+                                        <span class="sub-title dropdown-title"
+                                          >Filter Investments</span
+                                        >
+                                        <div class="dropdown">
+                                          <a href="#" class="link link-light"
+                                            ><em class="icon ni ni-more-h"></em
+                                          ></a>
+                                        </div>
+                                      </div>
+                                      <div
+                                        class="dropdown-body dropdown-body-rg"
+                                      >
+                                        <div class="row gx-6 gy-4">
+                                          <div class="col-6">
+                                            <div class="form-group">
+                                              <label
+                                                class="overline-title overline-title-alt"
+                                                >Status</label
+                                              >
+                                              <select
+                                                class="form-select js-select2"
+                                                id="filterStatus"
+                                              >
+                                                <option value="any">
+                                                  Any Status
+                                                </option>
+                                                <option value="pending">
+                                                  Pending
+                                                </option>
+                                                <option value="active">
+                                                  Active
+                                                </option>
+                                                <option value="completed">
+                                                  Completed
+                                                </option>
+                                                <option value="cancelled">
+                                                  Cancelled
+                                                </option>
+                                              </select>
+                                            </div>
+                                          </div>
+                                          <div class="col-6">
+                                            <div class="form-group">
+                                              <label
+                                                class="overline-title overline-title-alt"
+                                                >Date Range</label
+                                              >
+                                              <div class="form-control-wrap">
+                                                <div
+                                                  class="form-icon form-icon-left"
+                                                >
+                                                  <em
+                                                    class="icon ni ni-calendar"
+                                                  ></em>
+                                                </div>
+                                                <input
+                                                  type="text"
+                                                  class="form-control date-picker"
+                                                  id="filterDateRange"
+                                                  data-date-format="yyyy-mm-dd"
+                                                  placeholder="Start date - End date"
+                                                />
+                                              </div>
+                                            </div>
+                                          </div>
+                                          <div class="col-12">
+                                            <div class="form-group">
+                                              <button
+                                                type="button"
+                                                class="btn btn-secondary"
+                                                id="applyFilter"
+                                              >
+                                                Filter
+                                              </button>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="dropdown-foot between">
+                                        <a
+                                          class="clickable"
+                                          href="#"
+                                          id="resetFilter"
+                                          >Reset Filter</a
+                                        >
+                                        <a href="#">Save Filter</a>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </li>
+                                <li>
+                                  <div class="dropdown">
+                                    <a
+                                      href="#"
+                                      class="btn btn-trigger btn-icon dropdown-toggle"
+                                      data-bs-toggle="dropdown"
+                                      ><em class="icon ni ni-setting"></em
+                                    ></a>
+                                    <div
+                                      class="dropdown-menu dropdown-menu-xs dropdown-menu-end"
+                                    >
+                                      <ul class="link-check">
+                                        <li>
+                                          <span>Show</span>
+                                        </li>
+                                        <li class="active">
+                                          <a href="?limit=10">10</a>
+                                        </li>
+                                        <li>
+                                          <a href="?limit=20">20</a>
+                                        </li>
+                                        <li>
+                                          <a href="?limit=50">50</a>
+                                        </li>
+                                      </ul>
+                                      <ul class="link-check">
+                                        <li>
+                                          <span>Order</span>
+                                        </li>
+                                        <li class="active">
+                                          <a href="?sortOrder=desc">DESC</a>
+                                        </li>
+                                        <li>
+                                          <a href="?sortOrder=asc">ASC</a>
+                                        </li>
+                                      </ul>
+                                    </div>
+                                  </div>
+                                </li>
+                              </ul>
+                            </div>
+                            <div
+                              class="card-search search-wrap"
+                              data-search="search"
+                            >
+                              <div class="search-content">
+                                <a
+                                  href="#"
+                                  class="search-back btn btn-icon toggle-search"
+                                  data-target="search"
+                                  ><em class="icon ni ni-arrow-left"></em
+                                ></a>
+                                <input
+                                  type="text"
+                                  class="form-control border-transparent form-focus-none"
+                                  placeholder="Quick search by user or plan"
+                                  id="searchInput"
+                                />
+                                <button
+                                  class="search-submit btn btn-icon"
+                                  id="searchButton"
+                                >
+                                  <em class="icon ni ni-search"></em>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="card-inner p-0">
+                          <div class="nk-tb-list nk-tb-tnx">
+                            <div class="nk-tb-item nk-tb-head">
+                              <div class="nk-tb-col"><span>Details</span></div>
+                              <div class="nk-tb-col tb-col-xxl">
+                                <span>User</span>
+                              </div>
+                              <div class="nk-tb-col tb-col-lg">
+                                <span>Plan</span>
+                              </div>
+                              <div class="nk-tb-col text-end">
+                                <span>Amount</span>
+                              </div>
+                              <div class="nk-tb-col nk-tb-col-tools"></div>
+                            </div>
+
+                            <% if (investments && investments.length > 0) { %>
+                            <% investments.forEach(investment => { %>
+                            <div
+                              class="nk-tb-item"
+                              data-investment-id="<%= investment._id %>"
+                            >
+                              <div class="nk-tb-col">
+                                <div class="nk-tnx-type">
+                                  <div
+                                    class="nk-tnx-type-icon bg-<%= investment.status === 'pending' ? 'warning' : investment.status === 'active' ? 'success' : investment.status === 'completed' ? 'info' : 'danger' %>-dim text-<%= investment.status === 'pending' ? 'warning' : investment.status === 'active' ? 'success' : investment.status === 'completed' ? 'info' : 'danger' %>"
+                                  >
+                                    <em
+                                      class="icon ni ni-<%= investment.status === 'pending' ? 'clock' : investment.status === 'active' ? 'invest' : investment.status === 'completed' ? 'check-circle' : 'cross-circle' %>"
+                                    ></em>
+                                  </div>
+                                  <div class="nk-tnx-type-text">
+                                    <span class="tb-lead"
+                                      ><%=
+                                      investment.status.charAt(0).toUpperCase()
+                                      + investment.status.slice(1) %>
+                                      Investment</span
+                                    >
+                                    <span class="tb-date"
+                                      ><%= new
+                                      Date(investment.createdAt).toLocaleDateString()
+                                      %></span
+                                    >
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="nk-tb-col tb-col-xxl">
+                                <span class="tb-lead-sub"
+                                  ><%= investment.userId?.fullName || 'User'
+                                  %></span
+                                >
+                                <span class="tb-sub"
+                                  ><%= investment.userId?.email || 'No email'
+                                  %></span
+                                >
+                              </div>
+                              <div class="nk-tb-col tb-col-lg">
+                                <span class="tb-lead-sub">
+                                  <%= investment.planId?.name || 'Investment Plan' %>
+                                </span>
+                                <span
+                                  class="badge badge-dot bg-<%= investment.status === 'pending' ? 'warning' : investment.status === 'active' ? 'success' : investment.status === 'completed' ? 'info' : 'danger' %>"
+                                  ><%= investment.status.charAt(0).toUpperCase()
+                                  + investment.status.slice(1) %></span
+                                >
+                              </div>
+                              <div class="nk-tb-col text-end">
+                                <span class="tb-amount">
+                                  <%= investment.amount.toFixed(2) %>
+                                  <span>USD</span>
+                                </span>
+                                <span class="tb-amount-sm">
+                                  ROI: <%= (investment.earningRate *
+                                  100).toFixed(1) %>% / <%= investment.duration
+                                  %> <%= investment.durationUnit %><%=
+                                  investment.duration > 1 ? 's' : '' %>
+                                </span>
+                              </div>
+                              <div class="nk-tb-col nk-tb-col-tools">
+                                <ul class="nk-tb-actions gx-2">
+                                  <li class="nk-tb-action-hidden">
+                                    <a
+                                      href="#investmentDetails"
+                                      data-bs-toggle="modal"
+                                      class="bg-white btn btn-sm btn-outline-light btn-icon btn-show-details"
+                                      title="Details"
+                                      data-id="<%= investment._id %>"
+                                    >
+                                      <em class="icon ni ni-eye"></em>
+                                    </a>
+                                  </li>
+                                  <% if (investment.status === 'pending') { %>
+                                  <li class="nk-tb-action-hidden">
+                                    <a
+                                      href="#"
+                                      class="bg-white btn btn-sm btn-outline-light btn-icon btn-confirm-investment"
+                                      data-bs-toggle="tooltip"
+                                      data-bs-placement="top"
+                                      title="Approve"
+                                      data-id="<%= investment._id %>"
+                                    >
+                                      <em class="icon ni ni-done"></em>
+                                    </a>
+                                  </li>
+                                  <li class="nk-tb-action-hidden">
+                                    <a
+                                      href="#"
+                                      class="bg-white btn btn-sm btn-outline-light btn-icon btn-edit-investment"
+                                      data-bs-toggle="modal"
+                                      data-bs-target="#editInvestmentModal"
+                                      title="Edit"
+                                      data-id="<%= investment._id %>"
+                                    >
+                                      <em class="icon ni ni-edit"></em>
+                                    </a>
+                                  </li>
+                                  <% } %>
+                                  <li>
+                                    <div class="dropdown">
+                                      <a
+                                        href="#"
+                                        class="dropdown-toggle bg-white btn btn-sm btn-outline-light btn-icon"
+                                        data-bs-toggle="dropdown"
+                                      >
+                                        <em class="icon ni ni-more-h"></em>
+                                      </a>
+                                      <div
+                                        class="dropdown-menu dropdown-menu-end"
+                                      >
+                                        <ul class="link-list-opt">
+                                          <li>
+                                            <a
+                                              href="#investmentDetails"
+                                              class="btn-show-details"
+                                              data-bs-toggle="modal"
+                                              data-id="<%= investment._id %>"
+                                            >
+                                              <em class="icon ni ni-eye"></em>
+                                              <span>View Details</span>
+                                            </a>
+                                          </li>
+                                          <% if (investment.status ===
+                                          'pending') { %>
+                                          <li>
+                                            <a
+                                              href="#"
+                                              class="btn-confirm-investment"
+                                              data-id="<%= investment._id %>"
+                                            >
+                                              <em class="icon ni ni-done"></em>
+                                              <span>Approve</span>
+                                            </a>
+                                          </li>
+                                          <li>
+                                            <a
+                                              href="#"
+                                              class="btn-cancel-investment"
+                                              data-id="<%= investment._id %>"
+                                            >
+                                              <em
+                                                class="icon ni ni-cross-round"
+                                              ></em>
+                                              <span>Reject</span>
+                                            </a>
+                                          </li>
+                                          <li>
+                                            <a
+                                              href="#"
+                                              class="btn-edit-investment"
+                                              data-bs-toggle="modal"
+                                              data-bs-target="#editInvestmentModal"
+                                              data-id="<%= investment._id %>"
+                                            >
+                                              <em class="icon ni ni-edit"></em>
+                                              <span>Edit</span>
+                                            </a>
+                                          </li>
+                                          <% } %>
+                                        </ul>
+                                      </div>
+                                    </div>
+                                  </li>
+                                </ul>
+                              </div>
+                            </div>
+                            <% }); %> <% } else { %>
+                            <div class="nk-tb-item">
+                              <div class="nk-tb-col" colspan="5">
+                                <div class="text-center">
+                                  <p>No investments found</p>
+                                </div>
+                              </div>
+                            </div>
+                            <% } %>
+                          </div>
+                        </div>
+
+                        <% if (pagination && pagination.pages > 1) { %>
+                        <div class="card-inner">
+                          <ul
+                            class="pagination justify-content-center justify-content-md-start"
+                          >
+                            <% if (pagination.page > 1) { %>
+                            <li class="page-item">
+                              <a
+                                class="page-link"
+                                href="?page=<%= pagination.page - 1 %>"
+                                >Prev</a
+                              >
+                            </li>
+                            <% } %> <% for (let i = 1; i <= pagination.pages;
+                            i++) { %> <% if (i === pagination.page) { %>
+                            <li class="page-item active">
+                              <a class="page-link" href="?page=<%= i %>"
+                                ><%= i %></a
+                              >
+                            </li>
+                            <% } else if (i <= 2 || i >= pagination.pages - 1 ||
+                            Math.abs(i - pagination.page) <= 1) { %>
+                            <li class="page-item">
+                              <a class="page-link" href="?page=<%= i %>"
+                                ><%= i %></a
+                              >
+                            </li>
+                            <% } else if (i === 3 && pagination.page > 4) { %>
+                            <li class="page-item">
+                              <span class="page-link">
+                                <em class="icon ni ni-more-h"></em>
+                              </span>
+                            </li>
+                            <% } %> <% } %> <% if (pagination.page <
+                            pagination.pages) { %>
+                            <li class="page-item">
+                              <a
+                                class="page-link"
+                                href="?page=<%= pagination.page + 1 %>"
+                                >Next</a
+                              >
+                            </li>
+                            <% } %>
+                          </ul>
+                        </div>
+                        <% } %>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Investment details modal -->
+          <div class="modal fade" tabindex="-1" id="investmentDetails">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <a
+                  href="#"
+                  class="close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                >
+                  <em class="icon ni ni-cross"></em>
+                </a>
+                <div class="modal-body modal-body-md">
+                  <div class="nk-modal-head mb-2 mb-sm-5">
+                    <h4 class="nk-modal-title title">
+                      Investment Details
+                      <small class="text-primary investment-id"></small>
+                    </h4>
+                  </div>
+                  <div class="nk-tnx-details">
+                    <div class="nk-block-between flex-wrap g-3">
+                      <div class="nk-tnx-type">
+                        <div
+                          class="nk-tnx-type-icon bg-success-dim text-success investment-icon"
+                        >
+                          <em class="icon ni ni-invest"></em>
+                        </div>
+                        <div class="nk-tnx-type-text">
+                          <h5 class="title investment-amount"></h5>
+                          <span class="sub-text mt-n1 investment-date"></span>
+                        </div>
+                      </div>
+                      <div class="align-center flex-wrap gx-3">
+                        <span class="badge bg-success investment-status"
+                          >Active</span
+                        >
+                      </div>
+                    </div>
+                    <hr />
+                    <div class="row gy-3">
+                      <div class="col-lg-6">
+                        <span class="sub-text">Investor</span>
+                        <span class="caption-text investor-name"></span>
+                      </div>
+                      <div class="col-lg-6">
+                        <span class="sub-text">Email</span>
+                        <span class="caption-text investor-email"></span>
+                      </div>
+                      <div class="col-lg-6">
+                        <span class="sub-text">Investment Plan</span>
+                        <span class="caption-text fw-bold plan-name"></span>
+                      </div>
+                      <div class="col-lg-6">
+                        <span class="sub-text">Amount</span>
+                        <span
+                          class="caption-text fw-bold investment-amount-detail"
+                        ></span>
+                      </div>
+                      <div class="col-lg-6">
+                        <span class="sub-text">ROI</span>
+                        <span class="caption-text investment-roi"></span>
+                      </div>
+                      <div class="col-lg-6">
+                        <span class="sub-text">Duration</span>
+                        <span class="caption-text investment-duration"></span>
+                      </div>
+                      <div class="col-lg-6 investment-dates-section">
+                        <span class="sub-text">Start Date</span>
+                        <span class="caption-text investment-start-date"></span>
+                      </div>
+                      <div class="col-lg-6 investment-dates-section">
+                        <span class="sub-text">End Date</span>
+                        <span class="caption-text investment-end-date"></span>
+                      </div>
+                      <div class="col-lg-6 investment-dates-section">
+                        <span class="sub-text">Expected Return</span>
+                        <span class="caption-text investment-return"></span>
+                      </div>
+                      <div class="col-lg-6 investment-dates-section">
+                        <span class="sub-text">Progress</span>
+                        <div class="progress">
+                          <div
+                            class="progress-bar progress-bar-striped bg-success investment-progress"
+                            role="progressbar"
+                            style="width: 0%"
+                            aria-valuenow="0"
+                            aria-valuemin="0"
+                            aria-valuemax="100"
+                          ></div>
+                        </div>
+                      </div>
+                    </div>
+                    <hr />
+                    <div
+                      class="nk-modal-head mt-sm-5 mb-4 pending-actions-section"
+                    >
+                      <h5 class="title">Investment Actions</h5>
+                    </div>
+                    <div class="row gy-3 pending-actions-section">
+                      <div class="col-12 text-center mt-4">
+                        <button class="btn btn-primary mx-1 btn-confirm-modal">
+                          Confirm Investment
+                        </button>
+                        <button
+                          class="btn btn-warning mx-1 btn-edit-modal"
+                          data-bs-toggle="modal"
+                          data-bs-target="#editInvestmentModal"
+                        >
+                          Edit Details
+                        </button>
+                        <button class="btn btn-danger mx-1 btn-cancel-modal">
+                          Reject Investment
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Edit Investment Modal -->
+          <div class="modal fade" tabindex="-1" id="editInvestmentModal">
+            <div class="modal-dialog modal-md" role="document">
+              <div class="modal-content">
+                <a
+                  href="#"
+                  class="close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                >
+                  <em class="icon ni ni-cross"></em>
+                </a>
+                <div class="modal-body modal-body-md">
+                  <h4 class="title nk-modal-title mb-3">
+                    Edit Investment Details
+                  </h4>
+
+                  <form id="editInvestmentForm">
+                    <input type="hidden" id="edit-investment-id" />
+                    <div class="row gy-3">
+                      <div class="col-lg-6">
+                        <label>
+                          Amount <span class="text-danger">*</span>
+                        </label>
+                        <div class="form-control-wrap">
+                          <div class="form-text-hint">
+                            <span class="overline-title">USD</span>
+                          </div>
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="edit-amount"
+                            name="amount"
+                            required
+                          />
+                        </div>
+                      </div>
+
+                      <div class="col-lg-6">
+                        <label>
+                          ROI Percentage <span class="text-danger">*</span>
+                        </label>
+                        <div class="form-control-wrap">
+                          <div class="form-text-hint">
+                            <span class="overline-title">%</span>
+                          </div>
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="edit-earning-rate"
+                            name="earningRate"
+                            step="0.1"
+                            required
+                          />
+                        </div>
+                      </div>
+
+                      <div class="col-lg-6">
+                        <label>
+                          Duration <span class="text-danger">*</span>
+                        </label>
+                        <div class="form-control-wrap">
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="edit-duration"
+                            name="duration"
+                            min="1"
+                            required
+                          />
+                        </div>
+                      </div>
+
+                      <div class="col-lg-6">
+                        <label>
+                          Duration Unit <span class="text-danger">*</span>
+                        </label>
+                        <div class="form-control-wrap">
+                          <select
+                            name="durationUnit"
+                            id="edit-duration-unit"
+                            class="form-control form-select js-select2"
+                            required
+                          >
+                            <option value="hour">Hour</option>
+                            <option value="day" selected>Day</option>
+                            <option value="week">Week</option>
+                            <option value="month">Month</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-12">
+                        <button type="submit" class="btn btn-primary">
+                          Update Investment
+                        </button>
+                        <button
+                          type="button"
+                          class="btn btn-light"
+                          data-bs-dismiss="modal"
+                          aria-label="Close"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Confirmation Modal -->
+          <div class="modal fade" tabindex="-1" id="confirmationModal">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-body modal-body-lg text-center">
+                  <div class="nk-modal">
+                    <em
+                      class="nk-modal-icon icon icon-circle icon-circle-xxl ni ni-check bg-success"
+                    ></em>
+                    <h4 class="nk-modal-title">Confirmation Required</h4>
+                    <div class="nk-modal-text">
+                      <p class="lead confirmation-message">
+                        Are you sure you want to confirm this investment?
+                      </p>
+                      <p class="text-danger confirmation-warning">
+                        This action cannot be reversed once confirmed.
+                      </p>
+                    </div>
+                    <div class="nk-modal-action mt-4">
+                      <button
+                        class="btn btn-lg btn-mw btn-primary"
+                        id="confirmation-action-btn"
+                      >
+                        Confirm
+                      </button>
+                      <button
+                        data-bs-dismiss="modal"
+                        class="btn btn-lg btn-mw btn-light"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Rejection Modal -->
+          <div class="modal fade" tabindex="-1" id="rejectionModal">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Reject Investment</h5>
+                  <a
+                    href="#"
+                    class="close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  >
+                    <em class="icon ni ni-cross"></em>
+                  </a>
+                </div>
+                <div class="modal-body">
+                  <form id="rejectionForm">
+                    <div class="form-group">
+                      <label class="form-label"
+                        >Reason for rejection (optional)</label
+                      >
+                      <div class="form-control-wrap">
+                        <textarea
+                          class="form-control"
+                          id="rejection-reason"
+                          placeholder="Enter the reason for rejecting this investment"
+                        ></textarea>
+                      </div>
+                    </div>
+                    <div class="form-group mt-3">
+                      <button type="submit" class="btn btn-danger">
+                        Reject Investment
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-light"
+                        data-bs-dismiss="modal"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ========Footer========== -->
+          <%- include('../snippets/adminSnippets/footer.ejs') %>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================Scripts========== -->
+    <%- include('../snippets/adminSnippets/scripts.ejs') %>
+    <script src="/apiClient/transactionClient.js"></script>
+
+    <script>
+      $(document).ready(function () {
+        let currentInvestmentId = null;
+
+        // Initialize tooltips and select2
+        $('[data-bs-toggle="tooltip"]').tooltip();
+        $(".js-select2").select2({
+          dropdownParent: $("#editInvestmentModal"),
+        });
+
+        // Initialize date picker
+        $(".date-picker").datepicker({
+          format: "yyyy-mm-dd",
+          autoclose: true,
+          todayHighlight: true,
+        });
+
+        // Show investment details
+        $(".btn-show-details").on("click", function () {
+          const investmentId = $(this).data("id");
+          currentInvestmentId = investmentId;
+
+          // Fetch investment details
+          TransactionClient.getInvestmentDetails(investmentId)
+            .then((response) => {
+              if (response.success) {
+                const investment = response.investment;
+                const user = investment.userId;
+                const plan = investment.planId;
+
+                // Populate modal data
+                $(".investment-id").text("#" + investmentId);
+                $(".investment-amount").text(
+                  "$" + investment.amount.toFixed(2)
+                );
+
+                // Set status-specific classes and elements
+                const statusClass =
+                  investment.status === "pending"
+                    ? "warning"
+                    : investment.status === "active"
+                    ? "success"
+                    : investment.status === "completed"
+                    ? "info"
+                    : "danger";
+
+                const statusIcon =
+                  investment.status === "pending"
+                    ? "clock"
+                    : investment.status === "active"
+                    ? "invest"
+                    : investment.status === "completed"
+                    ? "check-circle"
+                    : "cross-circle";
+
+                // Update status badge and icon
+                $(".investment-status")
+                  .removeClass("bg-success bg-warning bg-info bg-danger")
+                  .addClass("bg-" + statusClass)
+                  .text(
+                    investment.status.charAt(0).toUpperCase() +
+                      investment.status.slice(1)
+                  );
+
+                $(".investment-icon")
+                  .removeClass(
+                    "bg-success-dim bg-warning-dim bg-info-dim bg-danger-dim text-success text-warning text-info text-danger"
+                  )
+                  .addClass("bg-" + statusClass + "-dim text-" + statusClass)
+                  .html(`<em class="icon ni ni-${statusIcon}"></em>`);
+
+                // Show/hide date fields based on status
+                if (investment.status === "pending") {
+                  $(".investment-date").text(
+                    new Date(investment.createdAt).toLocaleString()
+                  );
+                  $(".investment-dates-section").hide();
+                  $(".pending-actions-section").show();
+                } else {
+                  $(".investment-date").text(
+                    new Date(investment.startDate).toLocaleString() +
+                      " to " +
+                      new Date(investment.endDate).toLocaleString()
+                  );
+                  $(".investment-dates-section").show();
+                  $(".pending-actions-section").hide();
+
+                  // Show dates and calculate progress
+                  $(".investment-start-date").text(
+                    new Date(investment.startDate).toLocaleDateString()
+                  );
+                  $(".investment-end-date").text(
+                    new Date(investment.endDate).toLocaleDateString()
+                  );
+
+                  // Calculate expected returns
+                  const expectedReturn =
+                    investment.amount * (1 + investment.earningRate);
+                  $(".investment-return").text("$" + expectedReturn.toFixed(2));
+
+                  // Calculate progress percentage for active investments
+                  if (investment.status === "active") {
+                    const startDate = new Date(investment.startDate).getTime();
+                    const endDate = new Date(investment.endDate).getTime();
+                    const currentDate = new Date().getTime();
+
+                    let progressPercentage = Math.round(
+                      ((currentDate - startDate) / (endDate - startDate)) * 100
+                    );
+                    progressPercentage = Math.max(
+                      0,
+                      Math.min(100, progressPercentage)
+                    ); // Ensure between 0-100
+
+                    $(".investment-progress").css(
+                      "width",
+                      progressPercentage + "%"
+                    );
+                    $(".investment-progress").attr(
+                      "aria-valuenow",
+                      progressPercentage
+                    );
+                  } else if (investment.status === "completed") {
+                    $(".investment-progress").css("width", "100%");
+                    $(".investment-progress").attr("aria-valuenow", 100);
+                  }
+                }
+
+                // Fill in common fields
+                $(".investor-name").text(user?.fullName || "Unknown");
+                $(".investor-email").text(user?.email || "Unknown");
+                $(".plan-name").text(plan?.name || "Unknown Plan");
+                $(".investment-amount-detail").text(
+                  "$" + investment.amount.toFixed(2)
+                );
+                $(".investment-roi").text(
+                  (investment.earningRate * 100).toFixed(1) + "%"
+                );
+                $(".investment-duration").text(
+                  investment.duration +
+                    " " +
+                    investment.durationUnit +
+                    (investment.duration > 1 ? "s" : "")
+                );
+              } else {
+                toastr.error("Failed to load investment details");
+              }
+            })
+            .catch((err) => {
+              console.error("Error:", err);
+              toastr.error(
+                "An error occurred while fetching investment details"
+              );
+            });
+        });
+
+        // Edit investment - load data into form
+        $(".btn-edit-investment, .btn-edit-modal").on("click", function () {
+          const investmentId = $(this).hasClass("btn-edit-modal")
+            ? currentInvestmentId
+            : $(this).data("id");
+          $("#edit-investment-id").val(investmentId);
+
+          if (!investmentId) {
+            toastr.error("No investment selected");
+            return;
+          }
+
+          TransactionClient.getInvestmentDetails(investmentId)
+            .then((response) => {
+              if (response.success) {
+                const investment = response.investment;
+
+                if (investment.status !== "pending") {
+                  toastr.error("Only pending investments can be edited");
+                  return;
+                }
+
+                // Populate form
+                $("#edit-amount").val(investment.amount);
+                $("#edit-earning-rate").val(
+                  (investment.earningRate * 100).toFixed(1)
+                );
+                $("#edit-duration").val(investment.duration);
+                $("#edit-duration-unit")
+                  .val(investment.durationUnit)
+                  .trigger("change");
+              } else {
+                toastr.error("Failed to load investment details");
+              }
+            })
+            .catch((err) => {
+              console.error("Error:", err);
+              toastr.error(
+                "An error occurred while fetching investment details"
+              );
+            });
+        });
+
+        // Submit edit investment form
+        $("#editInvestmentForm").on("submit", function (e) {
+          e.preventDefault();
+
+          const investmentId = $("#edit-investment-id").val();
+          const updateData = {
+            amount: $("#edit-amount").val(),
+            earningRate: $("#edit-earning-rate").val(),
+            duration: $("#edit-duration").val(),
+            durationUnit: $("#edit-duration-unit").val(),
+          };
+
+          TransactionClient.updateInvestmentDetails(investmentId, updateData)
+            .then((response) => {
+              if (response.success) {
+                $("#editInvestmentModal").modal("hide");
+                toastr.success("Investment updated successfully");
+                // Refresh the page after a short delay
+                setTimeout(() => window.location.reload(), 1500);
+              } else {
+                toastr.error(response.message || "Failed to update investment");
+              }
+            })
+            .catch((err) => {
+              console.error("Error:", err);
+              toastr.error("An error occurred while updating the investment");
+            });
+        });
+
+        // Handle confirm investment buttons
+        $(".btn-confirm-investment, .btn-confirm-modal").on(
+          "click",
+          function () {
+            const investmentId = $(this).hasClass("btn-confirm-modal")
+              ? currentInvestmentId
+              : $(this).data("id");
+
+            if (!investmentId) {
+              toastr.error("No investment selected");
+              return;
+            }
+
+            currentInvestmentId = investmentId;
+
+            // Show confirmation modal
+            $(".confirmation-message").text(
+              "Are you sure you want to confirm this investment?"
+            );
+            $("#confirmation-action-btn").data("action", "confirm");
+            $("#confirmationModal").modal("show");
+          }
+        );
+
+        // Handle cancel investment buttons
+        $(".btn-cancel-investment, .btn-cancel-modal").on("click", function () {
+          const investmentId = $(this).hasClass("btn-cancel-modal")
+            ? currentInvestmentId
+            : $(this).data("id");
+
+          if (!investmentId) {
+            toastr.error("No investment selected");
+            return;
+          }
+
+          currentInvestmentId = investmentId;
+
+          // Show rejection modal
+          $("#rejectionModal").modal("show");
+        });
+
+        // Handle confirmation actions
+        $("#confirmation-action-btn").on("click", function () {
+          const action = $(this).data("action");
+
+          if (action === "confirm" && currentInvestmentId) {
+            // Confirm investment
+            TransactionClient.confirmInvestment(currentInvestmentId)
+              .then((response) => {
+                if (response.success) {
+                  $("#confirmationModal").modal("hide");
+                  $("#investmentDetails").modal("hide");
+                  toastr.success("Investment confirmed successfully");
+                  // Refresh the page after a short delay
+                  setTimeout(() => window.location.reload(), 1500);
+                } else {
+                  toastr.error(
+                    response.message || "Failed to confirm investment"
+                  );
+                }
+              })
+              .catch((err) => {
+                console.error("Error:", err);
+                toastr.error(
+                  "An error occurred while confirming the investment"
+                );
+              });
+          }
+        });
+
+        // Handle rejection form submit
+        $("#rejectionForm").on("submit", function (e) {
+          e.preventDefault();
+
+          if (currentInvestmentId) {
+            const reason = $("#rejection-reason").val();
+
+            // Cancel investment
+            TransactionClient.cancelInvestment(currentInvestmentId, reason)
+              .then((response) => {
+                if (response.success) {
+                  $("#rejectionModal").modal("hide");
+                  $("#investmentDetails").modal("hide");
+                  toastr.success("Investment rejected successfully");
+                  // Refresh the page after a short delay
+                  setTimeout(() => window.location.reload(), 1500);
+                } else {
+                  toastr.error(
+                    response.message || "Failed to reject investment"
+                  );
+                }
+              })
+              .catch((err) => {
+                console.error("Error:", err);
+                toastr.error(
+                  "An error occurred while rejecting the investment"
+                );
+              });
+          }
+        });
+
+        // Filter functionality
+        $("#applyFilter").on("click", function () {
+          const status = $("#filterStatus").val();
+          const dateRange = $("#filterDateRange").val();
+
+          // Build query parameters
+          let queryParams = new URLSearchParams(window.location.search);
+
+          if (status && status !== "any") {
+            queryParams.set("status", status);
+          } else {
+            queryParams.delete("status");
+          }
+
+          if (dateRange) {
+            const dates = dateRange.split(" - ");
+            if (dates.length === 2) {
+              queryParams.set("startDate", dates[0]);
+              queryParams.set("endDate", dates[1]);
+            }
+          }
+
+          // Redirect with filter parameters
+          window.location.href =
+            window.location.pathname + "?" + queryParams.toString();
+        });
+
+        // Reset filter
+        $("#resetFilter").on("click", function () {
+          window.location.href = window.location.pathname;
+        });
+
+        // Search functionality
+        $("#searchButton").on("click", function () {
+          const searchQuery = $("#searchInput").val().trim();
+
+          if (searchQuery) {
+            let queryParams = new URLSearchParams(window.location.search);
+            queryParams.set("search", searchQuery);
+            window.location.href =
+              window.location.pathname + "?" + queryParams.toString();
+          }
+        });
+
+        // Allow search on Enter key
+        $("#searchInput").on("keypress", function (e) {
+          if (e.which === 13) {
+            // Enter key
+            $("#searchButton").click();
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

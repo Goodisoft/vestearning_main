@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="zxx" class="js">
+  <head>
+    <!-- ========Headers meta======== -->
+    <%- include('../snippets/adminSnippets/header_meta.ejs') %>
+
+    <title>EXNESTRADE | Investment Plans</title>
+  </head>
+  <body class="nk-body bg-lighter npc-general has-sidebar">
+    <div class="nk-app-root">
+      <div class="nk-main">
+        <!-- ==========Sidebar======= -->
+        <%- include('../snippets/adminSnippets/sidebar.ejs') %>
+
+        <div class="nk-wrap">
+          <!-- ============Navbar======== -->
+          <%- include('../snippets/adminSnippets/navbar.ejs') %>
+
+          <!-- ============Content======== -->
+          <div class="nk-content nk-content-fluid">
+            <div class="container-xl wide-lg">
+              <div class="nk-content-body">
+                <div class="nk-block-head">
+                  <div class="nk-block-head-content">
+                    <h4 class="nk-block-title fw-normal">Withdraw Funds</h4>
+                    <div class="nk-block-des">
+                      <p>
+                        Withdraw your wallet balance or referral earnings to
+                        your preferred cryptocurrency address.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="nk-block">
+                  <div class="row g-gs">
+                    <!-- Wallet Balance Card -->
+                    <div class="col-lg-6">
+                      <div class="card card-bordered">
+                        <div class="card-inner">
+                          <div class="card-title-group align-start mb-3">
+                            <div class="card-title">
+                              <h6 class="title">Wallet Balance</h6>
+                            </div>
+                          </div>
+                          <div class="card-amount">
+                            <span class="amount"
+                              ><%=
+                              wallet.walletBalance.toLocaleString(undefined, {
+                              minimumFractionDigits: 2, maximumFractionDigits: 8
+                              }) %>
+                              <span class="currency currency-usd"
+                                >USDT</span
+                              ></span
+                            >
+                          </div>
+                          <div class="card-stats">
+                            <div class="card-stats-group g-2">
+                              <div class="card-stats-data">
+                                <div class="title">Total Withdrawal</div>
+                                <div class="amount">
+                                  <%=
+                                  wallet.totalWithdrawal.toLocaleString(undefined,
+                                  { minimumFractionDigits: 2,
+                                  maximumFractionDigits: 8 }) %>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="mt-4">
+                            <% if (user.kycStatus === "not_required" ||
+                            user.kycStatus === "approved") { %>
+                            <button
+                              class="btn btn-primary w-100"
+                              data-bs-toggle="modal"
+                              data-bs-target="#walletWithdrawalModal"
+                            >
+                              Withdraw from Wallet
+                            </button>
+                            <% } else { %>
+                            <button class="btn btn-primary w-100" disabled>
+                              KYC Required for Withdrawal
+                            </button>
+                            <p class="text-muted small mt-2">
+                              Please complete KYC verification to enable
+                              withdrawals
+                            </p>
+                            <% } %>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Referral Balance Card -->
+                    <div class="col-lg-6">
+                      <div class="card card-bordered">
+                        <div class="card-inner">
+                          <div class="card-title-group align-start mb-3">
+                            <div class="card-title">
+                              <h6 class="title">Referral Earnings</h6>
+                            </div>
+                          </div>
+                          <div class="card-amount">
+                            <span class="amount"
+                              ><%=
+                              wallet.referralBalance.toLocaleString(undefined, {
+                              minimumFractionDigits: 2, maximumFractionDigits: 8
+                              }) %>
+                              <span class="currency currency-usd"
+                                >USDT</span
+                              ></span
+                            >
+                          </div>
+                          <div class="card-stats">
+                            <div class="card-stats-group g-2">
+                              <div class="card-stats-data">
+                                <div class="title">Direct Referrals</div>
+                                <div class="amount">
+                                  <%= directReferrals %> / <%= referralNeeded >
+                                  0 ? referralNeeded : 0 %> needed
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="mt-4">
+                            <% if (user.kycStatus === "not_required" ||
+                            user.kycStatus === "approved") { %> <% if
+                            (canWithdrawReferral) { %>
+                            <button
+                              class="btn btn-primary w-100"
+                              data-bs-toggle="modal"
+                              data-bs-target="#referralWithdrawalModal"
+                            >
+                              Withdraw Referral Earnings
+                            </button>
+                            <% } else { %>
+                            <button class="btn btn-primary w-100" disabled>
+                              Need <%= referralNeeded %> Referrals
+                            </button>
+                            <p class="text-muted small mt-2">
+                              You need <%= referralNeeded %> direct referrals to
+                              withdraw referral earnings
+                            </p>
+                            <% } %> <% } else { %>
+                            <button class="btn btn-primary w-100" disabled>
+                              KYC Required for Withdrawal
+                            </button>
+                            <p class="text-muted small mt-2">
+                              Please complete KYC verification to enable
+                              withdrawals
+                            </p>
+                            <% } %>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Saved Wallet Addresses Section -->
+                <div class="nk-block mt-5">
+                  <div class="card card-bordered">
+                    <div class="card-inner">
+                      <div class="card-title-group align-start mb-3">
+                        <div class="card-title">
+                          <h6 class="title">My Wallet Addresses</h6>
+                          <p>
+                            Manage your cryptocurrency wallet addresses for
+                            withdrawals
+                          </p>
+                        </div>
+                        <div class="card-tools">
+                          <button
+                            class="btn btn-sm btn-primary"
+                            data-bs-toggle="modal"
+                            data-bs-target="#addWalletModal"
+                          >
+                            <em class="icon ni ni-plus"></em>
+                            <span>Add New Wallet</span>
+                          </button>
+                        </div>
+                      </div>
+
+                      <% if (savedWallets && savedWallets.length > 0) { %>
+                      <div class="">
+                        <table class="table table-striped table-responsive">
+                          <thead>
+                            <tr>
+                              <th>Currency</th>
+                              <th>Label</th>
+                              <th>Address</th>
+                              <th>Network</th>
+                              <th>Actions</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <% savedWallets.forEach(wallet => { %>
+                            <tr>
+                              <td><%= wallet.currency %></td>
+                              <td><%= wallet.label || wallet.currency %></td>
+                              <td>
+                                <div
+                                  class="text-truncate"
+                                  style="max-width: 200px"
+                                >
+                                  <%= wallet.address %>
+                                </div>
+                              </td>
+                              <td><%= wallet.network || 'Main' %></td>
+                              <td>
+                                <div class="dropdown">
+                                  <a
+                                    href="#"
+                                    class="dropdown-toggle btn btn-icon btn-trigger"
+                                    data-bs-toggle="dropdown"
+                                  >
+                                    <em class="icon ni ni-more-h"></em>
+                                  </a>
+                                  <div class="dropdown-menu dropdown-menu-end">
+                                    <ul class="link-list-opt no-bdr">
+                                      <li>
+                                        <a
+                                          href="#"
+                                          class="use-wallet-address"
+                                          data-currency="<%= wallet.currency %>"
+                                          data-address="<%= wallet.address %>"
+                                        >
+                                          <em
+                                            class="icon ni ni-wallet-out"
+                                          ></em>
+                                          <span>Use for Withdrawal</span>
+                                        </a>
+                                      </li>
+                                      <li>
+                                        <a
+                                          href="#"
+                                          class="edit-wallet-address"
+                                          data-currency="<%= wallet.currency %>"
+                                          data-address="<%= wallet.address %>"
+                                          data-network="<%= wallet.network || 'Main' %>"
+                                          data-label="<%= wallet.label || wallet.currency %>"
+                                        >
+                                          <em class="icon ni ni-edit"></em>
+                                          <span>Edit</span>
+                                        </a>
+                                      </li>
+                                    </ul>
+                                  </div>
+                                </div>
+                              </td>
+                            </tr>
+                            <% }) %>
+                          </tbody>
+                        </table>
+                      </div>
+                      <% } else { %>
+                      <div class="alert alert-info">
+                        <p>
+                          You don't have any saved wallet addresses yet. Click
+                          "Add New Wallet" to add your first wallet address for
+                          withdrawals.
+                        </p>
+                      </div>
+                      <% } %>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Recent Withdrawals Section -->
+                <div class="nk-block mt-5" id="withdrawalHistoryBlock">
+                  <div class="card card-bordered">
+                    <div class="card-inner">
+                      <div class="card-title-group align-start mb-3">
+                        <div class="card-title">
+                          <h6 class="title">Recent Withdrawals</h6>
+                        </div>
+                        <div class="card-tools">
+                          <div class="dropdown">
+                            <a
+                              href="#"
+                              class="btn btn-sm btn-outline-light dropdown-toggle"
+                              data-bs-toggle="dropdown"
+                            >
+                              <span id="currentFilter">All Types</span>
+                              <em class="icon ni ni-caret-down-fill"></em>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end">
+                              <ul class="link-list-opt no-bdr">
+                                <li>
+                                  <a
+                                    href="#"
+                                    class="filter-withdrawals"
+                                    data-type="all"
+                                  >
+                                    <span>All Types</span>
+                                  </a>
+                                </li>
+                                <li>
+                                  <a
+                                    href="#"
+                                    class="filter-withdrawals"
+                                    data-type="wallet"
+                                  >
+                                    <span>Wallet Withdrawals</span>
+                                  </a>
+                                </li>
+                                <li>
+                                  <a
+                                    href="#"
+                                    class="filter-withdrawals"
+                                    data-type="referral"
+                                  >
+                                    <span>Referral Withdrawals</span>
+                                  </a>
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div id="withdrawalHistoryTable">
+                        <!-- Withdrawal history will be loaded here via AJAX -->
+                        <div class="text-center py-4">
+                          <div
+                            class="spinner-border text-primary"
+                            role="status"
+                          >
+                            <span class="visually-hidden">Loading...</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Wallet Withdrawal Modal -->
+          <div class="modal fade" id="walletWithdrawalModal">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Withdraw from Wallet</h5>
+                  <a
+                    href="#"
+                    class="close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  >
+                    <em class="icon ni ni-cross"></em>
+                  </a>
+                </div>
+                <div class="modal-body">
+                  <form id="walletWithdrawalForm">
+                    <div class="form-group">
+                      <label class="form-label" for="walletBalance"
+                        >Available Balance</label
+                      >
+                      <div class="form-control-wrap">
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="walletBalance"
+                          value="<%= wallet.walletBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 8 }) %>"
+                          readonly
+                        />
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label" for="walletWithdrawalAmount"
+                        >Amount to Withdraw</label
+                      >
+                      <div class="form-control-wrap">
+                        <div class="form-text-hint">
+                          <a href="#" id="walletMaxAmount">Max</a>
+                        </div>
+                        <input
+                          type="number"
+                          class="form-control"
+                          id="walletWithdrawalAmount"
+                          name="amount"
+                          placeholder="Enter amount"
+                          step="0.00000001"
+                          min="0.00000001"
+                          required
+                        />
+                      </div>
+                      <div class="form-note">
+                        <% if (user.withdrawalLimit > 0) { %>
+                        <span class="text-info"
+                          >Withdrawal limit: <%= user.withdrawalLimit %></span
+                        >
+                        <% } %>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label" for="walletWithdrawalCurrency"
+                        >Currency</label
+                      >
+                      <div class="form-control-wrap">
+                        <select
+                          class="form-select"
+                          id="walletWithdrawalCurrency"
+                          name="currency"
+                          required
+                        >
+                          <% currencies.forEach(currency => { %>
+                          <option value="<%= currency.symbol %>">
+                            <%= currency.name %> (<%= currency.symbol %>)
+                          </option>
+                          <% }) %>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label" for="walletWithdrawalAddress"
+                        >Wallet Address</label
+                      >
+                      <div class="form-control-wrap">
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="walletWithdrawalAddress"
+                          name="walletAddress"
+                          placeholder="Enter wallet address"
+                          required
+                        />
+                      </div>
+                      <div class="form-note">
+                        <span
+                          >Make sure to enter the correct wallet address for the
+                          selected currency.</span
+                        >
+                      </div>
+                    </div>
+                    <div
+                      class="alert alert-danger d-none"
+                      id="walletWithdrawalError"
+                    ></div>
+                    <div class="form-group">
+                      <button
+                        type="submit"
+                        class="btn btn-primary w-100"
+                        id="walletWithdrawalSubmit"
+                      >
+                        <span>Withdraw Funds</span>
+                        <span
+                          class="spinner-border spinner-border-sm d-none"
+                          id="walletWithdrawalSpinner"
+                          role="status"
+                          aria-hidden="true"
+                        ></span>
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Referral Withdrawal Modal -->
+          <div class="modal fade" id="referralWithdrawalModal">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Withdraw Referral Earnings</h5>
+                  <a
+                    href="#"
+                    class="close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  >
+                    <em class="icon ni ni-cross"></em>
+                  </a>
+                </div>
+                <div class="modal-body">
+                  <form id="referralWithdrawalForm">
+                    <div class="form-group">
+                      <label class="form-label" for="referralBalance"
+                        >Available Referral Balance</label
+                      >
+                      <div class="form-control-wrap">
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="referralBalance"
+                          value="<%= wallet.referralBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 8 }) %>"
+                          readonly
+                        />
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label" for="referralWithdrawalAmount"
+                        >Amount to Withdraw</label
+                      >
+                      <div class="form-control-wrap">
+                        <div class="form-text-hint">
+                          <a href="#" id="referralMaxAmount">Max</a>
+                        </div>
+                        <input
+                          type="number"
+                          class="form-control"
+                          id="referralWithdrawalAmount"
+                          name="amount"
+                          placeholder="Enter amount"
+                          step="0.00000001"
+                          min="0.00000001"
+                          required
+                        />
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label" for="referralWithdrawalCurrency"
+                        >Currency</label
+                      >
+                      <div class="form-control-wrap">
+                        <select
+                          class="form-select"
+                          id="referralWithdrawalCurrency"
+                          name="currency"
+                          required
+                        >
+                          <% currencies.forEach(currency => { %>
+                          <option value="<%= currency.symbol %>">
+                            <%= currency.name %> (<%= currency.symbol %>)
+                          </option>
+                          <% }) %>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label" for="referralWithdrawalAddress"
+                        >Wallet Address</label
+                      >
+                      <div class="form-control-wrap">
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="referralWithdrawalAddress"
+                          name="walletAddress"
+                          placeholder="Enter wallet address"
+                          required
+                        />
+                      </div>
+                      <div class="form-note">
+                        <span
+                          >Make sure to enter the correct wallet address for the
+                          selected currency.</span
+                        >
+                      </div>
+                    </div>
+                    <div
+                      class="alert alert-danger d-none"
+                      id="referralWithdrawalError"
+                    ></div>
+                    <div class="form-group">
+                      <button
+                        type="submit"
+                        class="btn btn-primary w-100"
+                        id="referralWithdrawalSubmit"
+                      >
+                        <span>Withdraw Funds</span>
+                        <span
+                          class="spinner-border spinner-border-sm d-none"
+                          id="referralWithdrawalSpinner"
+                          role="status"
+                          aria-hidden="true"
+                        ></span>
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Add Wallet Modal -->
+          <div class="modal fade" id="addWalletModal">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Add Wallet Address</h5>
+                  <a
+                    href="#"
+                    class="close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  >
+                    <em class="icon ni ni-cross"></em>
+                  </a>
+                </div>
+                <div class="modal-body">
+                  <form id="addWalletForm">
+                    <div class="form-group">
+                      <label class="form-label" for="walletCurrency"
+                        >Currency</label
+                      >
+                      <div class="form-control-wrap">
+                        <select
+                          class="form-select"
+                          id="walletCurrency"
+                          name="currency"
+                          required
+                        >
+                          <% currencies.forEach(currency => { %>
+                          <option value="<%= currency.symbol %>">
+                            <%= currency.name %> (<%= currency.symbol %>)
+                          </option>
+                          <% }) %>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label" for="walletAddress"
+                        >Wallet Address</label
+                      >
+                      <div class="form-control-wrap">
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="walletAddress"
+                          name="address"
+                          placeholder="Enter wallet address"
+                          required
+                        />
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label" for="walletNetwork"
+                        >Network (Optional)</label
+                      >
+                      <div class="form-control-wrap">
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="walletNetwork"
+                          name="network"
+                          placeholder="E.g., Main, BSC, ERC20"
+                        />
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label" for="walletLabel"
+                        >Label (Optional)</label
+                      >
+                      <div class="form-control-wrap">
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="walletLabel"
+                          name="label"
+                          placeholder="E.g., My Binance Wallet"
+                        />
+                      </div>
+                    </div>
+                    <div
+                      class="alert alert-danger d-none"
+                      id="addWalletError"
+                    ></div>
+                    <div class="form-group">
+                      <button
+                        type="submit"
+                        class="btn btn-primary w-100"
+                        id="addWalletSubmit"
+                      >
+                        <span>Save Wallet</span>
+                        <span
+                          class="spinner-border spinner-border-sm d-none"
+                          id="addWalletSpinner"
+                          role="status"
+                          aria-hidden="true"
+                        ></span>
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Withdrawal Details Modal -->
+          <div class="modal fade" id="withdrawalDetailsModal">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Withdrawal Details</h5>
+                  <a
+                    href="#"
+                    class="close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  >
+                    <em class="icon ni ni-cross"></em>
+                  </a>
+                </div>
+                <div class="modal-body">
+                  <div class="nk-block">
+                    <div class="nk-block-head">
+                      <h5 class="title" id="withdrawalDetailId"></h5>
+                      <p class="text-soft" id="withdrawalDetailDate"></p>
+                    </div>
+                    <div class="card card-bordered">
+                      <div class="card-inner">
+                        <div class="row g-3">
+                          <div class="col-lg-6">
+                            <span class="sub-text">Amount</span>
+                            <span
+                              class="lead-text"
+                              id="withdrawalDetailAmount"
+                            ></span>
+                          </div>
+                          <div class="col-lg-6">
+                            <span class="sub-text">Status</span>
+                            <span
+                              class="lead-text"
+                              id="withdrawalDetailStatus"
+                            ></span>
+                          </div>
+                          <div class="col-lg-6">
+                            <span class="sub-text">Type</span>
+                            <span
+                              class="lead-text"
+                              id="withdrawalDetailType"
+                            ></span>
+                          </div>
+                          <div class="col-lg-6">
+                            <span class="sub-text">Currency</span>
+                            <span
+                              class="lead-text"
+                              id="withdrawalDetailCurrency"
+                            ></span>
+                          </div>
+                          <div class="col-12">
+                            <span class="sub-text">Wallet Address</span>
+                            <span
+                              class="lead-text text-break"
+                              id="withdrawalDetailAddress"
+                            ></span>
+                          </div>
+                          <div
+                            id="withdrawalDetailTxHashDiv"
+                            class="col-12 d-none"
+                          >
+                            <span class="sub-text">Transaction Hash</span>
+                            <span
+                              class="lead-text text-break"
+                              id="withdrawalDetailTxHash"
+                            ></span>
+                          </div>
+                          <div
+                            id="withdrawalDetailReasonDiv"
+                            class="col-12 d-none"
+                          >
+                            <span class="sub-text">Reason</span>
+                            <span
+                              class="lead-text"
+                              id="withdrawalDetailReason"
+                            ></span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Cancel button for pending withdrawals -->
+                    <div id="withdrawalDetailActions" class="mt-3 d-none">
+                      <button
+                        class="btn btn-danger w-100"
+                        id="cancelWithdrawalButton"
+                      >
+                        Cancel Withdrawal
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ========Footer========== -->
+          <%- include('../snippets/adminSnippets/footer.ejs') %>
+        </div>
+      </div>
+    </div>
+    <!-- ===================Scripts========== -->
+    <%- include('../snippets/adminSnippets/scripts.ejs') %>
+
+    <%- include('../snippets/live_chat.ejs') %>
+
+
+    <!-- Scripts for withdrawal functionality -->
+    <script src="/apiClient/apiClient.js"></script>
+
+    <script src="/apiClient/userWithdrawalClient.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Initialize wallet withdrawal form
+        userWithdrawalClient.initWithdrawalForm(
+          "walletWithdrawalForm",
+          "walletWithdrawalSubmit",
+          "walletWithdrawalError",
+          userWithdrawalClient.processWalletWithdrawal
+        );
+
+        // Initialize referral withdrawal form
+        userWithdrawalClient.initWithdrawalForm(
+          "referralWithdrawalForm",
+          "referralWithdrawalSubmit",
+          "referralWithdrawalError",
+          userWithdrawalClient.processReferralWithdrawal
+        );
+
+        // Initialize add wallet form
+        const addWalletForm = document.getElementById("addWalletForm");
+        if (addWalletForm) {
+          addWalletForm.addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            const submitBtn = document.getElementById("addWalletSubmit");
+            const spinner = document.getElementById("addWalletSpinner");
+            const errorMsg = document.getElementById("addWalletError");
+
+            // Show loading state
+            submitBtn.disabled = true;
+            spinner.classList.remove("d-none");
+            errorMsg.classList.add("d-none");
+
+            try {
+              const formData = new FormData(addWalletForm);
+              const data = {
+                currency: formData.get("currency"),
+                address: formData.get("address"),
+                network: formData.get("network"),
+                label: formData.get("label"),
+              };
+
+              const response = await userWithdrawalClient.saveWalletAddress(
+                data
+              );
+
+              if (response.success) {
+                // Close modal and reload page
+                const modal = bootstrap.Modal.getInstance(
+                  document.getElementById("addWalletModal")
+                );
+                modal.hide();
+
+                alert("Wallet address saved successfully!");
+                window.location.reload();
+              } else {
+                // Show error message
+                errorMsg.textContent = response.message;
+                errorMsg.classList.remove("d-none");
+              }
+            } catch (error) {
+              errorMsg.textContent =
+                "An error occurred while saving your wallet address";
+              errorMsg.classList.remove("d-none");
+            } finally {
+              // Reset submit button
+              submitBtn.disabled = false;
+              spinner.classList.add("d-none");
+            }
+          });
+        }
+
+        // Set max amount for wallet withdrawal
+        document
+          .getElementById("walletMaxAmount")
+          .addEventListener("click", function (e) {
+            e.preventDefault();
+            const maxAmount = parseFloat("<%= wallet.walletBalance %>");
+            document.getElementById("walletWithdrawalAmount").value = maxAmount;
+          });
+
+        // Set max amount for referral withdrawal
+        document
+          .getElementById("referralMaxAmount")
+          .addEventListener("click", function (e) {
+            e.preventDefault();
+            const maxAmount = parseFloat("<%= wallet.referralBalance %>");
+            document.getElementById("referralWithdrawalAmount").value =
+              maxAmount;
+          });
+
+        // Use saved wallet addresses for withdrawal
+        document.querySelectorAll(".use-wallet-address").forEach((button) => {
+          button.addEventListener("click", function (e) {
+            e.preventDefault();
+            const currency = this.dataset.currency;
+            const address = this.dataset.address;
+
+            // Determine which modal to populate
+            const walletModal = bootstrap.Modal.getInstance(
+              document.getElementById("walletWithdrawalModal")
+            );
+            const referralModal = bootstrap.Modal.getInstance(
+              document.getElementById("referralWithdrawalModal")
+            );
+
+            if (walletModal && walletModal._isShown) {
+              document.getElementById("walletWithdrawalAddress").value =
+                address;
+              document.getElementById("walletWithdrawalCurrency").value =
+                currency;
+            } else if (referralModal && referralModal._isShown) {
+              document.getElementById("referralWithdrawalAddress").value =
+                address;
+              document.getElementById("referralWithdrawalCurrency").value =
+                currency;
+            } else {
+              // If no modal is open, open the wallet withdrawal modal
+              document.getElementById("walletWithdrawalAddress").value =
+                address;
+              document.getElementById("walletWithdrawalCurrency").value =
+                currency;
+              new bootstrap.Modal(
+                document.getElementById("walletWithdrawalModal")
+              ).show();
+            }
+          });
+        });
+
+        // Load withdrawal history
+        function loadWithdrawalHistory(page = 1, limit = 10, type = "all") {
+          const tableContainer = document.getElementById(
+            "withdrawalHistoryTable"
+          );
+          tableContainer.innerHTML = `<div class="text-center py-4">
+                                        <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                    </div>`;
+
+          const params = { page, limit };
+          if (type !== "all") {
+            params.type = type;
+          }
+
+          userWithdrawalClient
+            .getWithdrawalHistory(params)
+            .then((response) => {
+              if (response.success) {
+                renderWithdrawalHistory(response);
+              } else {
+                tableContainer.innerHTML = `<div class="alert alert-danger">${response.message}</div>`;
+              }
+            })
+            .catch((error) => {
+              tableContainer.innerHTML = `<div class="alert alert-danger">Failed to load withdrawal history</div>`;
+              console.error(error);
+            });
+        }
+
+        // Render withdrawal history
+        function renderWithdrawalHistory(data) {
+          const { withdrawals, pagination } = data;
+          const tableContainer = document.getElementById(
+            "withdrawalHistoryTable"
+          );
+
+          if (withdrawals.length === 0) {
+            tableContainer.innerHTML = `<div class="alert alert-info">No withdrawal history found</div>`;
+            return;
+          }
+
+          let html = `
+            <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Amount</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+        `;
+
+          withdrawals.forEach((withdrawal) => {
+            const date = new Date(withdrawal.createdAt).toLocaleDateString();
+            const amount = userWithdrawalClient.formatCurrency(
+              withdrawal.amount,
+              withdrawal.currency
+            );
+            const typeLabel =
+              withdrawal.type === "wallet" ? "Wallet" : "Referral";
+            let statusClass = "";
+
+            switch (withdrawal.status) {
+              case "pending":
+                statusClass = "badge-dim bg-warning";
+                break;
+              case "completed":
+                statusClass = "badge-dim bg-success";
+                break;
+              case "failed":
+                statusClass = "badge-dim bg-danger";
+                break;
+              case "cancelled":
+                statusClass = "badge-dim bg-secondary";
+                break;
+              default:
+                statusClass = "badge-dim bg-info";
+            }
+
+            html += `
+            <tr>
+                <td>${date}</td>
+                <td>${amount}</td>
+                <td>${typeLabel}</td>
+                <td><span class="badge ${statusClass}">${
+              withdrawal.status.charAt(0).toUpperCase() +
+              withdrawal.status.slice(1)
+            }</span></td>
+                <td>
+                <button class="btn btn-sm btn-outline-primary view-withdrawal" data-id="${
+                  withdrawal._id
+                }">
+                    View
+                </button>
+                </td>
+            </tr>
+            `;
+          });
+
+          html += `
+                </tbody>
+            </table>
+            </div>
+        `;
+
+          // Add pagination if needed
+          if (pagination.total > pagination.limit) {
+            const totalPages = pagination.pages;
+            const currentPage = pagination.page;
+
+            html += `
+            <div class="mt-3">
+                <ul class="pagination justify-content-center">
+                <li class="page-item ${currentPage === 1 ? "disabled" : ""}">
+                    <a class="page-link page-link-prev" href="#" data-page="${
+                      currentPage - 1
+                    }">Previous</a>
+                </li>
+            `;
+
+            for (let i = 1; i <= totalPages; i++) {
+              html += `
+                <li class="page-item ${i === currentPage ? "active" : ""}">
+                <a class="page-link" href="#" data-page="${i}">${i}</a>
+                </li>
+            `;
+            }
+
+            html += `
+                <li class="page-item ${
+                  currentPage === totalPages ? "disabled" : ""
+                }">
+                    <a class="page-link page-link-next" href="#" data-page="${
+                      currentPage + 1
+                    }">Next</a>
+                </li>
+                </ul>
+            </div>
+            `;
+          }
+
+          tableContainer.innerHTML = html;
+
+          // Add click event for pagination
+          document.querySelectorAll(".page-link").forEach((link) => {
+            link.addEventListener("click", function (e) {
+              e.preventDefault();
+              if (!this.parentElement.classList.contains("disabled")) {
+                const page = parseInt(this.dataset.page);
+                const currentType =
+                  document.getElementById("currentFilter").textContent ===
+                  "All Types"
+                    ? "all"
+                    : document.getElementById("currentFilter").textContent ===
+                      "Wallet Withdrawals"
+                    ? "wallet"
+                    : "referral";
+                loadWithdrawalHistory(page, pagination.limit, currentType);
+              }
+            });
+          });
+
+          // Add click event for viewing withdrawal details
+          document.querySelectorAll(".view-withdrawal").forEach((button) => {
+            button.addEventListener("click", function () {
+              const withdrawalId = this.dataset.id;
+              const withdrawal = withdrawals.find(
+                (w) => w._id === withdrawalId
+              );
+              if (withdrawal) {
+                showWithdrawalDetails(withdrawal);
+              }
+            });
+          });
+        }
+
+        // Show withdrawal details
+        function showWithdrawalDetails(withdrawal) {
+          document.getElementById(
+            "withdrawalDetailId"
+          ).textContent = `Withdrawal #${withdrawal._id.substr(0, 8)}`;
+          document.getElementById("withdrawalDetailDate").textContent =
+            new Date(withdrawal.createdAt).toLocaleString();
+          document.getElementById("withdrawalDetailAmount").textContent =
+            userWithdrawalClient.formatCurrency(
+              withdrawal.amount,
+              withdrawal.currency
+            );
+          document.getElementById("withdrawalDetailType").textContent =
+            withdrawal.type === "wallet"
+              ? "Wallet Withdrawal"
+              : "Referral Earnings Withdrawal";
+          document.getElementById("withdrawalDetailCurrency").textContent =
+            withdrawal.currency;
+          document.getElementById("withdrawalDetailAddress").textContent =
+            withdrawal.walletAddress;
+
+          // Status with badge
+          const statusElement = document.getElementById(
+            "withdrawalDetailStatus"
+          );
+          let statusClass = "";
+
+          switch (withdrawal.status) {
+            case "pending":
+              statusClass = "badge-dim badge-warning";
+              break;
+            case "completed":
+              statusClass = "badge-dim badge-success";
+              break;
+            case "failed":
+              statusClass = "badge-dim badge-danger";
+              break;
+            case "cancelled":
+              statusClass = "badge-dim badge-secondary";
+              break;
+            default:
+              statusClass = "badge-dim badge-info";
+          }
+
+          statusElement.innerHTML = `<span class="badge ${statusClass}">${
+            withdrawal.status.charAt(0).toUpperCase() +
+            withdrawal.status.slice(1)
+          }</span>`;
+
+          // Transaction hash if available
+          const txHashDiv = document.getElementById(
+            "withdrawalDetailTxHashDiv"
+          );
+          const txHashElement = document.getElementById(
+            "withdrawalDetailTxHash"
+          );
+
+          if (withdrawal.txHash) {
+            txHashElement.textContent = withdrawal.txHash;
+            txHashDiv.classList.remove("d-none");
+          } else {
+            txHashDiv.classList.add("d-none");
+          }
+
+          // Reason if available
+          const reasonDiv = document.getElementById(
+            "withdrawalDetailReasonDiv"
+          );
+          const reasonElement = document.getElementById(
+            "withdrawalDetailReason"
+          );
+
+          if (withdrawal.reason) {
+            reasonElement.textContent = withdrawal.reason;
+            reasonDiv.classList.remove("d-none");
+          } else {
+            reasonDiv.classList.add("d-none");
+          }
+
+          // Show cancel button for pending withdrawals
+          const actionsDiv = document.getElementById("withdrawalDetailActions");
+          const cancelButton = document.getElementById(
+            "cancelWithdrawalButton"
+          );
+
+          if (withdrawal.status === "pending") {
+            actionsDiv.classList.remove("d-none");
+
+            // Add click event for cancel button
+            cancelButton.onclick = function () {
+              if (confirm("Are you sure you want to cancel this withdrawal?")) {
+                userWithdrawalClient
+                  .cancelWithdrawal(withdrawal._id)
+                  .then((response) => {
+                    if (response.success) {
+                      alert("Withdrawal cancelled successfully");
+                      const modal = bootstrap.Modal.getInstance(
+                        document.getElementById("withdrawalDetailsModal")
+                      );
+                      modal.hide();
+                      // Reload withdrawal history
+                      loadWithdrawalHistory();
+                    } else {
+                      alert("Failed to cancel withdrawal: " + response.message);
+                    }
+                  })
+                  .catch((error) => {
+                    alert("An error occurred while cancelling the withdrawal");
+                    console.error(error);
+                  });
+              }
+            };
+          } else {
+            actionsDiv.classList.add("d-none");
+          }
+
+          // Show the modal
+          const modal = new bootstrap.Modal(
+            document.getElementById("withdrawalDetailsModal")
+          );
+          modal.show();
+        }
+
+        // Filter withdrawals
+        document.querySelectorAll(".filter-withdrawals").forEach((link) => {
+          link.addEventListener("click", function (e) {
+            e.preventDefault();
+            const type = this.dataset.type;
+            document.getElementById("currentFilter").textContent =
+              type === "all"
+                ? "All Types"
+                : type === "wallet"
+                ? "Wallet Withdrawals"
+                : "Referral Withdrawals";
+            loadWithdrawalHistory(1, 10, type);
+          });
+        });
+
+        // Initial load of withdrawal history
+        loadWithdrawalHistory();
+      });
+    </script>
+  </body>
+</html>

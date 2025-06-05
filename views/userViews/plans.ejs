@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="zxx" class="js">
+  <head>
+    <!-- ========Headers meta======== -->
+    <%- include('../snippets/adminSnippets/header_meta.ejs') %>
+
+    <title>EXNESTRADE | Investment Plans</title>
+  </head>
+  <body class="nk-body bg-lighter npc-general has-sidebar">
+    <div class="nk-app-root">
+      <div class="nk-main">
+        <!-- ==========Sidebar======= -->
+        <%- include('../snippets/adminSnippets/sidebar.ejs') %>
+
+        <div class="nk-wrap">
+          <!-- ============Navbar======== -->
+          <%- include('../snippets/adminSnippets/navbar.ejs') %>
+
+          <!-- ============Content======== -->
+          <div class="nk-content">
+            <div class="container-fluid">
+              <div class="nk-content-inner">
+                <div class="nk-content-body">
+                  <div class="nk-block-head nk-block-head-sm">
+                      <div class="nk-block-head text-center">
+                        <h3 class="nk-block-title page-title">
+                          Investment Plans
+                        </h3>
+                        <div class="nk-block-des text-soft">
+                          <p>
+                            Our well crafted investment plans allow you to
+                            invest daily, weekly or monthly and get higher
+                            returns in your investment. 
+                            <p class="fw-bold">Choose your favourite plan and start earning</p>
+                          </p>
+                        </div>
+                      </div>
+                  
+                  </div>
+
+                  <div class="nk-block mt-2">
+                    <div class="row g-gs">
+                      <% if (plans && plans.length > 0) { %>
+                        <% plans.forEach(plan => { %>
+                          <div class="col-lg-4 col-sm-6">
+                            <div class="card card-bordered pricing">
+                              <div class="card-inner-group">
+                                <div class="card-inner">
+                                  <div class="text-center">
+                                    <h4><%= plan.name %></h4>
+                                    <p><%= plan.shortName ? `(${plan.shortName})` : '' %></p>
+                                  </div>
+                                  <div class="row text-center mt-4">
+                                    <div class="col-6">
+                                      <div class="plan-sum">
+                                        <div class="h4"><%= plan.roiPercentage %> %</div>
+                                        <span class="title"><%= plan.roiPeriod.charAt(0).toUpperCase() + plan.roiPeriod.slice(1) %> Interest</span>
+                                      </div>
+                                    </div>
+                                    <div class="col-6">
+                                      <div class="plan-sum">
+                                        <div class="amount"><%= plan.term %></div>
+                                        <span class="title"><%= plan.termPeriod.charAt(0).toUpperCase() + plan.termPeriod.slice(1) %>s (Term)</span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="card-inner">
+                                  <div class="row text-center">
+                                    <div class="col-6">
+                                      <div class="plan-sum">
+                                        <span class="title">Min Deposit</span>
+                                        <div class="h6"><%= plan.minAmount.toFixed(2) %> USD</div>
+                                      </div>
+                                    </div>
+                                    <div class="col-6">
+                                      <div class="plan-sum">
+                                        <span class="title">Max Deposit</span>
+                                        <div class="h6"><%= plan.maxAmount.toFixed(2) %> USD</div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="row text-center mt-2">
+                                    <div class="col-6">
+                                      <div class="plan-sum">
+                                        <span class="title">Capital Return</span>
+                                        <div class="h6">End of Term</div>
+                                      </div>
+                                    </div>
+                                    <div class="col-6">
+                                      <div class="plan-sum">
+                                        <span class="title">Investment Type</span>
+                                        <div class="h6"><%= plan.type.charAt(0).toUpperCase() + plan.type.slice(1) %></div>
+                                      </div>
+                                    </div>
+                                    <div class="text-center mt-4">
+                                      <button class="btn btn-primary invest-now-btn" data-plan-id="<%= plan._id %>">
+                                        <span>Invest Now</span>
+                                      </button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        <% }); %>
+                      <% } else { %>
+                        <div class="col-12">
+                          <div class="card card-bordered">
+                            <div class="card-inner">
+                              <div class="text-center">
+                                <h5>No investment plans available at the moment</h5>
+                                <p>Please check back later for new investment opportunities.</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      <% } %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ===========Investment Modals======== -->
+          <!-- Step 1: Currency Selection Modal -->
+          <div class="modal fade" tabindex="-1" id="selectCurrencyModal">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <a href="#" class="close" data-bs-dismiss="modal" aria-label="Close">
+                  <em class="icon ni ni-cross"></em>
+                </a>
+                <div class="modal-body modal-body-lg">
+                  <h4 class="title nk-modal-title">Select Payment Method</h4>
+                  <div class="nk-block">
+                    <input type="hidden" id="selected-plan-id">
+                    <div class="row g-3">
+                      <div class="col-12">
+                        <div class="form-group">
+                          <label class="form-label" for="investment-amount">Investment Amount (USD)</label>
+                          <div class="form-control-wrap">
+                            <div class="form-text-hint">
+                              <span class="overline-title">USD</span>
+                            </div>
+                            <input type="number" class="form-control" id="investment-amount" placeholder="0.00">
+                          </div>
+                          <div class="form-note">Enter amount in USD</div>
+                        </div>
+                      </div>
+                      <div class="col-12">
+                        <div class="form-group">
+                          <label class="form-label">Select Cryptocurrency</label>
+                          <div class="currency-list" id="currency-options">
+                            <!-- Currency options will be dynamically loaded here -->
+                            <div class="d-flex justify-content-center">
+                              <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-12 text-center">
+                        <button class="btn btn-primary" id="next-payment-btn" disabled>Next</button>
+                        <button class="btn btn-light" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 2: Payment Details Modal -->
+          <div class="modal fade" tabindex="-1" id="paymentDetailsModal">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <a href="#" class="close" data-bs-dismiss="modal" aria-label="Close">
+                  <em class="icon ni ni-cross"></em>
+                </a>
+                <div class="modal-body modal-body-lg">
+                  <h4 class="title nk-modal-title">Payment Details</h4>
+                  <div class="nk-block">
+                    <div class="payment-details text-center">
+                      <div class="payment-summary mb-4">
+                        <h5 class="mb-1">Send Payment</h5>
+                        <h4 class="amount-text mb-3"><span id="crypto-amount">0.00</span> <span id="crypto-symbol">BTC</span></h4>
+                        <p class="text-soft">to</p>
+                      </div>
+                      <div class="qr-wrapper mb-4">
+                        <img id="wallet-qrcode" src="" width="160" alt="QR Code" class="img-fluid qr-image">
+                      </div>
+                      <div class="wallet-address mb-4">
+                        <div class="form-group">
+                          <div class="form-control-wrap">
+                            <div class="form-clip clipboard-init" data-clipboard-target="#wallet-address" data-success="Copied" data-text="Copy">
+                              <em class="clipboard-icon icon ni ni-copy"></em> 
+                              <span class="clipboard-text">Copy</span>
+                            </div>
+                            <div class="form-icon">
+                              <em class="icon ni ni-wallet-alt"></em>
+                            </div>
+                            <input type="text" class="form-control form-control-lg" id="wallet-address" value="" readonly>
+                          </div>
+                          <div class="form-note text-danger">Please send payment to this address only</div>
+                        </div>
+                      </div>
+                      <div class="payment-info mb-4">
+                        <ul class="list-group list-group-borderless">
+                          <li class="list-group-item">Investment Plan: <span id="plan-name-display" class="fw-bold"></span></li>
+                          <li class="list-group-item">Amount (USD): <span id="usd-amount-display" class="fw-bold"></span></li>
+                          <li class="list-group-item">Payment Method: <span id="currency-name-display" class="fw-bold"></span></li>
+                        </ul>
+                      </div>
+                      <div class="d-flex justify-content-center gap-2">
+                        <button class="btn btn-outline-light py-3" id="back-to-currencies">Back</button>
+                        <button class="btn btn-primary py-3" id="preview-payment-btn">I've Sent the Payment</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 3: Payment Confirmation Modal -->
+          <div class="modal fade" tabindex="-1" id="paymentConfirmModal">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <a href="#" class="close" data-bs-dismiss="modal" aria-label="Close">
+                  <em class="icon ni ni-cross"></em>
+                </a>
+                <div class="modal-body modal-body-lg">
+                  <h4 class="title nk-modal-title">Confirm Transaction</h4>
+                  <div class="nk-block">
+                    <div class="preview-box border rounded p-3 mb-4">
+                      <div class="row g-3">
+                        <div class="col-md-6">
+                          <p class="overline-title text-soft">Plan</p>
+                          <h6 id="preview-plan-name"></h6>
+                        </div>
+                        <div class="col-md-6">
+                          <p class="overline-title text-soft">Currency</p>
+                          <h6 id="preview-currency-name"></h6>
+                        </div>
+                        <div class="col-md-6">
+                          <p class="overline-title text-soft">Amount (USD)</p>
+                          <h6 id="preview-amount-usd"></h6>
+                        </div>
+                        <div class="col-md-6">
+                          <p class="overline-title text-soft">Amount (Crypto)</p>
+                          <h6 id="preview-amount-crypto"></h6>
+                        </div>
+                        <div class="col-12">
+                          <p class="overline-title text-soft">Wallet Address</p>
+                          <div class="wallet-address-preview">
+                            <span id="preview-wallet-address" class="text-break"></span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label" for="transaction-hash">Transaction Hash/ID</label>
+                      <div class="form-control-wrap">
+                        <input type="text" class="form-control" id="transaction-hash" placeholder="Enter transaction hash/ID">
+                      </div>
+                      <div class="form-note">This helps us verify your transaction quickly</div>
+                    </div>
+                    <div class="form-group text-center mt-4">
+                      <div class="d-flex justify-content-center gap-2">
+                        <button class="btn btn-dim btn-outline-light py-3" id="back-to-payment">Back</button>
+                        <button class="btn btn-primary py-3" id="confirm-payment-btn">Confirm Payment</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ========Footer========== -->
+          <%- include('../snippets/adminSnippets/footer.ejs') %>
+        </div>
+      </div>
+    </div>
+    <!-- ===================Scripts========== -->
+    <%- include('../snippets/adminSnippets/scripts.ejs') %>
+
+    <%- include('../snippets/live_chat.ejs') %>
+
+
+    <!-- Investment process JavaScript -->
+    <script src="/apiClient/planClient.js"></script>
+    <script src="/apiClient/investmentClient.js"></script>
+  </body>
+</html>

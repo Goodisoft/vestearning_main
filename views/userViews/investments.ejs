@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="zxx" class="js">
+  <head>
+    <!-- ========Headers meta======== -->
+    <%- include('../snippets/adminSnippets/header_meta.ejs') %>
+
+    <title>EXNESTRADE | My Investments</title>
+  </head>
+  <body class="nk-body bg-lighter npc-general has-sidebar">
+    <div class="nk-app-root">
+      <div class="nk-main">
+        <!-- ==========Sidebar======= -->
+        <%- include('../snippets/adminSnippets/sidebar.ejs') %>
+
+        <div class="nk-wrap">
+          <!-- ============Navbar======== -->
+          <%- include('../snippets/adminSnippets/navbar.ejs') %>
+
+          <!-- ============Content======== -->
+          <div class="nk-content">
+            <div class="container-fluid">
+              <div class="nk-content-inner">
+                <div class="nk-content-body">
+                  <div class="nk-block-head nk-block-head-sm">
+                    <div class="nk-block-between">
+                      <div class="nk-block-head-content">
+                        <h3 class="nk-block-title page-title">
+                          My Investments
+                        </h3>
+                        <div class="nk-block-des text-soft">
+                          <p>Monitor your investment portfolio and earnings</p>
+                        </div>
+                      </div>
+                      <!-- .nk-block-head-content -->
+                      <div class="nk-block-head-content">
+                        <div class="toggle-wrap nk-block-tools-toggle">
+                          <a
+                            href="#"
+                            class="btn btn-icon btn-trigger toggle-expand me-n1"
+                            data-target="pageMenu"
+                            ><em class="icon ni ni-more-v"></em
+                          ></a>
+                          <div
+                            class="toggle-expand-content"
+                            data-content="pageMenu"
+                          >
+                            <ul class="nk-block-tools g-3">
+                              <li>
+                                <a
+                                  href="/user/investment-plans"
+                                  class="btn btn-white btn-dim btn-outline-primary"
+                                >
+                                  <em class="icon ni ni-plus"></em>
+                                  <span>New Investment</span>
+                                </a>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- .nk-block-head-content -->
+                    </div>
+                    <!-- .nk-block-between -->
+                  </div>
+
+                  <!-- Investment Stats -->
+                  <div class="nk-block">
+                    <div class="row g-gs">
+                      <div class="col-sm-6 col-lg-4">
+                        <div class="card card-bordered">
+                          <div class="card-inner">
+                            <div class="card-title-group align-start mb-2">
+                              <div class="card-title">
+                                <h6 class="title">Total Invested</h6>
+                              </div>
+                            </div>
+                            <div
+                              class="align-end flex-sm-wrap g-4 flex-md-nowrap"
+                            >
+                              <div class="nk-sale-data">
+                                <span class="amount"
+                                  >$<%= (investments && investments.reduce) ?
+                                  investments.reduce((sum, inv) => sum +
+                                  inv.amount, 0).toFixed(2) : '0.00' %></span
+                                >
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-sm-6 col-lg-4">
+                        <div class="card card-bordered">
+                          <div class="card-inner">
+                            <div class="card-title-group align-start mb-2">
+                              <div class="card-title">
+                                <h6 class="title">Active Investments</h6>
+                              </div>
+                            </div>
+                            <div
+                              class="align-end flex-sm-wrap g-4 flex-md-nowrap"
+                            >
+                              <div class="nk-sale-data">
+                                <span class="amount"
+                                  ><%= investments ? investments.filter(inv =>
+                                  inv.status === 'active').length : 0 %></span
+                                >
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-sm-6 col-lg-4">
+                        <div class="card card-bordered">
+                          <div class="card-inner">
+                            <div class="card-title-group align-start mb-2">
+                              <div class="card-title">
+                                <h6 class="title">Total Earnings</h6>
+                              </div>
+                            </div>
+                            <div
+                              class="align-end flex-sm-wrap g-4 flex-md-nowrap"
+                            >
+                              <div class="nk-sale-data">
+                                <span class="amount"
+                                  >$<%= (investments && investments.reduce) ?
+                                  investments.reduce((sum, inv) => sum +
+                                  (inv.earnings || 0), 0).toFixed(2) : '0.00'
+                                  %></span
+                                >
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Filter -->
+                  <div class="nk-block">
+                    <div class="card card-bordered card-stretch">
+                      <div class="card-inner-group">
+                        <div class="card-inner position-relative">
+                          <div class="card-title-group">
+                            <div class="card-title">
+                              <h5 class="title">All Investments</h5>
+                            </div>
+                            <div class="card-tools me-n1">
+                              <ul class="btn-toolbar gx-1">
+                                <li>
+                                  <div class="dropdown">
+                                    <a
+                                      href="#"
+                                      class="btn btn-trigger btn-icon dropdown-toggle"
+                                      data-bs-toggle="dropdown"
+                                    >
+                                      <div class="dot dot-primary"></div>
+                                      <em class="icon ni ni-filter-alt"></em>
+                                    </a>
+                                    <div
+                                      class="dropdown-menu dropdown-menu-end"
+                                    >
+                                      <ul class="link-list-opt no-bdr">
+                                        <li>
+                                          <a href="/user/investments"
+                                            ><span>All</span></a
+                                          >
+                                        </li>
+                                        <li>
+                                          <a
+                                            href="/user/investments?status=active"
+                                            ><span>Active</span></a
+                                          >
+                                        </li>
+                                        <li>
+                                          <a
+                                            href="/user/investments?status=completed"
+                                            ><span>Completed</span></a
+                                          >
+                                        </li>
+                                        <li>
+                                          <a
+                                            href="/user/investments?status=pending"
+                                            ><span>Pending</span></a
+                                          >
+                                        </li>
+                                      </ul>
+                                    </div>
+                                  </div>
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- Investments Table -->
+                        <div class="card-inner p-0">
+                          <div class="nk-tb-list nk-tb-ulist">
+                            <div class="nk-tb-item nk-tb-head">
+                              <div class="nk-tb-col">
+                                <span class="sub-text">Plan</span>
+                              </div>
+                              <div class="nk-tb-col tb-col-md">
+                                <span class="sub-text">Amount</span>
+                              </div>
+                              <div class="nk-tb-col tb-col-sm">
+                                <span class="sub-text">ROI</span>
+                              </div>
+                              <div class="nk-tb-col tb-col-lg">
+                                <span class="sub-text">Term</span>
+                              </div>
+                              <div class="nk-tb-col tb-col-md">
+                                <span class="sub-text">Earnings</span>
+                              </div>
+                              <div class="nk-tb-col tb-col-sm">
+                                <span class="sub-text">Status</span>
+                              </div>
+                              <div class="nk-tb-col">
+                                <span class="sub-text">Created</span>
+                              </div>
+                            </div>
+
+                            <% if (investments && investments.length > 0) { %>
+                            <% investments.forEach(investment => { %>
+                            <div class="nk-tb-item">
+                              <div class="nk-tb-col">
+                                <span class="tb-lead"
+                                  ><a href="#"
+                                    ><%= investment.planId ?
+                                    investment.planId.name : 'Unknown Plan'
+                                    %></a
+                                  ></span
+                                >
+                                <span class="tb-sub"
+                                  ><%= investment.planId ?
+                                  investment.planId.shortName : '' %></span
+                                >
+                              </div>
+                              <div class="nk-tb-col tb-col-md">
+                                <span class="tb-amount"
+                                  >$<%= investment.amount.toFixed(2) %></span
+                                >
+                              </div>
+                              <div class="nk-tb-col tb-col-sm">
+                                <span class="tb-amount"
+                                  ><%= (investment.earningRate * 100).toFixed(1)
+                                  %>%</span
+                                >
+                                <span class="tb-sub"
+                                  ><%= investment.planId ?
+                                  investment.planId.roiPeriod : 'daily' %></span
+                                >
+                              </div>
+                              <div class="nk-tb-col tb-col-lg">
+                                <span class="tb-amount"
+                                  ><%= investment.duration %></span
+                                >
+                                <span class="tb-sub"
+                                  ><%= investment.planId ?
+                                  investment.planId.termPeriod + 's' : 'days'
+                                  %></span
+                                >
+                              </div>
+                              <div class="nk-tb-col tb-col-md">
+                                <span class="tb-amount"
+                                  >$<%= investment.earnings ?
+                                  investment.earnings.toFixed(2) : '0.00'
+                                  %></span
+                                >
+                              </div>
+                              <div class="nk-tb-col tb-col-sm">
+                                <% let statusClass = '';
+                                switch(investment.status) { case 'active':
+                                statusClass = 'success'; break; case 'pending':
+                                statusClass = 'warning'; break; case
+                                'completed': statusClass = 'info'; break; case
+                                'cancelled': statusClass = 'danger'; break;
+                                default: statusClass = 'light'; } %>
+                                <span
+                                  class="badge badge-dim bg-<%= statusClass %>"
+                                >
+                                  <span
+                                    ><%=
+                                    investment.status.charAt(0).toUpperCase() +
+                                    investment.status.slice(1) %></span
+                                  >
+                                </span>
+                              </div>
+                              <div class="nk-tb-col">
+                                <span class="tb-date"
+                                  ><%= new
+                                  Date(investment.createdAt).toLocaleDateString()
+                                  %></span
+                                >
+                              </div>
+                            </div>
+                            <% }); %> <% } else { %>
+                            <div class="nk-tb-item">
+                              <div class="nk-tb-col text-center" colspan="7">
+                                <span class="text-soft"
+                                  >No investments found</span
+                                >
+                              </div>
+                            </div>
+                            <% } %>
+                          </div>
+                        </div>
+
+                        <!-- Pagination -->
+                        <% if (pagination && pagination.pages > 1) { %>
+                        <div class="card-inner">
+                          <div class="nk-block-between-md g-3">
+                            <div class="g">
+                              <ul
+                                class="pagination justify-content-center justify-content-md-start"
+                              >
+                                <li
+                                  class="page-item <%= pagination.page === 1 ? 'disabled' : '' %>"
+                                >
+                                  <a
+                                    class="page-link"
+                                    href="/user/investments?page=<%= pagination.page - 1 %><%= filters.status !== 'all' ? '&status=' + filters.status : '' %>"
+                                    >Prev</a
+                                  >
+                                </li>
+
+                                <% for(let i = 1; i <= pagination.pages; i++) {
+                                %>
+                                <li
+                                  class="page-item <%= pagination.page === i ? 'active' : '' %>"
+                                >
+                                  <a
+                                    class="page-link"
+                                    href="/user/investments?page=<%= i %><%= filters.status !== 'all' ? '&status=' + filters.status : '' %>"
+                                    ><%= i %></a
+                                  >
+                                </li>
+                                <% } %>
+
+                                <li
+                                  class="page-item <%= pagination.page === pagination.pages ? 'disabled' : '' %>"
+                                >
+                                  <a
+                                    class="page-link"
+                                    href="/user/investments?page=<%= pagination.page + 1 %><%= filters.status !== 'all' ? '&status=' + filters.status : '' %>"
+                                    >Next</a
+                                  >
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                        <% } %>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ========Footer========== -->
+          <%- include('../snippets/adminSnippets/footer.ejs') %>
+        </div>
+      </div>
+    </div>
+    <!-- ===================Scripts========== -->
+    <%- include('../snippets/adminSnippets/scripts.ejs') %>
+
+    <%- include('../snippets/live_chat.ejs') %>
+
+  </body>
+</html>

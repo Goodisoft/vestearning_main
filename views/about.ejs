@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en" itemscope itemtype="http://schema.org/WebPage">
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+  <head>
+    <%- include('./snippets/header_meta.ejs') %>
+    <title><%= appSettings.siteName %></title>
+  </head>
+
+  <style>
+    /* language */
+    .language_switcher {
+      position: relative;
+      padding-right: 20px;
+      min-width: max-content;
+    }
+
+    @media (max-width: 991px) {
+      .language_switcher {
+        padding-block: 6px;
+        display: inline-flex;
+      }
+
+      .language_switcher_wrapper {
+        flex: 1;
+        text-align: right;
+      }
+    }
+
+    .language_switcher::after {
+      font-family: "Line Awesome Free";
+      content: "\f107";
+      font-weight: 900;
+      font-size: 14px;
+      position: absolute;
+      margin: 0;
+      color: #fff;
+      top: 50%;
+      right: 0;
+      -webkit-transform: translateY(-50%);
+      transform: translateY(-50%);
+      transition: all ease 350ms;
+      -webkit-transition: all ease 350ms;
+      -moz-transition: all ease 350ms;
+    }
+
+    .language_switcher.open:after {
+      -webkit-transform: translateY(-50%) rotate(180deg);
+      transform: translateY(-50%) rotate(180deg);
+    }
+
+    .language_switcher__caption {
+      cursor: pointer;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-wrap: nowrap;
+    }
+
+    .language_switcher__caption .icon {
+      position: relative;
+      height: 20px;
+      width: 20px;
+      display: flex;
+    }
+
+    .language_switcher__caption .icon img {
+      height: 100%;
+      width: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .language_switcher__caption .text {
+      font-size: 0.875rem;
+      font-weight: 500;
+      flex: 1;
+      color: #fff;
+      line-height: 1;
+    }
+
+    .language_switcher__list {
+      width: 100px;
+      border-radius: 4px;
+      padding: 0;
+      max-height: 105px;
+      overflow-y: auto !important;
+      background: hsl(var(--base));
+      -webkit-box-shadow: 0px 12px 24px rgba(21, 18, 51, 0.13);
+      opacity: 0;
+      overflow: hidden;
+      -webkit-transition: all 0.15s cubic-bezier(0.25, 0, 0.25, 1.75),
+        opacity 0.1s linear;
+      transition: all 0.15s cubic-bezier(0.25, 0, 0.25, 1.75),
+        opacity 0.1s linear;
+      -webkit-transform: scale(0.85);
+      transform: scale(0.85);
+      -webkit-transform-origin: 50% 0;
+      transform-origin: 50% 0;
+      position: absolute;
+      top: calc(100% + 18px);
+      z-index: -1;
+      visibility: hidden;
+    }
+
+    .language_switcher__list::-webkit-scrollbar-track {
+      border-radius: 3px;
+      background-color: hsl(var(--base) / 0.3);
+    }
+
+    .language_switcher__list::-webkit-scrollbar {
+      width: 3px;
+    }
+
+    .language_switcher__list::-webkit-scrollbar-thumb {
+      border-radius: 3px;
+      background-color: hsl(var(--base) / 0.8);
+    }
+
+    .language_switcher__list .text {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #fff;
+    }
+
+    .language_switcher.open .language_switcher__list {
+      -webkit-transform: scale(1);
+      transform: scale(1);
+      opacity: 1;
+      z-index: 1;
+      visibility: visible;
+    }
+
+    .language_switcher__item a {
+      cursor: pointer;
+      padding: 5px;
+      border-bottom: 1px solid hsl(var(--heading-color) / 0.2);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .language_switcher__item img {
+      height: 20px;
+      width: 20px;
+      display: block;
+      border-radius: 50%;
+    }
+
+    .language_switcher__item:last-of-type {
+      border-bottom: 0;
+    }
+    .language_switcher__item:hover {
+      background-color: hsl(var(--dark) / 0.1);
+    }
+    .language_switcher__item.selected {
+      background: rgba(36, 60, 187, 0.02);
+      pointer-events: none;
+    }
+  </style>
+  <body>
+    <div class="preloader">
+      <%- include('./snippets/preloader_logo.ejs') %>
+    </div>
+
+    <!-- scroll-to-top start -->
+    <div class="scroll-to-top">
+      <span class="scroll-icon">
+        <i class="fa fa-rocket" aria-hidden="true"></i>
+      </span>
+    </div>
+    <!-- scroll-to-top end -->
+
+    <div class="full-wh">
+      <!-- STAR ANIMATION -->
+      <div class="bg-animation">
+        <div id="stars"></div>
+        <div id="stars2"></div>
+        <div id="stars3"></div>
+        <div id="stars4"></div>
+      </div>
+      <!-- / STAR ANIMATION -->
+    </div>
+
+    <div class="page-wrapper">
+      <!-- header-section start  -->
+      <%- include('./snippets/navbar.ejs') %>
+      <!-- header-section end  -->
+      <section class="inner-hero bg_img">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-6">
+              <h2 class="page-title">About Us</h2>
+            </div>
+          </div>
+        </div>
+      </section>
+      <div class="section-wrapper">
+        <section
+          class="pt-120 pb-120 bg_img">
+          <div class="container">
+            <div class="row justify-content-center">
+              <div class="col-lg-6 text-center">
+                <div class="section-header">
+                  <h2 class="section-title">
+                    <span class="font-weight-normal">Get</span>
+                    <b class="base--color">Started With</b>
+                    <span class="font-weight-normal">Exnestrade</span>
+                  </h2>
+                  <p>
+                    Join the global community to make it in the crypto space.
+                    Follow the steps below to get started.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <!-- row end -->
+            <div class="row justify-content-center gy-5">
+              <div class="col-lg-4 col-md-6 work-item">
+                <div class="work-card text-center">
+                  <div class="work-card__icon base--color">
+                    <i class="lar la-user"></i>
+                    <span class="step-number">01</span>
+                  </div>
+                  <div class="work-card__content">
+                    <h4 class="base--color">Create Account</h4>
+                  </div>
+                </div>
+                <!-- work-card end -->
+              </div>
+              <div class="col-lg-4 col-md-6 work-item">
+                <div class="work-card text-center">
+                  <div class="work-card__icon base--color">
+                    <i class="las la-clipboard-list"></i>
+                    <span class="step-number">02</span>
+                  </div>
+                  <div class="work-card__content">
+                    <h4 class="base--color">Invest To Plan</h4>
+                  </div>
+                </div>
+                <!-- work-card end -->
+              </div>
+              <div class="col-lg-4 col-md-6 work-item">
+                <div class="work-card text-center">
+                  <div class="work-card__icon base--color">
+                    <i class="las la-wallet"></i>
+                    <span class="step-number">03</span>
+                  </div>
+                  <div class="work-card__content">
+                    <h4 class="base--color">Get Profit</h4>
+                  </div>
+                </div>
+                <!-- work-card end -->
+              </div>
+            </div>
+          </div>
+        </section>
+        <section
+          class="about-section pt-120 pb-120 bg_img">
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-6 offset-lg-6">
+                <div class="about-content">
+                   <h2 class="section-title mb-3">
+                    <span class="font-weight-normal">
+                      <%= aboutSection && aboutSection.title ?
+                      aboutSection.title : 'About' %>
+                    </span>
+                  </h2>
+                    <div>
+                    <%- aboutSection && aboutSection.description 
+                        ? aboutSection.description
+                        : appSettings.siteName + 
+                        ' AI is exploring adaptive trading algorithms that can dynamically adjust to market volatility, ensuring optimal performance in both bullish and bearish conditions.' %>
+                  </div>
+                  <a href="#" class="btn--base mt-4">Download Our Profile</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="pt-120 pb-120">
+            <div class="container">
+              <div class="row justify-content-center">
+                <div class="col-lg-6 text-center">
+                  <div class="section-header">
+                    <h2 class="section-title">
+                      <span class="font-weight-normal">Frequently Asked</span>
+                      <b class="base--color">Questions</b>
+                    </h2>
+                    <p>
+                      We answer some of your Frequently Asked Questions regarding
+                      our platform. If you have a query that is not answered here,
+                      Please contact us.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <!-- row end -->
+             <!-- row end -->
+            <div class="row justify-content-center">
+              <div class="col-lg-8">
+                <div class="accordion cmn-accordion" id="accordionExample">
+                  <% if (faqs && faqs.length > 0) { %> <%
+                  faqs.forEach(function(faq, index) { %>
+                  <div class="card">
+                    <div class="card-header" id="heading<%= index %>">
+                      <h2 class="mb-0">
+                        <button
+                          class="btn w-100 text-start collapsed"
+                          type="button"
+                          data-bs-toggle="collapse"
+                          data-bs-target="#collapse<%= index %>"
+                          aria-expanded="<%= index === 0 ? 'true' : 'false' %>"
+                          aria-controls="collapse<%= index %>"
+                        >
+                          <i class="las la-question-circle"></i>
+                          <span><%= faq.question %></span>
+                        </button>
+                      </h2>
+                    </div>
+
+                    <div
+                      id="collapse<%= index %>"
+                      class="collapse <%= index === 0 ? 'show' : '' %>"
+                      aria-labelledby="heading<%= index %>"
+                      data-bs-parent="#accordionExample"
+                    >
+                      <div class="card-body"><%= faq.answer %></div>
+                    </div>
+                  </div>
+                  <% }); %> <% } else { %>
+                  <!-- Default FAQs if no dynamic content is available -->
+                  <div class="card">
+                    <div class="card-header" id="heading0">
+                      <h2 class="mb-0">
+                        <button
+                          class="btn w-100 text-start collapsed"
+                          type="button"
+                          data-bs-toggle="collapse"
+                          data-bs-target="#collapse0"
+                          aria-expanded="false"
+                          aria-controls="collapse0"
+                        >
+                          <i class="las la-question-circle"></i>
+                          <span>How does the AI trading bot work?</span>
+                        </button>
+                      </h2>
+                    </div>
+
+                    <div
+                      id="collapse0"
+                      class="collapse"
+                      aria-labelledby="heading0"
+                      data-bs-parent="#accordionExample"
+                    >
+                      <div class="card-body">
+                        Our AI trading bot uses sophisticated algorithms to
+                        process vast amounts of market data in real-time. It
+                        identifies patterns, predicts trends, and executes
+                        trades automatically, ensuring optimal performance and
+                        efficiency.
+                      </div>
+                    </div>
+                  </div>
+
+                  <% } %>
+                </div>
+              </div>
+            </div>
+            </div>
+          </section>
+
+        <section class="pb-120">
+          <div class="container">
+            <div class="row justify-content-center">
+              <div class="col-xl-8">
+                <div
+                  class="cta-wrapper bg_img border-radius--10 text-center">
+                  <h2 class="title mb-3">Get Started Today With Us</h2>
+                  <p>
+                    This is a Revolutionary Money Making Platform! Invest for
+                    Future in Stable Platform and Make Fast Money. Not only we
+                    guarantee the fastest and the most exciting returns on your
+                    investments, but we also guarantee the security of your
+                    investment.
+                  </p>
+                  <a href="/auth/register" class="btn--base mt-4"
+                    >Join Us</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Footer -->
+      <%- include("./snippets/footer.ejs") %>
+    </div>
+
+    <!-- Scripts -->
+    <%- include("./snippets/scripts.ejs") %>
+
+    <%- include('./snippets/live_chat.ejs') %>
+
+
+    <script>
+      (function ($) {
+        "use strict";
+
+        $(".language_switcher > .language_switcher__caption").on(
+          "click",
+          function () {
+            $(this).parent().toggleClass("open");
+          }
+        );
+        $(document).on("keyup", function (evt) {
+          if ((evt.keyCode || evt.which) === 27) {
+            $(".language_switcher").removeClass("open");
+          }
+        });
+        $(document).on("click", function (evt) {
+          if (
+            $(evt.target).closest(
+              ".language_switcher > .language_switcher__caption"
+            ).length === 0
+          ) {
+            $(".language_switcher").removeClass("open");
+          }
+        });
+      })(jQuery);
+    </script>
+  </body>
+</html>

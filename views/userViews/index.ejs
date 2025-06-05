@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="zxx" class="js">
+  <head>
+    <!-- ========Headers meta======== -->
+    <%- include('../snippets/adminSnippets/header_meta.ejs') %>
+
+    <title>EXNESTRADE | User Dashboard</title>
+  </head>
+  <body class="nk-body bg-lighter npc-general has-sidebar">
+    <div class="nk-app-root">
+      <div class="nk-main">
+        <!-- ==========Sidebar======= -->
+        <%- include('../snippets/adminSnippets/sidebar.ejs') %>
+
+        <div class="nk-wrap">
+          <!-- ============Navbar======== -->
+          <%- include('../snippets/adminSnippets/navbar.ejs') %>
+
+          <div class="nk-content">
+            <div class="container-fluid">
+              <div class="nk-content-inner">
+                <div class="nk-content-body">
+                  <div class="nk-block-head nk-block-head-sm">
+                    <div class="nk-block-between">
+                      <div class="nk-block-head-content">
+                        <div class="nk-block-des text-soft">
+                          <p>Welcome!</p>
+                        </div>
+                        <h3 class="nk-block-title page-title">
+                          <%= user ? user.fullName : 'User' %>
+                        </h3>
+                      </div>
+                      <div class="nk-block-head-content">
+                        <div class="toggle-wrap nk-block-tools-toggle">
+                          <a
+                            href="#"
+                            class="btn btn-icon btn-trigger toggle-expand me-n1"
+                            data-target="pageMenu"
+                          >
+                            <em class="icon ni ni-more-v"></em>
+                          </a>
+                          <div
+                            class="toggle-expand-content"
+                            data-content="pageMenu"
+                          >
+                            <ul class="nk-block-tools g-3">
+                              <li>
+                                <a
+                                  href="/user/investment-plans"
+                                  class="btn btn-white btn-dim btn-outline-primary"
+                                >
+                                  <em class="icon ni ni-wallet-in"></em>
+                                  <span>Deposit</span>
+                                </a>
+                              </li>
+                              <li>
+                                <a
+                                  href="/user/withdrawal"
+                                  class="btn btn-white btn-dim btn-outline-primary"
+                                >
+                                  <em class="icon ni ni-wallet-out"></em>
+                                  <span>Withdrawal</span>
+                                </a>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Notifications Container -->
+                  <div id="notifications-container" class="d-none mb-3"></div>
+
+                  <div class="nk-block mb-4">
+                    <% if (user && user.kycStatus == 'pending') { %>
+                    <div
+                      class="alert alert-warning text-warning fw-bold mb-2 p-4"
+                    >
+                      <em class="icon ni ni-alert-circle"></em>
+                      Attention:
+                      <span class="text-muted fw-normal">
+                        Your KYC verification is <%= user.kycStatus ||
+                        'pending'%>. <%= user.kycStatus === 'rejected' ? 'Please submit valid documents.' : 'Please complete your verification to unlock all features.' %>
+                      </span>
+                      <span class="float-end ms-4">
+                        <a
+                          class="btn btn-sm btn-warning"
+                          href="/user/profile#kyc"
+                          >Complete KYC</a
+                        >
+                      </span>
+                    </div>
+                    <% } %> <% if (user && user.referrals &&
+                    user.referrals.length > 0) { %>
+                    <div
+                      class="alert alert-primary text-primary fw-bold mb-2 p-4"
+                    >
+                      <em class="icon ni ni-users"></em>
+                      Referrals:
+                      <span class="text-muted fw-normal">
+                        You have <%= user.referrals.length %> referral(s).
+                      </span>
+                      <span class="float-end ms-4">
+                        <a class="text-right" href="/user/referrals"
+                          ><%= user.referrals.length %> REFERRALS</a
+                        >
+                      </span>
+                    </div>
+                    <% } %>
+
+                    <!-- Display notifications from backend -->
+                    <% if (notifications && notifications.length > 0) { %> <%
+                    notifications.forEach(function(notification) { %>
+                    <div class="alert alert-info alert-dismissible fade show mb-2 p-2">
+                      <strong><%= notification.title || 'Notification' %></strong>
+                      <p class="mb-0"><%= notification.message %></p>
+                      <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert"
+                        aria-label="Close"
+                      ></button>
+                    </div>
+                    <% }); %> <% } %>
+
+                    <div class="alert alert-warning alert-thick alert-plain">
+                      <div class="alert-cta flex-wrap flex-md-nowrap g-2">
+                        <div class="alert-text icon">
+                          <p>
+                            Let your investment make profit for you. No stress
+                          </p>
+                        </div>
+                        <div class="alert-actions my-1 my-md-0">
+                          <a
+                            href="/user/investment-plans"
+                            class="btn btn-sm btn-warning"
+                            >Invest Now</a
+                          >
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="nk-block">
+                    <div class="row g-gs">
+                      <!-- Active Investments Section -->
+                      <% if (activeInvestments && activeInvestments.length > 0)
+                      { %> <% activeInvestments.forEach(function(investment,
+                      index) { %>
+                      <div class="col-md-4">
+                        <div class="card card-bordered card-full">
+                          <div class="card-inner">
+                            <div class="card-title-group align-start mb-0">
+                              <div class="card-title">
+                                <h6 class="subtitle fw-bold">
+                                  <%= investment.planId ? investment.planId.name
+                                  : 'Investment' %> Plan
+                                </h6>
+                              </div>
+                              <div class="card-tools">
+                                <em
+                                  class="card-hint icon ni ni-help-fill"
+                                  data-bs-toggle="tooltip"
+                                  data-bs-placement="left"
+                                  title="Active investment"
+                                ></em>
+                              </div>
+                            </div>
+                            <div class="card-amount">
+                              <span class="amount"
+                                >$<%= investment.amount.toFixed(2) %></span
+                              >
+                              <span class="change up text-success h6">
+                                <em class="icon ni ni-arrow-long-up"></em>
+                                <span id="earnings-<%= investment._id %>"
+                                  >$0.00</span
+                                >
+                                earned
+                              </span>
+                            </div>
+                            <div class="invest-data">
+                              <div class="invest-data-amount g-2">
+                                <div class="invest-data-history">
+                                  <div class="title">Plan Type</div>
+                                  <div class="amount">
+                                    <%= investment.planId ?
+                                    investment.planId.type : investment.type %>
+                                  </div>
+                                </div>
+                                <div class="invest-data-history">
+                                  <div class="title">Interest</div>
+                                  <div class="amount">
+                                    <%= (investment.earningRate *
+                                    100).toFixed(2) %>%
+                                  </div>
+                                </div>
+                                <div class="invest-data-history">
+                                  <div class="title">Term</div>
+                                  <div class="amount">
+                                    <%= investment.duration %> <%=
+                                    investment.durationUnit %><%=
+                                    investment.duration > 1 ? 's' : '' %>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="container mt-3">
+                              <div class="progress-list gy-3">
+                                <div class="progress-wrap">
+                                  <div class="progress-text">
+                                    <div class="progress-label">
+                                      Time Remaining
+                                    </div>
+                                    <div
+                                      class="progress-amount"
+                                      id="time-remaining-<%= investment._id %>"
+                                    >
+                                      Calculating...
+                                    </div>
+                                  </div>
+                                  <% let progressPercent = 0; if
+                                  (investment.startDate && investment.endDate) {
+                                  const now = new Date(); const start = new
+                                  Date(investment.startDate); const end = new
+                                  Date(investment.endDate); const totalDuration
+                                  = end - start; let elapsedDuration = now -
+                                  start; if (elapsedDuration > totalDuration)
+                                  elapsedDuration = totalDuration;
+                                  progressPercent = Math.floor((elapsedDuration
+                                  / totalDuration) * 100); } %>
+                                  <div class="progress progress-md">
+                                    <div
+                                      class="progress-bar"
+                                      data-progress="<%= progressPercent %>"
+                                      style="width: <%= progressPercent %>%"
+                                    ></div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="text-center mt-3">
+                                <span class="badge bg-primary"
+                                  >Started: <%= new
+                                  Date(investment.startDate).toLocaleString()
+                                  %></span
+                                >
+                                <span class="badge bg-warning"
+                                  >Ends: <%= new
+                                  Date(investment.endDate).toLocaleString()
+                                  %></span
+                                >
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <% }); %>
+
+                      <!-- Investment Summary Card -->
+                      <div class="col-md-4">
+                        <div class="card card-bordered card-full">
+                          <div class="card-inner">
+                            <div class="card-title-group align-start mb-0">
+                              <div class="card-title">
+                                <h6 class="subtitle fw-bold">
+                                  Investment Summary
+                                </h6>
+                              </div>
+                            </div>
+                            <div class="card-amount">
+                              <span class="amount"
+                                >$<%= stats.totalInvested.toFixed(2) %></span
+                              >
+                              <span class="currency">Total Invested</span>
+                            </div>
+                            <div class="invest-data">
+                              <div class="invest-data-amount g-2">
+                                <div class="invest-data-history">
+                                  <div class="title">Active Investments</div>
+                                  <div class="amount">
+                                    <%= stats.activeInvestments %>
+                                  </div>
+                                </div>
+                                <div class="invest-data-history">
+                                  <div class="title">Total Earnings</div>
+                                  <div class="amount">
+                                    $<%= stats.totalEarnings.toFixed(2) %>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="text-center mt-4">
+                              <a
+                                href="/user/investment-plans"
+                                class="btn btn-primary"
+                              >
+                                New Investment
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <% } else { %>
+                      <!-- No Active Investments Card -->
+                      <div class="col-md-4">
+                        <div class="card card-bordered card-full">
+                          <div class="card-inner">
+                            <div class="card-title-group align-start mb-0">
+                              <div class="card-title">
+                                <h6 class="subtitle fw-bold">
+                                  Active Investment
+                                </h6>
+                              </div>
+                              <div class="card-tools">
+                                <em
+                                  class="card-hint icon ni ni-help-fill"
+                                  data-bs-toggle="tooltip"
+                                  data-bs-placement="left"
+                                  title="Active investment account"
+                                ></em>
+                              </div>
+                            </div>
+                            <div class="card-amount">
+                              <span class="amount">$0.00</span>
+                            </div>
+                            <div class="invest-data">
+                              <div class="text-center my-4">
+                                <em class="icon ni ni-info-fill fs-2"></em>
+                                <p>No active investments</p>
+                              </div>
+                            </div>
+                            <div class="text-center mt-4 g-2">
+                              <a
+                                href="/user/investment-plans"
+                                class="btn btn-primary"
+                              >
+                                Invest Now
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <% } %>
+
+                      <!-- Wallet Balance Card -->
+                      <div class="col-md-4">
+                        <div class="card card-bordered card-full">
+                          <div class="card-inner">
+                            <div class="card-title-group align-start mb-0">
+                              <div class="card-title">
+                                <h6 class="subtitle">Available Balance</h6>
+                              </div>
+                              <div class="card-tools">
+                                <em
+                                  class="card-hint icon ni ni-help-fill"
+                                  data-bs-toggle="tooltip"
+                                  data-bs-placement="left"
+                                  title="Total Available Balance"
+                                ></em>
+                              </div>
+                            </div>
+                            <div class="card-amount">
+                              <span class="amount"
+                                >$<%= walletData && walletData.walletBalance ?
+                                walletData.walletBalance.toFixed(2) : '0.00'
+                                %></span
+                              >
+                            </div>
+                            <div class="invest-data">
+                              <div class="invest-data-amount g-2">
+                                <div class="invest-data-history">
+                                  <div class="title">Portfolio Value</div>
+                                  <div class="amount">
+                                    $<%= walletData && walletData.walletBalance
+                                    ? walletData.walletBalance.toFixed(2) :
+                                    '0.00' %>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="text-center mt-4">
+                              <a
+                                href="/user/investment-plans"
+                                class="btn btn-primary me-2"
+                              >
+                                Deposit
+                              </a>
+                              <a
+                                href="/user/withdrawal"
+                                class="btn btn-outline-primary"
+                              >
+                                Withdraw
+                              </a>
+                            </div>
+                            <hr />
+
+                            <div class="card-title-group align-start mb-0">
+                              <div class="card-title">
+                                <h6 class="subtitle">Referral Balance</h6>
+                              </div>
+                            </div>
+                            <div class="card-amount">
+                              <span class="amount">
+                                $<%= walletData && walletData.referralBalance ?
+                                walletData.referralBalance.toFixed(2) : '0.00'
+                                %>
+                              </span>
+                            </div>
+                            <div class="invest-data">
+                              <div class="invest-data-amount g-2">
+                                <div class="invest-data-history">
+                                  <div class="title">Total Referrals</div>
+                                  <div class="amount">
+                                    <%= user && user.referrals ?
+                                    user.referrals.length : 0 %>
+                                  </div>
+                                </div>
+                                <div class="invest-data-history">
+                                  <div class="title">Commission Rate</div>
+                                  <div class="amount">5%</div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="text-center mt-4">
+                              <a
+                                href="/user/withdrawal#referral"
+                                class="btn btn-outline-primary"
+                                id="withdrawReferralBtn"
+                              >
+                                Withdraw Referral Earnings
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Recent Transactions Card -->
+                      <div class="col-md-4">
+                        <div class="card card-bordered card-full">
+                          <div class="card-inner">
+                            <div class="card-title-group align-start mb-0">
+                              <div class="card-title">
+                                <h6 class="subtitle">Recent Transactions</h6>
+                              </div>
+                              <div class="card-tools">
+                                <a
+                                  href="/user/transactions"
+                                  class="link link-sm"
+                                  >View All</a
+                                >
+                              </div>
+                            </div>
+
+                            <ul class="nk-activity">
+                              <% if (transactions && transactions.length > 0) {
+                              %> <% transactions.forEach(function(tx) { %>
+                              <li class="nk-activity-item">
+                                <div class="nk-activity-media">
+                                  <% if (tx.type === 'deposit') { %>
+                                  <em
+                                    class="icon ni ni-wallet-in bg-success-dim text-success"
+                                  ></em>
+                                  <% } else if (tx.type === 'withdrawal') { %>
+                                  <em
+                                    class="icon ni ni-wallet-out bg-warning-dim text-warning"
+                                  ></em>
+                                  <% } else if (tx.type === 'investment') { %>
+                                  <em
+                                    class="icon ni ni-invest bg-primary-dim text-primary"
+                                  ></em>
+                                  <% } else if (tx.type === 'earnings') { %>
+                                  <em
+                                    class="icon ni ni-growth bg-info-dim text-info"
+                                  ></em>
+                                  <% } else { %>
+                                  <em class="icon ni ni-tranx bg-gray-dim"></em>
+                                  <% } %>
+                                </div>
+                                <div class="nk-activity-data">
+                                  <div class="label">
+                                    <%= tx.type.charAt(0).toUpperCase() +
+                                    tx.type.slice(1) %> -
+                                    <span
+                                      class="<%= tx.status === 'completed' ? 'text-success' : tx.status === 'pending' ? 'text-warning' : tx.status === 'failed' ? 'text-danger' : 'text-muted' %>"
+                                    >
+                                      <%= tx.status.charAt(0).toUpperCase() +
+                                      tx.status.slice(1) %>
+                                    </span>
+                                  </div>
+                                  <div class="time">
+                                    $<%= typeof tx.amount === 'number' ?
+                                    tx.amount.toFixed(2) : tx.amount %> • <%=
+                                    new Date(tx.createdAt).toLocaleString() %>
+                                  </div>
+                                </div>
+                              </li>
+                              <% }); %> <% } else { %>
+                              <li class="text-center p-3">
+                                <em class="icon ni ni-info fs-2"></em>
+                                <p>No recent transactions</p>
+                              </li>
+                              <% } %>
+                            </ul>
+
+                            <div class="mt-3 text-center">
+                              <a
+                                href="/user/transactions"
+                                class="btn btn-outline-primary"
+                              >
+                                View All Transactions
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-md-12">
+                        <div class="card card-bordered">
+                          <div class="card-inner">
+                            <div class="nk-refwg-invite">
+                              <div class="nk-refwg-head g-3">
+                                <div class="nk-refwg-title">
+                                  <h5 class="title">Refer &amp; Earn</h5>
+                                  <div class="title-sub">
+                                    Use the below link to invite your friends.
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="nk-refwg-url">
+                                <div class="form-control-wrap">
+                                  <div
+                                    class="form-clip clipboard-init"
+                                    data-clipboard-target="#ref-url"
+                                    data-clip-success="Copied"
+                                    data-clip-text="Copy Link"
+                                  >
+                                    <em
+                                      class="clipboard-icon icon ni ni-copy"
+                                    ></em>
+                                    <span class="clipboard-text"
+                                      >Copy Link</span
+                                    >
+                                  </div>
+                                  <div class="form-icon">
+                                    <em class="icon ni ni-link-alt"></em>
+                                  </div>
+                                  <input
+                                    type="text"
+                                    readonly
+                                    class="form-control copy-text"
+                                    id="ref-url"
+                                    value="<%= baseUrl %>/invite?ref=<%= user && user.referralCode ? user.referralCode : 'undefined' %>"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ========Footer========== -->
+          <%- include('../snippets/adminSnippets/footer.ejs') %>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================Scripts========== -->
+    <%- include('../snippets/adminSnippets/scripts.ejs') %>
+
+    <!-- Live chat -->
+    <%- include('../snippets/live_chat.ejs') %>
+
+
+
+    <!-- Add our investment tracker script -->
+    <script src="/apiClient/apiClient.js"></script>
+    <script src="/apiClient/realTimeInvestmentClient.js"></script>
+
+    <script>
+      // Initialize the real-time investment tracker when the page loads
+      document.addEventListener('DOMContentLoaded', function() {
+        // Check for KYC status and display notification if needed
+        <% if (user) { %>
+          checkKycStatus("<%= user.kycStatus %>");
+        <% } %>
+
+        // Initialize investment tracker with active investments
+        <% if (activeInvestments && activeInvestments.length > 0) { %>
+          // Convert server-side data to JSON for client-side use
+          const investmentsData = JSON.parse('<%- JSON.stringify(activeInvestments).replace(/'/g, "\\'").replace(/\\/g, "\\\\") %>');
+          initInvestmentTracker(investmentsData);
+        <% } %>
+
+       
+      });
+    </script>
+  </body>
+</html>

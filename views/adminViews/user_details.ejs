@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="zxx" class="js">
+  <head>
+    <!-- ========Headers meta======== -->
+    <%- include('../snippets/adminSnippets/header_meta.ejs') %>
+
+    <title>EXNESTRADE | User Details</title>
+  </head>
+  <body class="nk-body bg-lighter npc-general has-sidebar">
+    <div class="nk-app-root">
+      <div class="nk-main">
+        <!-- ==========Sidebar======= -->
+        <%- include('../snippets/adminSnippets/sidebar.ejs') %>
+
+        <div class="nk-wrap">
+          <!-- ============Navbar======== -->
+          <%- include('../snippets/adminSnippets/navbar.ejs') %>
+
+          <!-- ============Content======== -->
+          <div class="nk-content">
+            <div class="container-fluid">
+              <div class="nk-content-inner">
+                <div class="nk-content-body">
+                  <div class="nk-block-head nk-block-head-sm">
+                    <div class="nk-block-between">
+                      <div class="nk-block-head-content">
+                        <h3 class="nk-block-title page-title">User Details</h3>
+                        <div class="nk-block-des text-soft">
+                          <p>Complete information about this user.</p>
+                        </div>
+                      </div>
+                      <div class="nk-block-head-content">
+                        <div class="toggle-wrap nk-block-tools-toggle">
+                          <a
+                            href="#"
+                            class="btn btn-icon btn-trigger toggle-expand me-n1"
+                            data-target="pageMenu"
+                            ><em class="icon ni ni-menu-alt-r"></em
+                          ></a>
+                          <div
+                            class="toggle-expand-content"
+                            data-content="pageMenu"
+                          >
+                            <ul class="nk-block-tools g-3">
+                              <li>
+                                <a
+                                  href="/admin/users/all"
+                                  class="btn btn-white btn-dim btn-outline-light"
+                                >
+                                  <em class="icon ni ni-arrow-left"></em>
+                                  <span>Back to All Users</span>
+                                </a>
+                              </li>
+                              <li>
+                                <button
+                                  id="block-user-btn"
+                                  class="btn btn-danger d-none"
+                                  data-user-id=""
+                                  data-is-blocked="false"
+                                >
+                                  <em class="icon ni ni-na"></em>
+                                  <span>Block User</span>
+                                </button>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- User details loading indicator -->
+                  <div id="user-details-loading" class="text-center p-5">
+                    <div class="spinner-border text-primary" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-2">Loading user details...</p>
+                  </div>
+
+                  <!-- User details content (hidden until loaded) -->
+                  <div
+                    id="user-details-content"
+                    class="nk-block"
+                    style="display: none"
+                  >
+                    <div class="card card-bordered">
+                      <div class="card-aside-wrap">
+                        <div class="card-content">
+                          <ul
+                            class="nav nav-tabs nav-tabs-mb-icon nav-tabs-card"
+                          >
+                            <li class="nav-item">
+                              <a
+                                class="nav-link active"
+                                data-bs-toggle="tab"
+                                href="#personal-info"
+                              >
+                                <em class="icon ni ni-user-circle"></em>
+                                <span>Personal Information</span>
+                              </a>
+                            </li>
+                            <li class="nav-item">
+                              <a
+                                class="nav-link"
+                                data-bs-toggle="tab"
+                                href="#wallet-info"
+                              >
+                                <em class="icon ni ni-wallet-alt"></em>
+                                <span>Wallet Details</span>
+                              </a>
+                            </li>
+                            <li class="nav-item">
+                              <a
+                                class="nav-link"
+                                data-bs-toggle="tab"
+                                href="#kyc-info"
+                              >
+                                <em class="icon ni ni-file-text"></em>
+                                <span>KYC Information</span>
+                              </a>
+                            </li>
+                            <li class="nav-item">
+                              <a
+                                class="nav-link"
+                                data-bs-toggle="tab"
+                                href="#activities"
+                              >
+                                <em class="icon ni ni-activity"></em>
+                                <span>Account Activities</span>
+                              </a>
+                            </li>
+                          </ul>
+
+                          <div class="card-inner">
+                            <div class="tab-content">
+                              <!-- Personal Information Tab -->
+                              <div class="tab-pane active" id="personal-info">
+                                <div class="nk-block">
+                                  <div class="profile-ud-list">
+                                    <div class="profile-ud-item">
+                                      <div class="profile-ud wider">
+                                        <span class="profile-ud-label"
+                                          >Full Name</span
+                                        >
+                                        <span
+                                          class="profile-ud-value"
+                                          id="user-full-name"
+                                          >-</span
+                                        >
+                                      </div>
+                                    </div>
+                                    <div class="profile-ud-item">
+                                      <div class="profile-ud wider">
+                                        <span class="profile-ud-label"
+                                          >Email Address</span
+                                        >
+                                        <span
+                                          class="profile-ud-value"
+                                          id="user-email"
+                                          >-</span
+                                        >
+                                      </div>
+                                    </div>
+                                    <div class="profile-ud-item">
+                                      <div class="profile-ud wider">
+                                        <span class="profile-ud-label"
+                                          >Country</span
+                                        >
+                                        <span
+                                          class="profile-ud-value"
+                                          id="user-country"
+                                          >-</span
+                                        >
+                                      </div>
+                                    </div>
+                                    <div class="profile-ud-item">
+                                      <div class="profile-ud wider">
+                                        <span class="profile-ud-label"
+                                          >Registration Date</span
+                                        >
+                                        <span
+                                          class="profile-ud-value"
+                                          id="user-created-at"
+                                          >-</span
+                                        >
+                                      </div>
+                                    </div>
+                                    <div class="profile-ud-item">
+                                      <div class="profile-ud wider">
+                                        <span class="profile-ud-label"
+                                          >Last Login</span
+                                        >
+                                        <span
+                                          class="profile-ud-value"
+                                          id="user-last-login"
+                                          >-</span
+                                        >
+                                      </div>
+                                    </div>
+                                    <div class="profile-ud-item">
+                                      <div class="profile-ud wider">
+                                        <span class="profile-ud-label"
+                                          >Email Status</span
+                                        >
+                                        <span
+                                          class="profile-ud-value"
+                                          id="user-email-status"
+                                          >-</span
+                                        >
+                                      </div>
+                                    </div>
+                                    <div class="profile-ud-item">
+                                      <div class="profile-ud wider">
+                                        <span class="profile-ud-label"
+                                          >Account Status</span
+                                        >
+                                        <span
+                                          class="profile-ud-value"
+                                          id="user-account-status"
+                                          >-</span
+                                        >
+                                      </div>
+                                    </div>
+                                    <div class="profile-ud-item">
+                                      <div class="profile-ud wider">
+                                        <span class="profile-ud-label"
+                                          >Role</span
+                                        >
+                                        <span
+                                          class="profile-ud-value"
+                                          id="user-role"
+                                          >-</span
+                                        >
+                                      </div>
+                                    </div>
+                                    <div class="profile-ud-item">
+                                      <div class="profile-ud wider">
+                                        <span class="profile-ud-label"
+                                          >Referral Code</span
+                                        >
+                                        <span
+                                          class="profile-ud-value"
+                                          id="user-referral-code"
+                                          >-</span
+                                        >
+                                      </div>
+                                    </div>
+                                    <div class="profile-ud-item">
+                                      <div class="profile-ud wider">
+                                        <span class="profile-ud-label"
+                                          >Referred By</span
+                                        >
+                                        <span
+                                          class="profile-ud-value"
+                                          id="user-referred-by"
+                                          >-</span
+                                        >
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <!-- End Personal Information Tab -->
+
+                              <!-- Wallet Details Tab -->
+                              <div class="tab-pane" id="wallet-info">
+                                <div class="nk-block">
+                                  <div class="profile-ud-list">
+                                    <div class="profile-ud-item">
+                                      <div class="profile-ud wider">
+                                        <span class="profile-ud-label"
+                                          >Wallet Balance</span
+                                        >
+                                        <span
+                                          class="profile-ud-value"
+                                          id="wallet-balance"
+                                          >-</span
+                                        >
+                                      </div>
+                                    </div>
+                                    <div class="profile-ud-item">
+                                      <div class="profile-ud wider">
+                                        <span class="profile-ud-label"
+                                          >Total Deposits</span
+                                        >
+                                        <span
+                                          class="profile-ud-value"
+                                          id="total-deposits"
+                                          >-</span
+                                        >
+                                      </div>
+                                    </div>
+                                    <div class="profile-ud-item">
+                                      <div class="profile-ud wider">
+                                        <span class="profile-ud-label"
+                                          >Total Withdrawals</span
+                                        >
+                                        <span
+                                          class="profile-ud-value"
+                                          id="total-withdrawals"
+                                          >-</span
+                                        >
+                                      </div>
+                                    </div>
+                                    <div class="profile-ud-item">
+                                      <div class="profile-ud wider">
+                                        <span class="profile-ud-label"
+                                          >Referral Balance</span
+                                        >
+                                        <span
+                                          class="profile-ud-value"
+                                          id="referral-balance"
+                                          >-</span
+                                        >
+                                      </div>
+                                    </div>
+                                    <div class="profile-ud-item">
+                                      <div class="profile-ud wider">
+                                        <span class="profile-ud-label"
+                                          >Current Withdrawal Limit</span
+                                        >
+                                        <span
+                                          class="profile-ud-value"
+                                          id="current-withdrawal-limit"
+                                          >-</span
+                                        >
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <!-- Withdrawal addresses list -->
+                                  <div class="card-inner border-top mt-3">
+                                    <h5 class="card-title">
+                                      Withdrawal Addresses
+                                    </h5>
+                                    <div class="table-responsive">
+                                      <table class="table table-hover">
+                                        <thead>
+                                          <tr>
+                                            <th>Currency</th>
+                                            <th>Network</th>
+                                            <th>Address</th>
+                                            <th>Label</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody id="withdrawal-addresses">
+                                          <tr>
+                                            <td colspan="4" class="text-center">
+                                              No withdrawal addresses added
+                                            </td>
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                    </div>
+                                  </div>
+
+                                  <!-- Update withdrawal limit form -->
+                                  <div class="card-inner border-top">
+                                    <h5 class="card-title">
+                                      Update Withdrawal Limit
+                                    </h5>
+                                    <form
+                                      id="withdrawal-limit-form"
+                                      data-user-id=""
+                                    >
+                                      <div class="row g-3 align-center">
+                                        <div class="col-lg-5">
+                                          <div class="form-group">
+                                            <label
+                                              class="form-label"
+                                              for="withdrawal-limit"
+                                              >New Withdrawal Limit</label
+                                            >
+                                            <span class="form-note"
+                                              >Set the maximum amount this user
+                                              can withdraw.</span
+                                            >
+                                          </div>
+                                        </div>
+                                        <div class="col-lg-7">
+                                          <div class="form-group">
+                                            <div class="form-control-wrap">
+                                              <input
+                                                type="number"
+                                                class="form-control"
+                                                id="withdrawal-limit"
+                                                placeholder="Enter amount"
+                                                required
+                                              />
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="row g-3">
+                                        <div class="col-lg-7 offset-lg-5">
+                                          <div class="form-group mt-2">
+                                            <button
+                                              type="submit"
+                                              class="btn btn-primary"
+                                            >
+                                              Update Limit
+                                            </button>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </form>
+                                  </div>
+                                </div>
+                              </div>
+                              <!-- End Wallet Details Tab -->
+
+                              <!-- KYC Information Tab -->
+                              <div class="tab-pane" id="kyc-info">
+                                <div class="nk-block">
+                                  <div class="profile-ud-list">
+                                    <div class="profile-ud-item">
+                                      <div class="profile-ud wider">
+                                        <span class="profile-ud-label"
+                                          >KYC Status</span
+                                        >
+                                        <span
+                                          class="profile-ud-value"
+                                          id="kyc-status-display"
+                                          >-</span
+                                        >
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <!-- KYC Documents display (if available) -->
+                                  <div
+                                    class="card-inner border-top mt-3"
+                                    id="kyc-documents-section"
+                                  >
+                                    <h5 class="card-title">KYC Documents</h5>
+                                    <div id="kyc-documents-list" class="row">
+                                      <div class="col text-center">
+                                        <p>No KYC documents available</p>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <!-- Update KYC status form -->
+                                  <div class="card-inner border-top">
+                                    <h5 class="card-title">
+                                      Update KYC Status
+                                    </h5>
+                                    <form id="kyc-status-form" data-user-id="">
+                                      <div class="row g-3 align-center">
+                                        <div class="col-lg-5">
+                                          <div class="form-group">
+                                            <label
+                                              class="form-label"
+                                              for="kyc-status"
+                                              >KYC Status</label
+                                            >
+                                            <span class="form-note"
+                                              >Change the KYC verification
+                                              status for this user.</span
+                                            >
+                                          </div>
+                                        </div>
+                                        <div class="col-lg-7">
+                                          <div class="form-group">
+                                            <div class="form-control-wrap">
+                                              <select
+                                                class="form-select"
+                                                id="kyc-status"
+                                                required
+                                              >
+                                                <option value="not_required">
+                                                  Not Required
+                                                </option>
+                                                <option value="pending">
+                                                  Pending
+                                                </option>
+                                                <option value="approved">
+                                                  Approved
+                                                </option>
+                                                <option value="rejected">
+                                                  Rejected
+                                                </option>
+                                              </select>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="row g-3">
+                                        <div class="col-lg-7 offset-lg-5">
+                                          <div class="form-group mt-2">
+                                            <button
+                                              type="submit"
+                                              class="btn btn-primary"
+                                            >
+                                              Update KYC Status
+                                            </button>
+                                            <button
+                                              type="button"
+                                              id="request-kyc-btn"
+                                              class="btn btn-dim btn-outline-primary"
+                                            >
+                                              Request KYC
+                                            </button>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </form>
+                                  </div>
+                                </div>
+                              </div>
+                              <!-- End KYC Information Tab -->
+
+                              <!-- Activities Tab -->
+                              <div class="tab-pane" id="activities">
+                                <div class="nk-block">
+                                  <div class="card-inner border-top">
+                                    <h5 class="card-title">
+                                      Recent Activities
+                                    </h5>
+                                    <div id="user-activities" class="mt-3">
+                                      <div class="text-center">
+                                        <p>No recent activities found</p>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <!-- End Activities Tab -->
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ===========Footer=========== -->
+          <%- include('../snippets/adminSnippets/footer.ejs') %>
+        </div>
+      </div>
+    </div>
+    <!-- =========Scripts========= -->
+    <%- include('../snippets/adminSnippets/scripts.ejs') %>
+    <script src="/apiClient/apiClient.js"></script>
+    <script src="/apiClient/userAdminClient.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", async () => {
+        // Get user ID from URL
+        const pathParts = window.location.pathname.split("/");
+        const userId = pathParts[pathParts.length - 1];
+
+        if (!userId) {
+          showToast("User ID not found", "error");
+          setTimeout(() => {
+            window.location.href = "/admin/users/all";
+          }, 2000);
+          return;
+        }
+
+        try {
+          // Fetch user details
+          const response = await getUserDetails(userId);
+
+          if (!response.success) {
+            showToast(
+              response.message || "Failed to load user details",
+              "error"
+            );
+            return;
+          }
+
+          const user = response.user;
+
+          // Hide loading, show content
+          document.getElementById("user-details-loading").style.display =
+            "none";
+          document.getElementById("user-details-content").style.display =
+            "block";
+
+          // Update block/unblock button
+          const blockBtn = document.getElementById("block-user-btn");
+          blockBtn.setAttribute("data-user-id", user._id);
+          blockBtn.setAttribute("data-is-blocked", user.isBlocked);
+          blockBtn.classList.remove("d-none");
+
+          if (user.isBlocked) {
+            blockBtn.classList.remove("btn-danger");
+            blockBtn.classList.add("btn-success");
+            blockBtn.innerHTML =
+              '<em class="icon ni ni-unlock"></em><span>Unblock User</span>';
+          } else {
+            blockBtn.classList.remove("btn-success");
+            blockBtn.classList.add("btn-danger");
+            blockBtn.innerHTML =
+              '<em class="icon ni ni-na"></em><span>Block User</span>';
+          }
+
+          // Update forms with user ID
+          document
+            .getElementById("withdrawal-limit-form")
+            .setAttribute("data-user-id", user._id);
+          document
+            .getElementById("kyc-status-form")
+            .setAttribute("data-user-id", user._id);
+
+          // Set KYC status dropdown value
+          document.getElementById("kyc-status").value =
+            user.kycStatus || "not_required";
+
+          // Fill in user personal information
+          document.getElementById("user-full-name").textContent =
+            user.fullName || "N/A";
+          document.getElementById("user-email").textContent =
+            user.email || "N/A";
+          document.getElementById("user-country").textContent =
+            user.country || "N/A";
+          document.getElementById("user-created-at").textContent =
+            new Date(user.createdAt).toLocaleString() || "N/A";
+          document.getElementById("user-last-login").textContent =
+            user.lastLogin ? new Date(user.lastLogin).toLocaleString() : "N/A";
+
+          const emailStatus = document.getElementById("user-email-status");
+          if (user.isEmailVerified) {
+            emailStatus.textContent = "Verified";
+            emailStatus.classList.add("text-success");
+          } else {
+            emailStatus.textContent = "Unverified";
+            emailStatus.classList.add("text-warning");
+          }
+
+          const accountStatus = document.getElementById("user-account-status");
+          if (user.isBlocked) {
+            accountStatus.textContent = "Blocked";
+            accountStatus.classList.add("text-danger");
+          } else {
+            accountStatus.textContent = "Active";
+            accountStatus.classList.add("text-success");
+          }
+
+          document.getElementById("user-role").textContent = user.role
+            ? user.role.charAt(0).toUpperCase() + user.role.slice(1)
+            : "User";
+          document.getElementById("user-referral-code").textContent =
+            user.referralCode || "N/A";
+          document.getElementById("user-referred-by").textContent =
+            user.referredBy || "None";
+
+          // Fill in wallet details
+          if (user.wallet) {
+            document.getElementById(
+              "wallet-balance"
+            ).textContent = `$${user.wallet.walletBalance.toFixed(2)}`;
+            document.getElementById(
+              "total-deposits"
+            ).textContent = `$${user.wallet.totalDeposit.toFixed(2)}`;
+            document.getElementById(
+              "total-withdrawals"
+            ).textContent = `$${user.wallet.totalWithdrawal.toFixed(2)}`;
+            document.getElementById(
+              "referral-balance"
+            ).textContent = `$${user.wallet.referralBalance.toFixed(2)}`;
+            document.getElementById(
+              "current-withdrawal-limit"
+            ).textContent = `$${user.withdrawalLimit.toFixed(2)}`;
+            document.getElementById("withdrawal-limit").value =
+              user.withdrawalLimit;
+
+            // Display withdrawal addresses
+            const addressesTable = document.getElementById(
+              "withdrawal-addresses"
+            );
+            if (
+              user.wallet.withdrawalAddresses &&
+              user.wallet.withdrawalAddresses.length > 0
+            ) {
+              addressesTable.innerHTML = "";
+              user.wallet.withdrawalAddresses.forEach((address) => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                  <td>${address.currency || "N/A"}</td>
+                  <td>${address.network || "N/A"}</td>
+                  <td>${address.address || "N/A"}</td>
+                  <td>${address.label || "N/A"}</td>
+                `;
+                addressesTable.appendChild(row);
+              });
+            }
+          }
+
+          // Display KYC status
+          const kycStatusDisplay =
+            document.getElementById("kyc-status-display");
+          switch (user.kycStatus) {
+            case "approved":
+              kycStatusDisplay.textContent = "Approved";
+              kycStatusDisplay.classList.add("text-success");
+              break;
+            case "pending":
+              kycStatusDisplay.textContent = "Pending Verification";
+              kycStatusDisplay.classList.add("text-warning");
+              break;
+            case "rejected":
+              kycStatusDisplay.textContent = "Rejected";
+              kycStatusDisplay.classList.add("text-danger");
+              break;
+            default:
+              kycStatusDisplay.textContent = "Not Required";
+              kycStatusDisplay.classList.add("text-secondary");
+          }
+
+          // Request KYC button handler
+          document
+            .getElementById("request-kyc-btn")
+            .addEventListener("click", async () => {
+              if (
+                confirm(
+                  `Are you sure you want to request KYC verification from ${user.fullName}?`
+                )
+              ) {
+                try {
+                  const response = await updateKycStatus(user._id, "pending");
+                  if (response.success) {
+                    showToast("KYC request sent to user", "success");
+                    setTimeout(() => location.reload(), 1000);
+                  } else {
+                    showToast(
+                      response.message || "Failed to request KYC",
+                      "error"
+                    );
+                  }
+                } catch (error) {
+                  showToast(error.message, "error");
+                }
+              }
+            });
+        } catch (error) {
+          showToast(error.message || "Failed to load user details", "error");
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,162 @@
+<div class="nk-header nk-header-fixed is-light">
+  <div class="container-fluid">
+    <div class="nk-header-wrap">
+      <div class="nk-menu-trigger d-xl-none ms-n1">
+        <a
+          href="#"
+          class="nk-nav-toggle nk-quick-nav-icon"
+          data-target="sidebarMenu"
+          ><em class="icon ni ni-menu"></em
+        ></a>
+      </div>
+      <div class="nk-header-brand d-xl-none">
+        <a href="/" class="logo-link">
+          <img
+            class="logo-light logo-img"
+            src="<%= (appSettings && appSettings[0] && appSettings[0].siteLogo) ? appSettings[0].siteLogo : '' %>"
+            alt="logo"
+          />
+
+          <img
+            class="logo-dark logo-img"
+            src="<%= (appSettings && appSettings[0] && appSettings[0].siteLogo) ? appSettings[0].siteLogo : '' %>"
+            alt="logo-dark"
+          />
+        </a>
+      </div>
+      <div class="nk-header-news d-none d-xl-block">
+        <div class="nk-news-list">
+          <a class="nk-news-item" href="#">
+            <div class="nk-news-icon">
+              <em class="icon ni ni-card-view"></em>
+            </div>
+            <div class="nk-news-text">
+              <p>
+                Belivable Fact
+                <span> The app is doing well</span>
+              </p>
+              <em class="icon ni ni-external"></em>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="nk-header-tools">
+        <ul class="nk-quick-nav">
+          <li class="dropdown language-dropdown d-none d-sm-block me-n1">
+            <a
+              href="#"
+              class="dropdown-toggle nk-quick-nav-icon"
+              data-bs-toggle="dropdown"
+              ><div class="quick-icon border border-light">
+                <img
+                  class="icon"
+                  src="images/flags/english-sq.png"
+                  alt=""
+                /></div
+            ></a>
+          </li>
+          <li class="dropdown user-dropdown">
+            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"
+              ><div class="user-toggle">
+                <div class="user-avatar sm">
+                  <% if (typeof user !== 'undefined' && user) { %> <% if
+                    (user.profileImage) { %>
+                    <img src="<%= user.profileImage %>" alt="User Avatar" />
+                    <% } else { %>
+                    <span
+                      ><%= user.fullName ?
+                      user.fullName.charAt(0).toUpperCase() + (user.fullName ?
+                      user.fullName.charAt(1).toUpperCase() : '') : (user.email
+                      ? user.email.charAt(0).toUpperCase() : 'U') %></span
+                    >
+                    <% } %> <% } else { %>
+                      <em class="icon ni ni-user-alt"></em>
+                    <% } %>
+                  
+                </div>
+                <div class="user-info d-none d-md-block">
+                  <% if (typeof user !== 'undefined' && user) { %>
+                  <div class="user-status">
+                    <%= user.role ? user.role.charAt(0).toUpperCase() +
+                    user.role.slice(1) : "User" %>
+                  </div>
+                  <div class="user-name dropdown-indicator">
+                    <%= user.fullName ? `${user.fullName}`.trim() : user.email %>
+                  </div>
+                  <% } else { %>
+                  <div class="user-status">Guest</div>
+                  <div class="user-name dropdown-indicator">Guest User</div>
+                  <% } %>
+                </div>
+              </div></a
+            >
+            <div
+              class="dropdown-menu dropdown-menu-md dropdown-menu-end dropdown-menu-s1"
+            >
+              <div
+                class="dropdown-inner user-card-wrap bg-lighter d-none d-md-block"
+              >
+                <div class="user-card">
+                  <div class="user-avatar">
+                    <% if (typeof user !== 'undefined' && user) { %> <% if
+                    (user.profileImage) { %>
+                    <img src="<%= user.profileImage %>" alt="User Avatar" />
+                    <% } else { %>
+                    <span
+                      ><%= user.fullName ?
+                      user.fullName.charAt(0).toUpperCase() + (user.fullName ?
+                      user.fullName.charAt(1).toUpperCase() : '') : (user.email
+                      ? user.email.charAt(0).toUpperCase() : 'U') %></span
+                    >
+                    <% } %> <% } else { %>
+                    <span><em class="icon ni ni-user-alt"></em></span>
+                    <% } %>
+                  </div>
+                  <div class="user-info">
+                    <% if (typeof user !== 'undefined' && user) { %>
+                    <span class="lead-text"
+                      ><%= user.fullName ? `${user.fullName}`.trim() : user.fullName || 'User' %></span
+                    >
+                    <span class="sub-text"><%= user.email || '' %></span>
+                    <% } else { %>
+                    <span class="lead-text">Guest User</span>
+                    <span class="sub-text">guest@example.com</span>
+                    <% } %>
+                  </div>
+                </div>
+              </div>
+              <div class="dropdown-inner">
+                <ul class="link-list">
+                  <li>
+                    <a
+                      href="<%= typeof user !== 'undefined' && user && user.role === 'admin' ? '/admin/profile' : '/user/profile' %>"
+                      ><em class="icon ni ni-user-alt"></em
+                      ><span>View Profile</span></a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="<%= typeof user !== 'undefined' && user && user.role === 'admin' ? '/admin/settings' : '/user/settings' %>"
+                      ><em class="icon ni ni-setting-alt"></em
+                      ><span>Account Setting</span></a
+                    >
+                  </li>
+                </ul>
+              </div>
+              <div class="dropdown-inner">
+                <ul class="link-list">
+                  <li>
+                    <a href="/auth/logout">
+                      <em class="icon ni ni-signout"></em>
+                      <span>Sign out</span></a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="zxx" class="js">
+  <head>
+    <!-- ========Headers meta======== -->
+    <%- include('../snippets/adminSnippets/header_meta.ejs') %>
+
+    <title>EXNESTRADE | Admin Dashboard</title>
+  </head>
+  <body class="nk-body bg-lighter npc-general has-sidebar">
+    <div class="nk-app-root">
+      <div class="nk-main">
+        <!-- ==========Sidebar======= -->
+        <%- include('../snippets/adminSnippets/sidebar.ejs') %>
+
+        <div class="nk-wrap">
+          <!-- ============Navbar======== -->
+          <%- include('../snippets/adminSnippets/navbar.ejs') %>
+
+          <!-- ============Content======== -->
+          <div class="nk-content">
+            <div class="container-fluid">
+              <div class="nk-content-inner">
+                <div class="nk-content-body">
+                  <div class="nk-block-head nk-block-head-sm">
+                    <div class="nk-block-between">
+                      <div class="nk-block-head-content">
+                        <h3 class="nk-block-title page-title">
+                          Manage Plan Schemes
+                        </h3>
+                        <div class="nk-block-des text-soft">
+                          <p>Manage your investment plans.</p>
+                        </div>
+                      </div>
+                      <div class="nk-block-head-content">
+                        <div class="toggle-wrap nk-block-tools-toggle">
+                          <a
+                            href="#"
+                            class="btn btn-icon btn-trigger toggle-expand me-n1"
+                            data-target="pageMenu"
+                            ><em class="icon ni ni-menu-alt-r"></em
+                          ></a>
+                          <div
+                            class="toggle-expand-content"
+                            data-content="pageMenu"
+                          >
+                            <ul class="nk-block-tools g-3">
+                              <li>
+                                <a href="#addPlanSchemeModal" data-bs-toggle="modal"  class="btn btn-primary">
+                                  <span
+                                    ><em class="icon ni ni-plus"></em> Add Plan
+                                    Scheme</span
+                                  >
+                                </a>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="nk-block">
+                    <div class="row g-gs">
+                        <% if (plans && plans.length > 0) { %>
+                          <% plans.forEach(plan => { %>
+                            <div class="col-lg-4 col-sm-6">
+                              <div class="card card-bordered pricing">
+                                <div class="card-inner-group">
+                                  <div class="card-inner">
+                                    <div class="card-title-group align-start">
+                                      <div class="card-title">
+                                        <h5
+                                          class="title align-center"
+                                          id="<%= plan._id %>" >
+                                          <%= plan.name %>
+                                          <span class="mx-1 badge <%= plan.isActive ? 'bg-success-dim text-success' : 'bg-danger-dim text-danger' %>">
+                                            <%= plan.isActive ? 'Active' : 'Inactive' %>
+                                          </span>
+                                        </h5>
+                                        <p>
+                                          (<%= plan.shortName || 'Investment Plan' %>)
+                                        </p>
+                                      </div>
+
+                                      <div class="card-tools mt-n1 mr-n1">
+                                        <div class="dropdown">
+                                          <a href="#"
+                                            class="dropdown-toggle btn btn-icon btn-trigger"
+                                            data-bs-toggle="dropdown">
+                                            <em class="icon ni ni-more-h"></em>
+                                          </a>
+                                          <div
+                                            class="dropdown-menu dropdown-menu-right" >
+                                            <ul class="link-list-opt no-bdr">
+                                              <li>
+                                                <a
+                                                  href="javascript:void(0)"
+                                                  class="actn-scivs"
+                                                  data-action="edit"
+                                                  data-view="modal"
+                                                  data-backdrop="static"
+                                                  data-uid="<%= plan._id %>">
+                                                  <em class="icon ni ni-edit-fill"></em>
+                                                  <span>Update Scheme</span>
+                                                </a>
+                                              </li>
+
+                                              <li>
+                                                <a
+                                                  href="javascript:void(0)"
+                                                  class="actn-upivs"
+                                                  data-action="<%= plan.isActive ? 'inactive' : 'active' %>"
+                                                  data-uid="<%= plan._id %>">
+                                                  <em class="icon ni ni-<%= plan.isActive ? 'spark-off-fill' : 'spark-fill' %>"></em>
+                                                  <span><%= plan.isActive ? 'Mark Inactive' : 'Mark Active' %></span>
+                                                </a>
+                                              </li>
+
+                                              <li>
+                                                <a href="javascript:void(0)"
+                                                  class="actn-upivs"
+                                                  data-action="delete"
+                                                  data-uid="<%= plan._id %>">
+                                                  <em class="icon ni ni-trash-fill"></em>
+                                                  <span>Delete Scheme</span>
+                                                </a>
+                                              </li>
+                                              
+                                            </ul>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="card-inner">
+                                    <div class="row">
+                                      <div class="col-6">
+                                        <div class="plan-sum">
+                                          <div class="amount"><%= plan.roiPercentage %> %</div>
+                                          <span class="title">Interest (<%= plan.roiPeriod.charAt(0).toUpperCase() + plan.roiPeriod.slice(1) %>)</span>
+                                        </div>
+                                      </div>
+                                      <div class="col-6">
+                                        <div class="plan-sum">
+                                          <div class="amount"><%= plan.term %></div>
+                                          <span class="title"><%= plan.termPeriod.charAt(0).toUpperCase() + plan.termPeriod.slice(1) %> (Term)</span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="card-inner">
+                                    <div class="row g-2">
+                                      <div class="col-6">
+                                        <div class="plan-info">
+                                          <span class="title text-muted">Plan Type</span> <br>
+                                          <span class="info">
+                                            <%= plan.type.charAt(0).toUpperCase() + plan.type.slice(1) %>
+                                          </span>
+                                        </div>
+                                      </div>
+                                      <div class="col-6">
+                                        <div class="plan-info">
+                                          <span class="title text-muted">Profit</span> <br>
+                                          <span class="info"><%= plan.roiPeriod.charAt(0).toUpperCase() + plan.roiPeriod.slice(1) %> (Term basis)</span>
+                                        </div>
+                                      </div>
+
+                                      <div class="col-6">
+                                        <div class="plan-info">
+                                          <span class="title text-muted">Min: </span>
+                                          <span class="info"><%= plan.minAmount.toFixed(2) %> USD</span>
+                                        </div>
+                                      </div>
+                                      <div class="col-6">
+                                        <div class="plan-info">
+                                          <span class="title text-muted">Max: </span>
+                                          <span class="info"><%= plan.maxAmount.toFixed(2) %> USD</span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          <% }); %>
+                        <% } else { %>
+                          <div class="col-12">
+                            <div class="card card-bordered">
+                              <div class="card-inner">
+                                <div class="nk-block-head">
+                                  <div class="nk-block-head-content text-center">
+                                    <h5 class="nk-block-title">No investment plans found</h5>
+                                    <div class="nk-block-des">
+                                      <p>Click the "Add Plan Scheme" button to create your first investment plan.</p>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        <% } %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ===========Add Schema Modal======== -->
+          <div class="modal fade" tabindex="-1" id="addPlanSchemeModal">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <a href="#" class="close" data-bs-dismiss="modal"
+                  aria-label="Close">
+                  <em class="icon ni ni-cross"></em>
+                </a>
+                <div class="modal-body modal-body-lg">
+                  <h4 class="title nk-modal-title mb-3">
+                    Add New Plan Scheme
+                  </h4>
+
+                  <form action="/admin/investment/api/plans" method="POST" id="addPlanForm">
+                    <div class="row gy-3">
+                        <div class="col-lg-8">
+                            <label>
+                              Scheme Name <span class="text-danger">*</span>
+                            </label>
+                            <div class="form-control-wrap">
+                              <input type="text" class="form-control" 
+                              name="name" required/>
+                            </div>
+                            <p class="text-muted small fst-italic">
+                              The name of the plan
+                            </p>
+                        </div>
+                        <div class="col-lg-4">
+                            <label>
+                              Short Name
+                            </label>
+                            <div class="form-control-wrap">
+                              <input type="text" class="form-control" 
+                              name="shortName"/>
+                            </div>
+                            <p class="text-muted small fst-italic">
+                              The short name for the plan
+                            </p>
+                        </div>
+                        <hr>
+                        <div class="col-lg-4">
+                          <label>
+                              Minimum Amount <span class="text-danger">*</span>
+                          </label>
+                          <div class="form-control-wrap">
+                            <div class="form-text-hint">
+                                <span class="overline-title">USD</span>
+                            </div>
+                            <input type="number" step="0.01" class="form-control" 
+                            name="minAmount" placeholder="0.00" required/>
+                          </div>
+                          <p class="text-muted small fst-italic">
+                              Minimum (USD)
+                          </p>
+                        </div>
+                        <div class="col-lg-4">
+                          <label>
+                              Maximum Amount <span class="text-danger">*</span>
+                          </label>
+                          <div class="form-control-wrap">
+                              <div class="form-text-hint">
+                                  <span class="overline-title">USD</span>
+                              </div>
+                              <input type="number" step="0.01" class="form-control" 
+                              name="maxAmount" placeholder="0.00" required/>
+                          </div>
+                          <p class="text-muted small fst-italic">
+                              Maximum (USD)
+                          </p>
+                        </div>
+
+                        <div class="col-lg-4">
+                          <label>
+                              Interest/Profit <span class="text-danger">*</span>
+                          </label>
+                          <div class="form-control-wrap">
+                              <div class="form-text-hint">
+                                  <span class="overline-title">%</span>
+                              </div>
+                              <input type="number" step="0.01" class="form-control" 
+                              name="roiPercentage" placeholder="2.5" required/>
+                          </div>
+                          <p class="text-muted small fst-italic">
+                              Percentage (Percent)
+                          </p>
+                        </div>
+
+                      <div class="col-lg-4">
+                        <label>
+                          Profit Period <span class="text-danger">*</span>
+                        </label>
+                        <div class="form-control-wrap">
+                          <select name="roiPeriod" class="form-control form-select js-select2" required>
+                            <option value="hourly">Hourly</option>
+                            <option value="daily">Daily</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="monthly" selected>Monthly</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-4">
+                        <label>
+                          Term Duration <span class="text-danger">*</span>
+                        </label>
+                        <div class="form-control-wrap">
+                          <input type="number" class="form-control" 
+                          placeholder="4" name="term" min="1" required/>
+                        </div>
+                        <p class="text-muted small fst-italic">
+                          The duration of the plan
+                        </p>
+                    </div>
+
+                    <div class="col-lg-4">
+                      <label>
+                        Duration Unit <span class="text-danger">*</span>
+                      </label>
+                      <div class="form-control-wrap">
+                        <select
+                        name="termPeriod"
+                        class="form-control form-select js-select2"
+                        required >
+                          <option value="hour" >Hours</option>
+                          <option value="day" selected>days</option>
+                          <option value="week">Weeks</option>
+                          <option value="month">Months</option>
+                        </select>
+                      </div>
+                    </div>
+                    <hr>
+
+                    <div class="col-lg-6">
+                      <label>
+                        Plan Type
+                      </label>
+                      <div class="form-control-wrap">
+                        <select name="type" class="form-control form-select js-select2" required>
+                          <option value="investment">Investment</option>
+                          <option value="loan">Loan</option>
+                          <option value="promo">Promo</option>
+                          <option value="trading">Trading</option>
+                        </select>
+                      </div>
+                    </div>
+                      
+                    <div class="col-lg-6">
+                      <div class="form-group mt-3"><div class="custom-control custom-control-labeled custom-switch">
+                        <input name="isActive" type="checkbox" class="custom-control-input" id="isActive" checked>
+                        <label class="custom-control-label" for="isActive">Active</label>
+                      </div></div>
+                    </div>
+                    <hr>
+                    <div class="col-lg-12 text-end">
+                      <button type="submit" class="btn btn-primary">Add Scheme</button>
+                      <button type="button" class="btn btn-light" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                    </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ===========Edit Schema Modal======== -->
+          <div class="modal fade" tabindex="-1" id="editPlanSchemeModal">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <a href="#" class="close" data-bs-dismiss="modal"
+                  aria-label="Close">
+                  <em class="icon ni ni-cross"></em>
+                </a>
+                <div class="modal-body modal-body-lg">
+                  <h4 class="title nk-modal-title mb-3">
+                    Update Plan Scheme
+                  </h4>
+
+                  <form action="/admin/plans" method="PUT" id="editPlanForm">
+                    <input type="hidden" name="planId" id="edit-plan-id">
+                    <div class="row gy-3">
+                        <div class="col-lg-8">
+                            <label>
+                              Scheme Name <span class="text-danger">*</span>
+                            </label>
+                            <div class="form-control-wrap">
+                              <input type="text" class="form-control" 
+                              id="edit-name" name="name" required/>
+                            </div>
+                            <p class="text-muted small fst-italic">
+                              The name of the plan
+                            </p>
+                        </div>
+                        <div class="col-lg-4">
+                            <label>
+                              Short Name
+                            </label>
+                            <div class="form-control-wrap">
+                              <input type="text" class="form-control" 
+                              id="edit-shortName" name="shortName"/>
+                            </div>
+                            <p class="text-muted small fst-italic">
+                              The short name for the plan
+                            </p>
+                        </div>
+                        <hr>
+                        <div class="col-lg-4">
+                          <label>
+                              Minimum Amount <span class="text-danger">*</span>
+                          </label>
+                          <div class="form-control-wrap">
+                            <div class="form-text-hint">
+                                <span class="overline-title">USD</span>
+                            </div>
+                            <input type="number" step="0.01" class="form-control" 
+                            id="edit-minAmount" name="minAmount" placeholder="0.00" required/>
+                          </div>
+                          <p class="text-muted small fst-italic">
+                              Minimum (USD)
+                          </p>
+                        </div>
+                        <div class="col-lg-4">
+                          <label>
+                              Maximum Amount <span class="text-danger">*</span>
+                          </label>
+                          <div class="form-control-wrap">
+                              <div class="form-text-hint">
+                                  <span class="overline-title">USD</span>
+                              </div>
+                              <input type="number" step="0.01" class="form-control" 
+                              id="edit-maxAmount" name="maxAmount" placeholder="0.00" required/>
+                          </div>
+                          <p class="text-muted small fst-italic">
+                              Maximum (USD)
+                          </p>
+                        </div>
+
+                        <div class="col-lg-4">
+                          <label>
+                              Interest/Profit <span class="text-danger">*</span>
+                          </label>
+                          <div class="form-control-wrap">
+                              <div class="form-text-hint">
+                                  <span class="overline-title">%</span>
+                              </div>
+                              <input type="number" step="0.01" class="form-control" 
+                              id="edit-roiPercentage" name="roiPercentage" placeholder="2.5" required/>
+                          </div>
+                          <p class="text-muted small fst-italic">
+                              Percentage (Percent)
+                          </p>
+                        </div>
+
+                      <div class="col-lg-4">
+                        <label>
+                          Profit Period <span class="text-danger">*</span>
+                        </label>
+                        <div class="form-control-wrap">
+                          <select id="edit-roiPeriod" name="roiPeriod" class="form-control form-select js-select2" required>
+                            <option value="hourly">Hourly</option>
+                            <option value="daily" selected>Daily</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="monthly">Monthly</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-4">
+                        <label>
+                          Term Duration <span class="text-danger">*</span>
+                        </label>
+                        <div class="form-control-wrap">
+                          <input type="number" class="form-control" 
+                          placeholder="4" id="edit-term" name="term" min="1" required/>
+                        </div>
+                        <p class="text-muted small fst-italic">
+                          The duration of the plan
+                        </p>
+                    </div>
+
+                    <div class="col-lg-4">
+                      <label>
+                        Duration Unit <span class="text-danger">*</span>
+                      </label>
+                      <div class="form-control-wrap">
+                        <select
+                        id="edit-termPeriod"
+                        name="termPeriod"
+                        class="form-control form-select js-select2"
+                        required>
+                          <option value="hour">Hours</option>
+                          <option value="day" selected>days</option>
+                          <option value="week">Weeks</option>
+                          <option value="month">Months</option>
+                        </select>
+                      </div>
+                    </div>
+                    <hr>
+
+                    <div class="col-lg-6">
+                      <label>
+                        Plan Type
+                      </label>
+                      <div class="form-control-wrap">
+                        <select id="edit-type" name="type" class="form-control form-select js-select2" required>
+                          <option value="investment">Investment</option>
+                          <option value="loan">Loan</option>
+                          <option value="promo">Promo</option>
+                          <option value="trading">Trading</option>
+                        </select>
+                      </div>
+                    </div>
+                      
+                    <div class="col-lg-6">
+                      <div class="form-group mt-3"><div class="custom-control custom-control-labeled custom-switch">
+                        <input id="edit-isActive" name="isActive" type="checkbox" class="custom-control-input">
+                        <label class="custom-control-label" for="edit-isActive">Active</label>
+                      </div></div>
+                    </div>
+                    <hr>
+                    <div class="col-lg-12 text-end">
+                      <button type="submit" class="btn btn-primary">Update Scheme</button>
+                      <button type="button" class="btn btn-light" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                    </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div> 
+          </div>
+
+          <!-- ========Footer========== -->
+          <%- include('../snippets/adminSnippets/footer.ejs') %>
+        </div>
+      </div>
+    </div>
+    
+    <!-- ===================Scripts========== -->
+    <%- include('../snippets/adminSnippets/scripts.ejs') %>
+    
+    <!-- Include API client scripts -->
+    <script src="/apiClient/apiClient.js"></script>
+
+    <script>
+      $(document).ready(function () {
+        // Initialize Select2
+        $(".js-select2").select2({
+          placeholder: "Select an option",
+          width: "100%",
+        });
+      });
+
+           // Handle Add Plan Form Submission
+           $("#addPlanForm").on("submit", function (e) {
+            e.preventDefault();
+            const formData = $(this).serialize();
+  
+            $.ajax({
+              url: "/admin/investment/api/plans",
+              type: "POST",
+              data: formData,
+              success: function (response) {
+                if (response.success) {
+                  // Show success notification
+                  showToast(response.message, "success");
+                  // Reload page to show new plan
+                  setTimeout(function () {
+                    location.reload();
+                  }, 1000);
+                } else {
+                  // Show error notification
+                  showToast(response.message, "error");
+                }
+              },
+              error: function (error) {
+                showToast("Failed to register plan", "error");
+              },
+            });
+          });
+  
+          // Handle Edit Button Click
+          $(".actn-scivs[data-action='edit']").on("click", function () {
+            const planId = $(this).data("uid");
+  
+            // Fetch plan details
+            $.ajax({
+              url: `/admin/investment/api/plans/${planId}`,
+              type: "GET",
+              success: function (response) {
+                if (response.success && response.plan) {
+                  const plan = response.plan;
+  
+                  // Populate the edit form
+                  $("#edit-plan-id").val(plan._id);
+                  $("#edit-name").val(plan.name);
+                  $("#edit-shortName").val(plan.shortName);
+                  $("#edit-minAmount").val(plan.minAmount);
+                  $("#edit-maxAmount").val(plan.maxAmount);
+                  $("#edit-roiPercentage").val(plan.roiPercentage);
+                  $("#edit-roiPeriod").val(plan.roiPeriod).trigger("change");
+                  $("#edit-term").val(plan.term);
+                  $("#edit-termPeriod").val(plan.termPeriod).trigger("change");
+                  $("#edit-type").val(plan.type).trigger("change");
+                  $("#edit-isActive").prop("checked", plan.isActive);
+  
+                  // Show the edit modal
+                  $("#editPlanSchemeModal").modal("show");
+                } else {
+                  showToast("Failed to fetch plan details", "error");
+                }
+              },
+              error: function (error) {
+                showToast("Failed to fetch plan details", "error");
+              },
+            });
+          });
+  
+          // Handle Edit Plan Form Submission
+          $("#editPlanForm").on("submit", function (e) {
+            e.preventDefault();
+            const planId = $("#edit-plan-id").val();
+            const formData = $(this).serialize();
+  
+            $.ajax({
+              url: `/admin/investment/api/plans/${planId}`,
+              type: "PUT",
+              data: formData,
+              success: function (response) {
+                if (response.success) {
+                  // Show success notification
+                  showToast(response.message, "success");
+                  // Reload page to show updated plan
+                  setTimeout(function () {
+                    location.reload();
+                  }, 1000);
+                } else {
+                  // Show error notification
+                  showToast(response.message, "error");
+                }
+              },
+              error: function (error) {
+                showToast("Failed to update plan scheme", "error");
+              },
+            });
+          });
+  
+          // Handle Toggle Status Button Click
+          $(
+            ".actn-upivs[data-action='active'], .actn-upivs[data-action='inactive']"
+          ).on("click", function () {
+            const planId = $(this).data("uid");
+  
+            $.ajax({
+              url: `/admin/investment/api/plans/${planId}/toggle-status`,
+              type: "PATCH",
+              success: function (response) {
+                if (response.success) {
+                  showToast(response.message, "success");
+                  setTimeout(function () {
+                    location.reload();
+                  }, 1000);
+                } else {
+                  showToast(response.message, "error");
+                }
+              },
+              error: function (error) {
+                showToast("Failed to toggle plan status", "error");
+              },
+            });
+          });
+  
+          // Handle Delete Button Click
+          $(".actn-upivs[data-action='delete']").on("click", function () {
+            const planId = $(this).data("uid");
+  
+            if (
+              confirm(
+                "Are you sure you want to delete this investment plan? This action cannot be undone."
+              )
+            ) {
+              $.ajax({
+                url: `/admin/investment/api/plans/${planId}`,
+                type: "DELETE",
+                success: function (response) {
+                  if (response.success) {
+                    showToast(response.message, "success");
+                    setTimeout(function () {
+                      location.reload();
+                    }, 1000);
+                  } else {
+                    showToast(response.message, "error");
+                  }
+                },
+                error: function (error) {
+                  showToast("Failed to delete plan scheme", "error");
+                },
+              });
+            }
+          });
+    </script>
+  </body>
+</html>

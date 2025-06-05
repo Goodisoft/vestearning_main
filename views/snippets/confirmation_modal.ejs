@@ -1,0 +1,25 @@
+<!-- snippets/adminSnippets/confirmation_modal.ejs -->
+<div class="modal fade" tabindex="-1" id="confirmationModal">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <a href="#" class="close" data-bs-dismiss="modal" aria-label="Close">
+          <em class="icon ni ni-cross"></em>
+        </a>
+        <div class="modal-body modal-body-md">
+          <div class="nk-tnx-details">
+            <div class="nk-modal-head mt-sm-5 mt-4 mb-4">
+              <h5 class="title text-center"><%= message %></h5>
+            </div>
+            <div class="row gy-3">
+              <div class="col-lg-12 text-center mt-4">
+                <button class="btn btn-primary"><%= buttonText %></button>
+              </div>
+              <div class="col-lg-12">
+                <span class="sub-text text-danger text-center"><%= warning %></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

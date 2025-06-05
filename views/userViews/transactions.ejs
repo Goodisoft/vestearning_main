@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="zxx" class="js">
+  <head>
+    <!-- ========Headers meta======== -->
+    <%- include('../snippets/adminSnippets/header_meta.ejs') %>
+
+    <title>EXNESTRADE | Transactions</title>
+  </head>
+  <body class="nk-body bg-lighter npc-general has-sidebar">
+    <div class="nk-app-root">
+      <div class="nk-main">
+        <!-- ==========Sidebar======= -->
+        <%- include('../snippets/adminSnippets/sidebar.ejs') %>
+
+        <div class="nk-wrap">
+          <!-- ============Navbar======== -->
+          <%- include('../snippets/adminSnippets/navbar.ejs') %>
+
+          <div class="nk-content">
+            <div class="container-fluid">
+              <div class="nk-content-inner">
+                <div class="nk-content-body">
+                  <div class="nk-block-head nk-block-head-sm">
+                    <div class="nk-block-between g-3">
+                      <div class="nk-block-head-content">
+                        <h5 class="nk-block-title page-title">Transactions</h5>
+                        <div class="nk-block-des text-soft">
+                          <p>List of all transactions in your account</p>
+                        </div>
+                      </div>
+                      <div class="nk-block-head-content">
+                        <div class="toggle-wrap nk-block-tools-toggle">
+                          <a
+                            href="#"
+                            class="btn btn-icon btn-trigger toggle-expand me-n1"
+                            data-target="pageMenu"
+                            ><em class="icon ni ni-menu-alt-r"></em
+                          ></a>
+                          <div
+                            class="toggle-expand-content"
+                            data-content="pageMenu"
+                          >
+                            <ul class="nk-block-tools g-3">
+                              <li class="nk-block-tools-opt">
+                                <a
+                                  href="/user/investment-plans"
+                                  class="btn btn-primary"
+                                  ><span>Make Deposit</span></a
+                                >
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="nk-block">
+                    <div class="card card-bordered card-stretch">
+                      <div class="card-inner-group">
+                        <div class="card-inner">
+                          <div class="card-title-group">
+                            <div class="card-title">
+                              <h6 class="title">All Transactions</h6>
+                            </div>
+                            <div class="card-tools me-n1">
+                              <ul class="btn-toolbar gx-1">
+                                <li>
+                                  <a
+                                    href="#"
+                                    class="search-toggle toggle-search btn btn-icon"
+                                    data-target="search"
+                                    ><em class="icon ni ni-search"></em
+                                  ></a>
+                                </li>
+                                <li class="btn-toolbar-sep"></li>
+                                <li>
+                                  <div class="dropdown">
+                                    <a
+                                      href="#"
+                                      class="btn btn-trigger btn-icon dropdown-toggle"
+                                      data-bs-toggle="dropdown"
+                                      ><em class="icon ni ni-filter-alt"></em
+                                    ></a>
+                                    <div
+                                      class="filter-wg dropdown-menu dropdown-menu-xl dropdown-menu-end"
+                                    >
+                                      <div class="dropdown-head">
+                                        <span class="sub-title dropdown-title"
+                                          >Filter Transactions</span
+                                        >
+                                      </div>
+                                      <div
+                                        class="dropdown-body dropdown-body-rg"
+                                      >
+                                        <div class="row gx-6 gy-4">
+                                          <div class="col-6">
+                                            <div class="form-group">
+                                              <label
+                                                class="overline-title overline-title-alt"
+                                                >Type</label
+                                              >
+                                              <select
+                                                class="form-select js-select2"
+                                                id="filterType"
+                                              >
+                                                <option value="all">
+                                                  All Types
+                                                </option>
+                                                <option value="deposit">
+                                                  Deposit
+                                                </option>
+                                                <option value="withdrawal">
+                                                  Withdrawal
+                                                </option>
+                                                <option value="investment">
+                                                  Investment
+                                                </option>
+                                                <option value="earnings">
+                                                  Earnings
+                                                </option>
+                                                <option value="referral">
+                                                  Referral
+                                                </option>
+                                              </select>
+                                            </div>
+                                          </div>
+                                          <div class="col-6">
+                                            <div class="form-group">
+                                              <label
+                                                class="overline-title overline-title-alt"
+                                                >Status</label
+                                              >
+                                              <select
+                                                class="form-select js-select2"
+                                                id="filterStatus"
+                                              >
+                                                <option value="all">
+                                                  All Status
+                                                </option>
+                                                <option value="pending">
+                                                  Pending
+                                                </option>
+                                                <option value="completed">
+                                                  Completed
+                                                </option>
+                                                <option value="cancelled">
+                                                  Cancelled
+                                                </option>
+                                                <option value="failed">
+                                                  Failed
+                                                </option>
+                                              </select>
+                                            </div>
+                                          </div>
+                                          <div class="col-12">
+                                            <div class="form-group">
+                                              <button
+                                                type="button"
+                                                class="btn btn-secondary"
+                                                id="applyFilter"
+                                              >
+                                                Apply Filter
+                                              </button>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="dropdown-foot between">
+                                        <a
+                                          class="clickable"
+                                          href="#"
+                                          id="resetFilter"
+                                          >Reset Filter</a
+                                        >
+                                      </div>
+                                    </div>
+                                  </div>
+                                </li>
+                              </ul>
+                            </div>
+                            <div
+                              class="card-search search-wrap"
+                              data-search="search"
+                            >
+                              <div class="search-content">
+                                <a
+                                  href="#"
+                                  class="search-back btn btn-icon toggle-search"
+                                  data-target="search"
+                                  ><em class="icon ni ni-arrow-left"></em></a
+                                ><input
+                                  type="text"
+                                  class="form-control border-transparent form-focus-none"
+                                  placeholder="Search by transaction ID"
+                                  id="searchTransaction"
+                                /><button class="search-submit btn btn-icon">
+                                  <em class="icon ni ni-search"></em>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="card-inner p-0">
+                          <div class="nk-tb-list nk-tb-tnx">
+                            <div class="nk-tb-item nk-tb-head">
+                              <div class="nk-tb-col"><span>Details</span></div>
+                              <div class="nk-tb-col tb-col-md">
+                                <span>Date</span>
+                              </div>
+                              <div class="nk-tb-col">
+                                <span class="d-none d-sm-block">Status</span>
+                              </div>
+                              <div class="nk-tb-col text-end">
+                                <span>Amount</span>
+                              </div>
+                              <div class="nk-tb-col nk-tb-col-tools"></div>
+                            </div>
+
+                            <!-- START: Transaction Items -->
+                            <% if (transactions && transactions.data.length > 0) { %>
+                            <% transactions.data.forEach(function(tx) { %>
+                            <div class="nk-tb-item">
+                              <div class="nk-tb-col">
+                                <div class="nk-tnx-type">
+                                  <% if (tx.type === 'deposit') { %>
+                                  <div
+                                    class="nk-tnx-type-icon bg-success-dim text-success"
+                                  >
+                                    <em class="icon ni ni-arrow-down-left"></em>
+                                  </div>
+                                  <% } else if (tx.type === 'withdrawal') { %>
+                                  <div
+                                    class="nk-tnx-type-icon bg-danger-dim text-danger"
+                                  >
+                                    <em class="icon ni ni-arrow-up-right"></em>
+                                  </div>
+                                  <% } else if (tx.type === 'investment') { %>
+                                  <div
+                                    class="nk-tnx-type-icon bg-warning-dim text-warning"
+                                  >
+                                    <em class="icon ni ni-invest"></em>
+                                  </div>
+                                  <% } else if (tx.type === 'earnings') { %>
+                                  <div
+                                    class="nk-tnx-type-icon bg-info-dim text-info"
+                                  >
+                                    <em class="icon ni ni-growth"></em>
+                                  </div>
+                                  <% } else if (tx.type === 'referral') { %>
+                                  <div
+                                    class="nk-tnx-type-icon bg-primary-dim text-primary"
+                                  >
+                                    <em class="icon ni ni-users"></em>
+                                  </div>
+                                  <% } else { %>
+                                  <div class="nk-tnx-type-icon bg-gray-dim">
+                                    <em class="icon ni ni-tranx"></em>
+                                  </div>
+                                  <% } %>
+                                  <div class="nk-tnx-type-text">
+                                    <span class="tb-lead">
+                                      <%= tx.type.charAt(0).toUpperCase() +
+                                      tx.type.slice(1) %> <%= tx.type ===
+                                      'withdrawal' ? 'to' : tx.type ===
+                                      'deposit' ? 'from' : '' %> <%=
+                                      tx.walletAddress ? ' ' +
+                                      tx.walletAddress.substring(0, 6) + '...' +
+                                      tx.walletAddress.substring(tx.walletAddress.length
+                                      - 6) : '' %>
+                                    </span>
+                                    <span class="tb-date d-md-none"
+                                      ><%= new
+                                      Date(tx.createdAt).toLocaleDateString()
+                                      %></span
+                                    >
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div class="nk-tb-col tb-col-md">
+                                <span class="tb-date"
+                                  ><%= new Date(tx.createdAt).toLocaleString()
+                                  %></span
+                                >
+                              </div>
+
+                              <div class="nk-tb-col">
+                                <span
+                                  class="badge badge-dot <%= tx.status === 'completed' ? 'bg-success' : tx.status === 'pending' ? 'bg-warning' : tx.status === 'cancelled' ? 'bg-danger' : 'bg-secondary' %>"
+                                >
+                                  <%= tx.status.charAt(0).toUpperCase() +
+                                  tx.status.slice(1) %>
+                                </span>
+                              </div>
+
+                              <div class="nk-tb-col text-end">
+                                <span
+                                  class="tb-amount <%= (tx.type === 'investment' || tx.type === 'loan' || tx.type === 'referral') ? 'text-success' : 'text-danger' %>"
+                                >
+                                  <%= (tx.type === 'investment' || tx.type ===
+                                  'earnings' || tx.type === 'referral') ? '+ ' :
+                                  '- ' %> <%= tx.amount.toFixed(2)
+                                  %>
+                                  <span>USD</span>
+                                </span>
+                              </div>
+
+                              <div class="nk-tb-col nk-tb-col-tools">
+                                <ul class="nk-tb-actions gx-2">
+                                  <li>
+                                    <div class="dropdown">
+                                      <a
+                                        href="#"
+                                        class="dropdown-toggle bg-white btn btn-sm btn-outline-light btn-icon"
+                                        data-bs-toggle="dropdown"
+                                      >
+                                        <em class="icon ni ni-more-h"></em>
+                                      </a>
+                                      <div
+                                        class="dropdown-menu dropdown-menu-end"
+                                      >
+                       
+                                        <ul class="link-list-opt">
+                                          <li>
+                                            <a
+                                              href="#" class="view-details" data-id="<%= tx._id %>">
+                                              <em class="icon ni ni-eye"></em>
+                                              <span>View Details</span>
+                                            </a>
+                                          </li>
+                                          <% if (tx.type === 'withdrawal' &&
+                                          tx.status === 'pending') { %>
+                                          <li>
+                                            <a
+                                              href="#"
+                                              onclick="cancelWithdrawal('<%= tx._id %>')"
+                                            >
+                                              <em
+                                                class="icon ni ni-cross-circle"
+                                              ></em>
+                                              <span>Cancel Withdrawal</span>
+                                            </a>
+                                          </li>
+                                          <% } %>
+                                        </ul>
+                                      </div>
+                                    </div>
+                                  </li>
+                                </ul>
+                              </div>
+                            </div>
+                            <% }); %> <% } else { %>
+                            <div class="nk-tb-item">
+                              <div class="nk-tb-col text-center" colspan="5">
+                                <span class="text-muted"
+                                  >No transactions found</span
+                                >
+                              </div>
+                            </div>
+                            <% } %>
+                            <!-- END: Transaction Items -->
+                          </div>
+                        </div>
+
+                        <div class="card-inner">
+                          <% if (pagination) { %>
+                          <ul
+                            class="pagination justify-content-center justify-content-md-start"
+                          >
+                            <% if (pagination.currentPage > 1) { %>
+                            <li class="page-item">
+                              <a
+                                class="page-link"
+                                href="?page=<%= pagination.currentPage - 1 %>"
+                                >Prev</a
+                              >
+                            </li>
+                            <% } else { %>
+                            <li class="page-item disabled">
+                              <span class="page-link">Prev</span>
+                            </li>
+                            <% } %> <% for(let i = 1; i <=
+                            pagination.totalPages; i++) { %> <% if (i ===
+                            pagination.currentPage) { %>
+                            <li class="page-item active">
+                              <span class="page-link"><%= i %></span>
+                            </li>
+                            <% } else if (i <= 3 || i > pagination.totalPages -
+                            3 || Math.abs(i - pagination.currentPage) <= 1) { %>
+                            <li class="page-item">
+                              <a class="page-link" href="?page=<%= i %>"
+                                ><%= i %></a
+                              >
+                            </li>
+                            <% } else if (Math.abs(i - pagination.currentPage)
+                            === 2) { %>
+                            <li class="page-item">
+                              <span class="page-link"
+                                ><em class="icon ni ni-more-h"></em
+                              ></span>
+                            </li>
+                            <% } %> <% } %> <% if (pagination.currentPage <
+                            pagination.totalPages) { %>
+                            <li class="page-item">
+                              <a
+                                class="page-link"
+                                href="?page=<%= pagination.currentPage + 1 %>"
+                                >Next</a
+                              >
+                            </li>
+                            <% } else { %>
+                            <li class="page-item disabled">
+                              <span class="page-link">Next</span>
+                            </li>
+                            <% } %>
+                          </ul>
+                          <% } else { %>
+                          <!-- Default pagination placeholder -->
+                          <ul
+                            class="pagination justify-content-center justify-content-md-start"
+                          >
+                            <li class="page-item disabled">
+                              <span class="page-link">Prev</span>
+                            </li>
+                            <li class="page-item active">
+                              <span class="page-link">1</span>
+                            </li>
+                            <li class="page-item disabled">
+                              <span class="page-link">Next</span>
+                            </li>
+                          </ul>
+                          <% } %>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ============Transaction details modal========== -->
+          <div class="modal fade" tabindex="-1" id="tranxDetails">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <a
+                  href="#"
+                  class="close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                  ><em class="icon ni ni-cross"></em
+                ></a>
+                <div class="modal-body modal-body-md">
+                  <div class="nk-modal-head mb-2 mb-sm-5">
+                    <h4 class="nk-modal-title title">
+                      Transaction
+                      <small class="text-primary" id="txDetailId">#--</small>
+                    </h4>
+                  </div>
+                  <div class="nk-tnx-details">
+                    <div class="nk-block-between flex-wrap g-3">
+                      <div class="nk-tnx-type">
+                        <div
+                          id="txDetailIcon"
+                          class="nk-tnx-type-icon bg-primary text-white"
+                        >
+                          <em class="icon ni ni-arrow-down-left"></em>
+                        </div>
+                        <div class="nk-tnx-type-text">
+                          <h5 class="title" id="txDetailAmount">
+                            + 0.0 USD
+                          </h5>
+                          <span class="sub-text mt-n1" id="txDetailTime"
+                            >--</span
+                          >
+                        </div>
+                      </div>
+                      <div class="align-center flex-wrap gx-3">
+                        <button class="btn" id="txDetailStatus">Status</button>
+                      </div>
+                    </div>
+                    <hr />
+                    <div class="row gy-3">
+                      <div class="col-lg-6">
+                        <span class="sub-text">Transaction ID</span>
+                        <span class="caption-text" id="txDetailTxId">--</span>
+                      </div>
+                      <div class="col-lg-6">
+                        <span class="sub-text">Transaction Type</span>
+                        <span class="caption-text" id="txDetailType">--</span>
+                      </div>
+                      <div class="col-lg-6">
+                        <span class="sub-text">Transaction Fee</span>
+                        <span class="caption-text fw-bold" id="txDetailFee">0.0 USD</span>
+                      </div>
+                      <div class="col-lg-6">
+                        <span class="sub-text">Amount</span>
+                        <span
+                          class="caption-text fw-bold"
+                          id="txDetailAmountOnly"
+                          >0.00000000 BTC</span
+                        >
+                      </div>
+                    </div>
+                    <hr />
+                    <div class="nk-modal-head mt-sm-5 mb-4">
+                      <h5 class="title">Transaction Details</h5>
+                    </div>
+                    <div class="row gy-3">
+                      <div class="col-lg-6" id="txWalletAddressContainer">
+                        <span class="sub-text" id="txWalletAddressLabel"
+                          >Payment To</span
+                        >
+                        <span
+                          class="caption-text text-break"
+                          id="txDetailWallet"
+                          >--</span
+                        >
+                      </div>
+                      <div class="col-lg-6">
+                        <span class="sub-text">Details</span>
+                        <span class="caption-text" id="txDetailDesc">--</span>
+                      </div>
+                      <div
+                        id="txActionContainer"
+                        class="col-lg-12 text-center mt-4"
+                        style="display: none"
+                      >
+                        <button id="txActionButton" class="btn btn-danger">
+                          Cancel Withdrawal
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ========Footer========== -->
+          <%- include('../snippets/adminSnippets/footer.ejs') %>
+        </div>
+      </div>
+    </div>
+    <!-- ===================Scripts========== -->
+    <%- include('../snippets/adminSnippets/scripts.ejs') %>
+
+    <%- include('../snippets/live_chat.ejs') %>
+
+
+    <script>
+      // Function to view transaction details
+      function viewTransactionDetails(txId) {
+        console.log("Trans id: ", txId)
+        // Fetch transaction details from API
+        fetch(`/user/api/transactions/${txId}`)
+          .then((response) => response.json()) 
+          .then((data) => {
+            if (data.success) {
+              const tx = data.transaction;
+
+              // Set transaction details in the modal
+              document.getElementById("txDetailId").textContent =
+                tx._id.substring(0, 8);
+              document.getElementById("txDetailTxId").textContent = tx._id;
+              document.getElementById("txDetailType").textContent =
+                tx.type.charAt(0).toUpperCase() + tx.type.slice(1);
+              document.getElementById("txDetailTime").textContent = new Date(
+                tx.createdAt
+              ).toLocaleString();
+              document.getElementById("txDetailFee").textContent =
+                "0.0 USD";
+
+              document.getElementById("txDetailAmountOnly").textContent =
+              tx.amount + " USD";
+
+              // Set prefix (+ or -) based on transaction type
+              const isIncoming =
+                tx.type === "deposit" ||
+                tx.type === "earnings" ||
+                tx.type === "withdrawal" ||
+                tx.type === "investment" ||
+                tx.type === "loan" ||
+                tx.type === "trading" ||
+                tx.type === "referral";
+              document.getElementById("txDetailAmount").textContent =
+                (isIncoming ? "+ " : "- ") + tx.amount + " USD";
+
+              // Set status button class
+              const statusBtn = document.getElementById("txDetailStatus");
+              statusBtn.textContent =
+                tx.status.charAt(0).toUpperCase() + tx.status.slice(1);
+
+              statusBtn.className = "btn";
+              if (tx.status === "completed") {
+                statusBtn.classList.add("btn-success");
+              } else if (tx.status === "pending") {
+                statusBtn.classList.add("btn-warning");
+              } else if (tx.status === "cancelled" || tx.status === "failed") {
+                statusBtn.classList.add("btn-danger");
+              } else {
+                statusBtn.classList.add("btn-secondary");
+              }
+
+              // Set transaction icon
+              const txIcon = document.getElementById("txDetailIcon");
+              txIcon.className = "nk-tnx-type-icon text-white";
+              let iconClass = "ni ni-tranx";
+
+              if (tx.type === "deposit") {
+                txIcon.classList.add("bg-success-dim");
+                iconClass = "ni-arrow-down-left";
+              } else if (tx.type === "withdrawal") {
+                txIcon.classList.add("bg-danger-dim");
+                iconClass = "ni-arrow-up-right";
+              } else if (tx.type === "investment") {
+                txIcon.classList.add("bg-warning-dim");
+                iconClass = "ni-invest";
+              } else if (tx.type === "earnings") {
+                txIcon.classList.add("bg-info-dim");
+                iconClass = "ni-growth";
+              } else if (tx.type === "referral") {
+                txIcon.classList.add("bg-primary-dim");
+                iconClass = "ni-users";
+              } else {
+                txIcon.classList.add("bg-gray-dim");
+              }
+
+              document.getElementById(
+                "txDetailIcon"
+              ).innerHTML = `<em class="icon ${iconClass}"></em>`;
+
+              // Handle wallet address display
+              const walletContainer = document.getElementById(
+                "txWalletAddressContainer"
+              );
+              const walletLabel = document.getElementById(
+                "txWalletAddressLabel"
+              );
+              const walletAddress = document.getElementById("txDetailWallet");
+
+              if (tx.walletAddress) {
+                walletContainer.style.display = "block";
+                if (tx.type === "withdrawal") {
+                  walletLabel.textContent = "Destination Address";
+                } else {
+                  walletLabel.textContent = "Source Address";
+                }
+                walletAddress.textContent = tx.walletAddress;
+              } else {
+                walletContainer.style.display = "none";
+              }
+
+              // Set description
+              let description = tx.description || "";
+              if (!description) {
+                if (tx.type === "deposit") {
+                  description = "Deposit funds to wallet";
+                } else if (tx.type === "withdrawal") {
+                  description = "Withdraw funds from wallet";
+                } else if (tx.type === "investment") {
+                  description = "Investment in plan";
+                } else if (tx.type === "earnings") {
+                  description = "Earnings from investment";
+                } else if (tx.type === "referral") {
+                  description = "Referral commission";
+                }
+              }
+              document.getElementById("txDetailDesc").textContent = description;
+
+              // Show action button for pending withdrawals
+              const actionContainer =
+                document.getElementById("txActionContainer");
+              const actionButton = document.getElementById("txActionButton");
+
+              if (tx.type === "withdrawal" && tx.status === "pending") {
+                actionContainer.style.display = "block";
+                actionButton.textContent = "Cancel Withdrawal";
+                actionButton.onclick = function () {
+                  cancelWithdrawal(tx._id);
+                };
+              } else {
+                actionContainer.style.display = "none";
+              }
+
+              // Show the modal
+              const tranxModal = new bootstrap.Modal(
+                document.getElementById("tranxDetails")
+              );
+              tranxModal.show();
+            } else {
+              alert("Error: " + data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            alert("An error occurred while fetching transaction details");
+          });
+      }
+
+      // Function to cancel a withdrawal
+      function cancelWithdrawal(txId) {
+        if (
+          confirm("Are you sure you want to cancel this withdrawal request?")
+        ) {
+          fetch(`/user/api/cancel-withdrawal/${txId}`, {
+            method: "POST",
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.success) {
+                alert("Withdrawal cancelled successfully");
+                // Hide the modal if open
+                const tranxModal = bootstrap.Modal.getInstance(
+                  document.getElementById("tranxDetails")
+                );
+                if (tranxModal) {
+                  tranxModal.hide();
+                }
+                // Reload the page to refresh the transactions list
+                window.location.reload();
+              } else {
+                alert("Error: " + data.message);
+              }
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              alert("An error occurred while cancelling the withdrawal");
+            });
+        }
+      }
+
+
+
+      // Filter transactions
+      document
+        .getElementById("applyFilter")
+        .addEventListener("click", function () {
+          const type = document.getElementById("filterType").value;
+          const status = document.getElementById("filterStatus").value;
+
+          let queryParams = [];
+          if (type !== "all") {
+            queryParams.push(`type=${type}`);
+          }
+          if (status !== "all") {
+            queryParams.push(`status=${status}`);
+          }
+
+          const queryString =
+            queryParams.length > 0 ? "?" + queryParams.join("&") : "";
+          window.location.href = `/user/transactions${queryString}`;
+        });
+
+      // Reset filters
+      document
+        .getElementById("resetFilter")
+        .addEventListener("click", function () {
+          window.location.href = "/user/transactions";
+        });
+
+      // Search transactions
+      document
+        .getElementById("searchTransaction")
+        .addEventListener("keypress", function (e) {
+          if (e.key === "Enter") {
+            const search = this.value.trim();
+            if (search) {
+              window.location.href = `/user/transactions?search=${search}`;
+            }
+          }
+        });
+
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+          document.querySelectorAll('.view-details').forEach(function (el) {
+            el.addEventListener('click', function (e) {
+              e.preventDefault();
+              const txId = el.getAttribute('data-id');
+              viewTransactionDetails(txId);
+            });
+          });
+        });
+
+    </script>
+  </body>
+</html>

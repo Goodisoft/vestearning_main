@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+<html lang="en" itemscope itemtype="http://schema.org/WebPage">
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+  <head>
+    <%- include('./snippets/header_meta.ejs') %>
+    <title><%= appSettings.siteName %> - Home</title>
+  </head>
+
+  <style>
+    /* language */
+    .language_switcher {
+      position: relative;
+      padding-right: 20px;
+      min-width: max-content;
+    }
+
+    @media (max-width: 991px) {
+      .language_switcher {
+        padding-block: 6px;
+        display: inline-flex;
+      }
+
+      .language_switcher_wrapper {
+        flex: 1;
+        text-align: right;
+      }
+    }
+
+    .language_switcher::after {
+      font-family: "Line Awesome Free";
+      content: "\f107";
+      font-weight: 900;
+      font-size: 14px;
+      position: absolute;
+      margin: 0;
+      color: #fff;
+      top: 50%;
+      right: 0;
+      -webkit-transform: translateY(-50%);
+      transform: translateY(-50%);
+      transition: all ease 350ms;
+      -webkit-transition: all ease 350ms;
+      -moz-transition: all ease 350ms;
+    }
+
+    .language_switcher.open:after {
+      -webkit-transform: translateY(-50%) rotate(180deg);
+      transform: translateY(-50%) rotate(180deg);
+    }
+
+    .language_switcher__caption {
+      cursor: pointer;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-wrap: nowrap;
+    }
+
+    .language_switcher__caption .icon {
+      position: relative;
+      height: 20px;
+      width: 20px;
+      display: flex;
+    }
+
+    .language_switcher__caption .icon img {
+      height: 100%;
+      width: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .language_switcher__caption .text {
+      font-size: 0.875rem;
+      font-weight: 500;
+      flex: 1;
+      color: #fff;
+      line-height: 1;
+    }
+
+    .language_switcher__list {
+      width: 100px;
+      border-radius: 4px;
+      padding: 0;
+      max-height: 105px;
+      overflow-y: auto !important;
+      background: hsl(var(--base));
+      -webkit-box-shadow: 0px 12px 24px rgba(21, 18, 51, 0.13);
+      opacity: 0;
+      overflow: hidden;
+      -webkit-transition: all 0.15s cubic-bezier(0.25, 0, 0.25, 1.75),
+        opacity 0.1s linear;
+      transition: all 0.15s cubic-bezier(0.25, 0, 0.25, 1.75),
+        opacity 0.1s linear;
+      -webkit-transform: scale(0.85);
+      transform: scale(0.85);
+      -webkit-transform-origin: 50% 0;
+      transform-origin: 50% 0;
+      position: absolute;
+      top: calc(100% + 18px);
+      z-index: -1;
+      visibility: hidden;
+    }
+
+    .language_switcher__list::-webkit-scrollbar-track {
+      border-radius: 3px;
+      background-color: hsl(var(--base) / 0.3);
+    }
+
+    .language_switcher__list::-webkit-scrollbar {
+      width: 3px;
+    }
+
+    .language_switcher__list::-webkit-scrollbar-thumb {
+      border-radius: 3px;
+      background-color: hsl(var(--base) / 0.8);
+    }
+
+    .language_switcher__list .text {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #fff;
+    }
+
+    .language_switcher.open .language_switcher__list {
+      -webkit-transform: scale(1);
+      transform: scale(1);
+      opacity: 1;
+      z-index: 1;
+      visibility: visible;
+    }
+
+    .language_switcher__item a {
+      cursor: pointer;
+      padding: 5px;
+      border-bottom: 1px solid hsl(var(--heading-color) / 0.2);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .language_switcher__item img {
+      height: 20px;
+      width: 20px;
+      display: block;
+      border-radius: 50%;
+    }
+
+    .language_switcher__item:last-of-type {
+      border-bottom: 0;
+    }
+    .language_switcher__item:hover {
+      background-color: hsl(var(--dark) / 0.1);
+    }
+    .language_switcher__item.selected {
+      background: rgba(36, 60, 187, 0.02);
+      pointer-events: none;
+    }
+  </style>
+  <body>
+    <div class="preloader">
+      <%- include('./snippets/preloader_logo.ejs') %>
+    </div>
+
+    <!-- scroll-to-top start -->
+    <div class="scroll-to-top">
+      <span class="scroll-icon">
+        <i class="fa fa-rocket" aria-hidden="true"></i>
+      </span>
+    </div>
+    <!-- scroll-to-top end -->
+
+    <div class="full-wh">
+      <!-- STAR ANIMATION -->
+      <div class="bg-animation">
+        <div id="stars"></div>
+        <div id="stars2"></div>
+        <div id="stars3"></div>
+        <div id="stars4"></div>
+      </div>
+      <!-- / STAR ANIMATION -->
+    </div>
+
+    <div class="page-wrapper">
+      <!-- header-section start  -->
+      <%- include('./snippets/navbar.ejs') %> 
+      <!-- header-section end  -->
+
+      <div class="section-wrapper">
+        <!-- hero start -->
+        <section class="hero bg_img">
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-6 col-xl-5"> 
+                <div class="hero__content">
+                  <h2 class="hero__title">
+                    <span class="base--color font-weight-normal">
+                      <%= heroSection && heroSection.title ? heroSection.title :
+                      'Make Constant Profit with' %>
+                    </span>
+                    
+                  </h2>
+                  <p class="text-white f-size-18 mt-3">
+                    <%= heroSection && heroSection.subtitle ?
+                    heroSection.subtitle : 'Welcome to ' + appSettings.siteName
+                    + ', where cutting-edge AI meets precision trading. Our advanced algorithms analyze market trends in real time, ensuring smarter and faster investment decisions.' %>
+                  </p>
+                  <a
+                    href="auth/register"
+                    class="btn--base text-uppercase font-weight-600 mt-4"
+                    >Create Account Now
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- hero end -->
+
+        <section class="about-section pt-120 pb-120 bg_img">
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-6 offset-lg-6">
+                <div class="about-content">
+                  <h2 class="section-title mb-3">
+                    <span class="font-weight-normal">
+                      <%= aboutSection && aboutSection.title ?
+                      aboutSection.title : 'About' %>
+                    </span>
+                    
+                  </h2>
+                  <div>
+                    <%- aboutSection && aboutSection.description 
+                        ? (aboutSection.description.length > 1000 
+                            ? aboutSection.description.substring(0, 1000) + '...' 
+                            : aboutSection.description)
+                        : appSettings.siteName + 
+                          ' AI is exploring adaptive trading algorithms that can dynamically adjust to market volatility, ensuring optimal performance in both bullish and bearish conditions.' %>
+                  </div>
+
+                  <a href="/about" class="btn--base mt-4">More Info</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        
+        <section class="pt-120 pb-120">
+          <div class="container">
+            <div class="row justify-content-center">
+              <div class="col-lg-6 text-center">
+                <div class="section-header">
+                  <h2 class="section-title">
+                    <span class="font-weight-normal">Best Trading</span>
+                    <b class="base--color">Plans</b>
+                  </h2>
+                  <p>
+                    To make a solid investment, you have to know where you are
+                    investing. Find a plan which is best for you.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <!-- row end -->
+            <div class="row gy-4 justify-content-center">
+              <% if (plans && plans.length > 0) { %> <% plans.forEach(plan => {
+              %>
+              <div class="col-xl-3 col-lg-4 col-md-6">
+                <div class="package-card text-center bg_img">
+                  <h4 class="package-card__title base--color mb-2">
+                    <%= plan.name %>
+                  </h4>
+
+                  <ul class="package-card__features mt-4">
+                    <li>Return <%= plan.roiPercentage %>%</li>
+
+                    <li>
+                      <%= plan.roiPeriod.charAt(0).toUpperCase() +
+                      plan.roiPeriod.slice(1) %>
+                    </li>
+                    <% if (plan.term > 0) { %>
+                    <li>
+                      For <%= plan.term %> <%= plan.termPeriod %><%= plan.term >
+                      1 ? 's' : '' %>
+                    </li>
+                    <% } %> <% if (plan.capital_back) { %>
+                    <li>
+                      Total <%= plan.term * plan.roiPercentage %>% +
+                      <span class="badge badge--success">Capital</span>
+                    </li>
+                    <% } else { %>
+                    <li>Total <%= plan.term * plan.roiPercentage %>%</li>
+                    <% } %> <% if (plan.compound_interest) { %>
+                    <li>Compound interest available</li>
+                    <% } %> <% if (plan.hold_capital) { %>
+                    <li>Hold capital & reinvest</li>
+                    <% } %>
+                  </ul>
+                  <div class="package-card__range mt-5 base--color">
+                    <% if (plan.fixed_amount > 0) { %> $<%=
+                    plan.fixed_amount.toFixed(2) %> <% } else { %> $<%=
+                    plan.minAmount.toFixed(2) %> - $<%=
+                    plan.maxAmount.toFixed(2) %> <% } %>
+                  </div>
+                  <a
+                    href="javascript:void(0)"
+                    data-bs-toggle="modal"
+                    data-bs-target="#investModal"
+                    data-plan="<%= JSON.stringify(plan) %>"
+                    class="btn--base btn-md mt-4 investModal"
+                    >Invest Now</a
+                  >
+                </div>
+                <!-- package-card end -->
+              </div>
+              <% }); %> <% } else { %>
+              <div class="col-12 text-center">
+                <p>No investment plans available at the moment.</p>
+              </div>
+              <% } %>
+
+              <div class="modal fade" id="investModal">
+                <div
+                  class="modal-dialog modal-md modal-dialog-centered modal-content-bg"
+                >
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <strong class="modal-title text-dark" id="ModalLabel">
+                        At first sign in your account
+                      </strong>
+                      <button
+                        type="button"
+                        class="close"
+                        data-bs-dismiss="modal"
+                      >
+                        <i class="las la-times"></i>
+                      </button>
+                    </div>
+                    <form action="" method="post">
+                      <input
+                        type="hidden"
+                        name="_token"
+                        value="hzJPoazTObpFbQ8fya3C7occebrlMcqm3yaab3Le"
+                        autocomplete="off"
+                      />
+                      <input type="hidden" name="plan_id" />
+                      <div class="modal-footer">
+                        <a
+                          href="user/login.html"
+                          class="btn--base btn-md w-100 text-center"
+                          >At first sign in your account</a
+                        >
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- testimonial section start -->
+        <section
+          class="pt-120 pb-120  testimonial"
+          
+        >
+          <div class="container">
+            <div class="row justify-content-center">
+              <div class="col-lg-6 text-center">
+                <div class="section-header">
+                  <h2 class="section-title">
+                    <span class="font-weight-normal">Trading Success</span>
+                    <b class="base--color">Stories</b>
+                  </h2>
+                  <p>
+                    Join thousands of successful traders using our platform for
+                    trading
+                  </p>
+                </div>
+              </div>
+            </div>
+            <!-- row end -->
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="testimonial-slider">
+                  <% if (testimonials && testimonials.length > 0) { %> <%
+                  testimonials.forEach(function(testimonial) { %>
+                  <div class="single-slide">
+                    <div class="testimonial-card">
+                      <div class="testimonial-card__content">
+                        <p><%= testimonial.message %></p>
+                      </div>
+                      <div class="testimonial-card__client">
+                        <div class="thumb"></div>
+                        <div class="content">
+                          <h6 class="name"><%= testimonial.name %></h6>
+                          <span class="designation"
+                            >User from <%= testimonial.country %></span
+                          >
+                        </div>
+                      </div>
+                    </div>
+                    <!-- testimonial-card end -->
+                  </div>
+                  <% }); %> <% } else { %>
+                  <!-- Default testimonials if no dynamic content is available -->
+                  <div class="single-slide">
+                    <div class="testimonial-card">
+                      <div class="testimonial-card__content">
+                        <p>
+                          The AI trading bot's ability to analyze market trends
+                          and execute trades with precision has significantly
+                          boosted my fund's performance
+                        </p>
+                      </div>
+                      <div class="testimonial-card__client">
+                        <div class="thumb"></div>
+                        <div class="content">
+                          <h6 class="name">Emily S.</h6>
+                          <span class="designation">User from USA</span>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- testimonial-card end -->
+                  </div>
+                  <div class="single-slide">
+                    <div class="testimonial-card">
+                      <div class="testimonial-card__content">
+                        <p>
+                          The risk management features give me peace of mind,
+                          and the detailed performance reports ensure I'm always
+                          in control. Exnestrading AI has become an
+                          indispensable tool in my investment strategy.
+                        </p>
+                      </div>
+                      <div class="testimonial-card__client">
+                        <div class="thumb"></div>
+                        <div class="content">
+                          <h6 class="name">Johnson L.</h6>
+                          <span class="designation">User From Germany</span>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- testimonial-card end -->
+                  </div>
+                  <% } %>
+                </div>
+              </div>
+            </div>
+            <!-- row end -->
+          </div>
+        </section>
+        <!-- testimonial section end -->
+        <section
+          class="pt-120 pb-120 overlay--radial bg_img"
+          data-background="/images/frontend/why_choose/why_bg2.jpg"
+        >
+          <div class="container">
+            <div class="row justify-content-center">
+              <div class="col-lg-6 text-center">
+                <div class="section-header">
+                  <h2 class="section-title">
+                    <span class="font-weight-normal">Why Choose</span>
+                    <b class="base--color"><%= appSettings.siteName %></b>
+                  </h2>
+                  <p>
+                    Our goal is to provide our investors with a reliable source
+                    of high income, while minimizing any possible risks and
+                    offering a high-quality service.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <!-- row end -->
+            <div class="row justify-content-center gy-4">
+              <% if (whyChooseUs && whyChooseUs.length > 0) { %> <%
+              whyChooseUs.forEach(function(item, index) { %>
+              <div class="col-xl-4 col-md-6">
+                <div class="choose-card border-radius--5">
+                  <div class="choose-card__header mb-3">
+                    <div class="choose-card__icon base--color">
+                      <i
+                        class="las la-<%= ['copy', 'lock', 'user-lock', 'shipping-fast', 'link', 'headset', 'server', 'expeditedssl', 'shield-alt'][index % 9] %>"
+                      ></i>
+                    </div>
+                    <h4 class="choose-card__title base--color">
+                      <%= item.title %>
+                    </h4>
+                  </div>
+                  <p><%= item.description %></p>
+                </div>
+              </div>
+              <% }); %> <% } else { %>
+              <!-- Default items if no dynamic content is available -->
+              <div class="col-xl-4 col-md-6">
+                <div class="choose-card border-radius--5">
+                  <div class="choose-card__header mb-3">
+                    <div class="choose-card__icon base--color">
+                      <i class="las la-copy"></i>
+                    </div>
+                    <h4 class="choose-card__title base--color">
+                      Proven Expert in Crypto Trading
+                    </h4>
+                  </div>
+                  <p>
+                    With years of experience and a 92% accuracy rate, we've
+                    mastered the complexities of crypto trading, delivering
+                    consistent results in volatile markets.
+                  </p>
+                </div>
+              </div>
+              <div class="col-xl-4 col-md-6">
+                <div class="choose-card border-radius--5">
+                  <div class="choose-card__header mb-3">
+                    <div class="choose-card__icon base--color">
+                      <i class="las la-lock"></i>
+                    </div>
+                    <h4 class="choose-card__title base--color">
+                      Best in the AI Trading Industry
+                    </h4>
+                  </div>
+                  <p>
+                    Our cutting-edge AI trading bot leverages advanced machine
+                    learning and adaptive algorithms to stay ahead of market
+                    trends.
+                  </p>
+                </div>
+              </div>
+              <div class="col-xl-4 col-md-6">
+                <div class="choose-card border-radius--5">
+                  <div class="choose-card__header mb-3">
+                    <div class="choose-card__icon base--color">
+                      <i class="las la-user-lock"></i>
+                    </div>
+                    <h4 class="choose-card__title base--color">
+                      Transparency and Trusted
+                    </h4>
+                  </div>
+                  <p>
+                    We provide detailed performance reports and insights,
+                    ensuring complete transparency in every transaction.
+                  </p>
+                </div>
+              </div>
+              <% } %>
+            </div>
+          </div>
+        </section>
+        <section class="pt-120 pb-120 testimonial">
+          <div class="container">
+            <div class="row justify-content-center">
+              <div class="col-lg-6">
+                <div class="section-header text-center">
+                  <h2 class="section-title">
+                    <span class="font-weight-normal">Profit</span>
+                    <b class="base--color">Calculator</b>
+                  </h2>
+                  <p>
+                    You must know the calculation before investing in any plan,
+                    so you never make mistakes. Check the calculation and you
+                    will get as our calculator says.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="row justify-content-center">
+              <div class="col-xl-8">
+                <div class="profit-calculator-wrapper">
+                  <form class="profit-calculator">
+                    <div class="row">
+                      <div class="mb-3 col-lg-6">
+                        <label>Choose Plan</label>
+                        <select class="base--bg" id="changePlan">
+                          <% if (plans && plans.length > 0) { %>
+                           <% plans.forEach((plan, index) => { %>
+                              <option
+                                value="<%= plan.id %>"
+                                data-fixed_amount="0"
+                                data-minimum_amount="<%= plan.minAmount %>"
+                                data-maximum_amount="<%= plan.maxAmount %>"
+                              >
+                                <%= plan.name %>
+                              </option>
+                           <% }) %>
+                          <% } %>
+                        </select>
+                      </div>
+                      <div class="mb-3 col-lg-6">
+                        <label
+                          >Invest Amount <span class="invest-range"></span
+                        ></label>
+                        <input
+                          type="text"
+                          placeholder="0.00"
+                          class="form-control base--bg invest-input"
+                          onkeyup="this.value = this.value.replace (/^\.|[^\d\.]/g, '')"
+                        />
+                      </div>
+                      <div class="col-lg-12">
+                        <h5 class="profit-input base--color"></h5>
+                        <code class="period"></code>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section
+          class="pt-120 pb-120 bg_img"
+          data-background="/images/frontend/how_work/631ca042137ab1662820418.jpg"
+        >
+          <div class="container">
+            <div class="row justify-content-center">
+              <div class="col-lg-6 text-center">
+                <div class="section-header">
+                  <h2 class="section-title">
+                    <span class="font-weight-normal">Get</span>
+                    <b class="base--color">Started With</b>
+                    <span class="font-weight-normal"
+                      ><%= appSettings.siteName %></span
+                    >
+                  </h2>
+                  <p>
+                    Follow the steps below to get Started and secure your
+                    financial freedom
+                  </p>
+                </div>
+              </div>
+            </div>
+            <!-- row end -->
+            <div class="row justify-content-center gy-5">
+              <div class="col-lg-4 col-md-6 work-item">
+                <div class="work-card text-center">
+                  <div class="work-card__icon base--color">
+                    <i class="lar la-user"></i>
+                    <span class="step-number">120</span>
+                  </div>
+                  <div class="work-card__content">
+                    <h4 class="base--color">Create Account</h4>
+                  </div>
+                </div>
+                <!-- work-card end -->
+              </div>
+              <div class="col-lg-4 col-md-6 work-item">
+                <div class="work-card text-center">
+                  <div class="work-card__icon base--color">
+                    <i class="las la-clipboard-list"></i>
+                    <span class="step-number">365</span>
+                  </div>
+                  <div class="work-card__content">
+                    <h4 class="base--color">Invest To Plan</h4>
+                  </div>
+                </div>
+                <!-- work-card end -->
+              </div>
+              <div class="col-lg-4 col-md-6 work-item">
+                <div class="work-card text-center">
+                  <div class="work-card__icon base--color">
+                    <i class="las la-wallet"></i>
+                    <span class="step-number">325</span>
+                  </div>
+                  <div class="work-card__content">
+                    <h4 class="base--color">Get Profit</h4>
+                  </div>
+                </div>
+                <!-- work-card end -->
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="pb-120">
+          <div class="container">
+            <div class="row justify-content-center">
+              <div class="col-lg-6 text-center">
+                <div class="section-header">
+                  <h2 class="section-title">
+                    <span class="font-weight-normal">Top</span>
+                    <b class="base--color">Investors</b>
+                  </h2>
+                  <p>
+                    Here are the investor leaders who have made the maximum
+                    investment with our system.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <!-- row end -->
+            <div class="row justify-content-center gy-4">
+              <% if (topInvestors && topInvestors.length > 0) { %> <%
+              topInvestors.forEach(function(investor, index) { %>
+              <div class="col-xl-3 col-lg-4 col-sm-6">
+                <div class="investor-card border-radius--5">
+                  <span class="investor-card__number"
+                    ><%= index + 1 %><%= index === 0 ? 'st' : (index === 1 ?
+                    'nd' : (index === 2 ? 'rd' : 'th')) %></span
+                  >
+                  <h5 class="investor-card__name"><%= investor.name %></h5>
+                  <h6 class="name">
+                    <%= investor.name.toLowerCase().replace(/\s+/g, '') +
+                    Math.floor(Math.random() * 100) %>
+                  </h6>
+                  <span class="amount f-size-14"
+                    >Investment - $<%= investor.amount.toLocaleString(undefined,
+                    {minimumFractionDigits: 2, maximumFractionDigits: 2})
+                    %></span
+                  >
+                </div>
+                <!-- investor-card end -->
+              </div>
+              <% }); %> <% } else { %>
+              <!-- Default top investors if no dynamic content is available -->
+              <div class="col-xl-3 col-lg-4 col-sm-6">
+                <div class="investor-card border-radius--5">
+                  <span class="investor-card__number">1st</span>
+                  <h5 class="investor-card__name">James Carter</h5>
+                  <h6 class="name">jcarter99</h6>
+                  <span class="amount f-size-14"
+                    >Investment - $9,500,000.00</span
+                  >
+                </div>
+              </div>
+              <div class="col-xl-3 col-lg-4 col-sm-6">
+                <div class="investor-card border-radius--5">
+                  <span class="investor-card__number">2nd</span>
+                  <h5 class="investor-card__name">Emily Watson</h5>
+                  <h6 class="name">emwatson22</h6>
+                  <span class="amount f-size-14"
+                    >Investment - $7,125,678.45</span
+                  >
+                </div>
+              </div>
+              <div class="col-xl-3 col-lg-4 col-sm-6">
+                <div class="investor-card border-radius--5">
+                  <span class="investor-card__number">3rd</span>
+                  <h5 class="investor-card__name">Daniel Lee</h5>
+                  <h6 class="name">dlee88</h6>
+                  <span class="amount f-size-14">Investment - $820,450.23</span>
+                </div>
+              </div>
+              <div class="col-xl-3 col-lg-4 col-sm-6">
+                <div class="investor-card border-radius--5">
+                  <span class="investor-card__number">4th</span>
+                  <h5 class="investor-card__name">Sophia Martinez</h5>
+                  <h6 class="name">smartinez77</h6>
+                  <span class="amount f-size-14">Investment - $700,321.00</span>
+                </div>
+              </div>
+              <% } %>
+            </div>
+          </div>
+        </section>
+
+        <section class="pb-120">
+          <div class="container">
+            <div class="row justify-content-center">
+              <div class="col-xl-8">
+                <div
+                  class="cta-wrapper bg_img border-radius--10 text-center"
+                  data-background="/images/frontend/cta/631c9f3d446e11662820157.jpg"
+                >
+                  <h2 class="title mb-3">Start Your Journey With Us</h2>
+                  <p>
+                    Join a trusted investment platform designed to help you grow
+                    your wealth securely and efficiently. With us, you get
+                    access to reliable financial opportunities that ensure both
+                    stability and profitability for your future.
+                  </p>
+                  <a href="/auth/register" class="btn--base mt-4"
+                    >Get Started</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="pb-120">
+          <div class="container">
+            <div class="row justify-content-center">
+              <div class="col-lg-6 text-center">
+                <div class="section-header">
+                  <h2 class="section-title">
+                    <span class="font-weight-normal">Payment We</span>
+                    <b class="base--color">Accept</b>
+                  </h2>
+                  <p>
+                    We accept cryptocurrency payments, ensuring fast, secure,
+                    and decentralized transactions for all our investors.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <!-- row end -->
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="payment-slider">
+                  <div class="single-slide">
+                    <div class="brand-item">
+                      <img
+                        src="/images/frontend/we_accept/btc.jpeg"
+                        alt="image"
+                      />
+                    </div>
+                    <!-- brand-item end -->
+                  </div>
+                  <div class="single-slide">
+                    <div class="brand-item">
+                      <img
+                        src="/images/frontend/we_accept/ltc.png"
+                        alt="image"
+                      />
+                    </div>
+                    <!-- brand-item end -->
+                  </div>
+                  <div class="single-slide">
+                    <div class="brand-item">
+                      <img
+                        src="/images/frontend/we_accept/eth.png"
+                        alt="image"
+                      />
+                    </div>
+                    <!-- brand-item end -->
+                  </div>
+                  <div class="single-slide">
+                    <div class="brand-item">
+                      <img
+                        src="/images/frontend/we_accept/doge.jpeg"
+                        alt="image"
+                      />
+                    </div>
+                    <!-- brand-item end -->
+                  </div>
+                </div>
+                <!-- payment-slider end -->
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="pt-120 pb-120 border-top-1 testimonial">
+          <div class="container">
+            <div class="row justify-content-center">
+              <div class="col-lg-6 text-center">
+                <div class="section-header">
+                  <h2 class="section-title">
+                    <span class="font-weight-normal"
+                      >Latest Cryptocurrency Tips</span
+                    >
+                  </h2>
+                  <p>
+                    Stay ahead in the crypto market with expert tips and
+                    insights from Exnestrading AI. Explore the latest trends,
+                    strategies, and updates to make informed trading decisions.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <!-- row end -->
+            <div class="row justify-content-center gy-4">
+              <% if (cryptoTips && cryptoTips.length > 0) { %> <%
+              cryptoTips.forEach(function(tip, index) { %>
+              <div class="col-lg-4 col-md-6">
+                <div class="blog-card h-100">
+                  <div class="blog-card__thumb">
+                    <img
+                      src="/images/frontend/blog/thumb_6331b1fab41151664201210.jpg"
+                      alt="Leverage AI for Smarter Trading"
+                    />
+                  </div>
+                  <div class="blog-card__content">
+                    <h5 class="blog-card__title mb-2">
+                      <a href="#"><%= tip.title %></a>
+                    </h5>
+                    <p><%= tip.content %></p>
+                  </div>
+                </div>
+              </div>
+              <% }); %> <% } else { %>
+              <div class="col-lg-4 col-md-6">
+                <div class="blog-card h-100">
+                  <div class="blog-card__thumb">
+                    <img
+                      src="/images/frontend/blog/thumb_6331b1fab41151664201210.jpg"
+                      alt="Leverage AI for Smarter Trading"
+                    />
+                  </div>
+                  <div class="blog-card__content">
+                    <h5 class="blog-card__title mb-2">
+                      <a href="#">Leverage AI for Smarter Trading</a>
+                    </h5>
+                    <p>
+                      AI-driven tools like Exnestrading AI can analyze vast
+                      amounts of data to predict market movements. Learn how to
+                      use AI to enhance your trading strategies.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-6">
+                <div class="blog-card h-100">
+                  <div class="blog-card__thumb">
+                    <img
+                      src="/images/frontend/blog/thumb_6331b1e8db6511664201192.jpg"
+                      alt="Avoid Emotional Trading"
+                    />
+                  </div>
+                  <div class="blog-card__content">
+                    <h5 class="blog-card__title mb-2">
+                      <a href="#">Avoid Emotional Trading</a>
+                    </h5>
+                    <p>
+                      Emotional decisions can lead to losses. Develop a
+                      disciplined trading plan and stick to it, using tools like
+                      stop-loss orders to manage risk effectively.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-6">
+                <div class="blog-card h-100">
+                  <div class="blog-card__thumb">
+                    <img
+                      src="/images/frontend/blog/thumb_6331b1d007fc91664201168.jpg"
+                      alt="Stay Updated with Crypto News"
+                    />
+                  </div>
+                  <div class="blog-card__content">
+                    <h5 class="blog-card__title mb-2">
+                      <a href="#">Stay Updated with Crypto News</a>
+                    </h5>
+                    <p>
+                      News and events can significantly impact crypto prices.
+                      Follow reliable sources and stay informed about regulatory
+                      changes, partnerships, and market developments.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <% } %>
+            </div>
+          </div>
+        </section>
+        
+        <section class="pb-120">
+          <div class="container">
+            <div class="row justify-content-center">
+              <div class="col-lg-10">
+                <div
+                  class="subscribe-wrapper bg_img"
+                  data-background="/images/frontend/subscribe/631ca2753add11662820981.jpg"
+                >
+                  <div class="row align-items-center">
+                    <div class="col-lg-5">
+                      <h2 class="title">Subscribe To Newsletter</h2>
+                    </div>
+                    <div class="col-lg-7 mt-lg-0 mt-4">
+                      <form class="subscribe-form" method="post">
+                        <input
+                          type="hidden"
+                          name="_token"
+                          value=""
+                          autocomplete="off"
+                        />
+                        <input
+                          type="email"
+                          class="form-control"
+                          name="email"
+                          placeholder="Email Address"
+                        />
+                        <button type="submit" class="subscribe-btn">
+                          <i class="las la-paper-plane"></i>
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+                <!-- subscribe-wrapper end -->
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="pt-120 pb-120">
+          <div class="container">
+            <div class="row justify-content-center">
+              <div class="col-lg-6 text-center">
+                <div class="section-header">
+                  <h2 class="section-title">
+                    <span class="font-weight-normal">Frequently Asked</span>
+                    <b class="base--color">Questions</b>
+                  </h2>
+                  <p>
+                    We answer some of your Frequently Asked Questions regarding
+                    our platform. If you have a query that is not answered here,
+                    Please contact us.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <!-- row end -->
+            <div class="row justify-content-center">
+              <div class="col-lg-8">
+                <div class="accordion cmn-accordion" id="accordionExample">
+                  <% if (faqs && faqs.length > 0) { %> <%
+                  faqs.forEach(function(faq, index) { %>
+                  <div class="card">
+                    <div class="card-header" id="heading<%= index %>">
+                      <h2 class="mb-0">
+                        <button
+                          class="btn w-100 text-start collapsed"
+                          type="button"
+                          data-bs-toggle="collapse"
+                          data-bs-target="#collapse<%= index %>"
+                          aria-expanded="<%= index === 0 ? 'true' : 'false' %>"
+                          aria-controls="collapse<%= index %>"
+                        >
+                          <i class="las la-question-circle"></i>
+                          <span><%= faq.question %></span>
+                        </button>
+                      </h2>
+                    </div>
+
+                    <div
+                      id="collapse<%= index %>"
+                      class="collapse <%= index === 0 ? 'show' : '' %>"
+                      aria-labelledby="heading<%= index %>"
+                      data-bs-parent="#accordionExample"
+                    >
+                      <div class="card-body"><%= faq.answer %></div>
+                    </div>
+                  </div>
+                  <% }); %> <% } else { %>
+                  <!-- Default FAQs if no dynamic content is available -->
+                  <div class="card">
+                    <div class="card-header" id="heading0">
+                      <h2 class="mb-0">
+                        <button
+                          class="btn w-100 text-start collapsed"
+                          type="button"
+                          data-bs-toggle="collapse"
+                          data-bs-target="#collapse0"
+                          aria-expanded="false"
+                          aria-controls="collapse0"
+                        >
+                          <i class="las la-question-circle"></i>
+                          <span>How does the AI trading bot work?</span>
+                        </button>
+                      </h2>
+                    </div>
+
+                    <div
+                      id="collapse0"
+                      class="collapse"
+                      aria-labelledby="heading0"
+                      data-bs-parent="#accordionExample"
+                    >
+                      <div class="card-body">
+                        Our AI trading bot uses sophisticated algorithms to
+                        process vast amounts of market data in real-time. It
+                        identifies patterns, predicts trends, and executes
+                        trades automatically, ensuring optimal performance and
+                        efficiency.
+                      </div>
+                    </div>
+                  </div>
+
+                  <% } %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Footer -->
+      <%- include("./snippets/footer.ejs") %>
+    </div>
+
+    <!-- Scripts -->
+    <%- include("./snippets/scripts.ejs") %> 
+    <%-include('./snippets/live_chat.ejs') %>
+
+    <script>
+      (function ($) {
+        "use strict";
+        $(document).ready(function () {
+          var curSym = "$";
+          $("#changePlan")
+            .on("change", function () {
+              var selectedPlan = $("#changePlan").find(":selected");
+              var planId = selectedPlan.val();
+              var data = selectedPlan.data();
+              var fixedAmount = parseFloat(data.fixed_amount).toFixed(2);
+              var minimumAmount = parseFloat(data.minimum_amount).toFixed(2);
+              var maximumAmount = parseFloat(data.maximum_amount).toFixed(2);
+
+              if (fixedAmount > 0) {
+                $(".invest-input").val(fixedAmount);
+                $(".invest-input").attr("readonly", true);
+                $(".invest-range").text("");
+              } else {
+                $(".invest-input").val(minimumAmount);
+                $(".invest-input").attr("readonly", false);
+                $(".invest-range").text(
+                  "(" +
+                    curSym +
+                    minimumAmount +
+                    " - " +
+                    curSym +
+                    maximumAmount +
+                    ")"
+                );
+              }
+
+              var investAmount = $(".invest-input").val();
+              var profitInput = $(".profit-input").text("");
+
+              $(".period").text("");
+
+              if (investAmount != "" && planId != null) {
+                ajaxPlanCalc(planId, investAmount);
+              }
+            })
+            .change();
+
+          $(".invest-input").on("change", function () {
+            var planId = $("#changePlan option:selected").val();
+            var investAmount = $(this).val();
+            var profitInput = $(".profit-input").text("");
+            $(".period").text("");
+            if (investAmount != "" && planId != null) {
+              ajaxPlanCalc(planId, investAmount);
+            }
+          });
+        });
+
+        function ajaxPlanCalc(planId, investAmount) {
+          // Find the plan data from the DOM instead of making an AJAX call
+          investAmount = parseFloat(investAmount);
+
+          // Loop through plans and find the one with matching ID
+          <% if (plans && plans.length > 0) { %>
+            const planData = {
+              <% plans.forEach(function(plan, index) { %>
+                '<%= plan._id %>': {
+                  name: '<%= plan.name %>',
+                  roiPercentage: <%= plan.roiPercentage %>,
+                  roiPeriod: '<%= plan.roiPeriod %>',
+                  term: <%= plan.term %>,
+                  termPeriod: '<%= plan.termPeriod %>',
+                  minAmount: <%= plan.minAmount %>,
+                  maxAmount: <%= plan.maxAmount %>
+                }<%= index < plans.length - 1 ? ',' : '' %>
+              <% }); %>
+            };
+          <% } else { %>
+            const planData = {};
+          <% } %>
+
+          if (planData[planId]) {
+            const plan = planData[planId];
+
+            // Validate investment amount
+            if (isNaN(investAmount) || investAmount <= 0) {
+              iziToast.error({
+                message: "Please enter a valid investment amount",
+                position: "topRight",
+              });
+              return;
+            }
+
+            // Check if investment amount is within plan limits
+            if (plan.minAmount > 0 && investAmount < plan.minAmount) {
+              iziToast.error({
+                message: `Minimum investment amount is $${plan.minAmount.toFixed(2)}`,
+                position: "topRight",
+              });
+              return;
+            }
+
+            if (plan.maxAmount > 0 && investAmount > plan.maxAmount) {
+              iziToast.error({
+                message: `Maximum investment amount is $${plan.maxAmount.toFixed(2)}`,
+                position: "topRight",
+              });
+              return;
+            }
+
+            // Calculate total ROI percentage (ROI % × term)
+            const totalRoiPercentage = plan.roiPercentage * plan.term;
+
+            // Calculate profit amount
+            const profitAmount = (investAmount * totalRoiPercentage) / 100;
+
+            // Format return message
+            const roiPeriodText = plan.roiPeriod.charAt(0).toUpperCase() + plan.roiPeriod.slice(1);
+            const termPeriodText = plan.term > 1 ? plan.termPeriod + 's' : plan.termPeriod;
+
+            var msg = `You will earn ${plan.roiPercentage}% ${roiPeriodText} for ${plan.term} ${termPeriodText}`;
+            $(".profit-input").text(msg);
+
+            // Display net profit
+            $(".period").text("Net Profit $" + profitAmount.toFixed(2));
+          } else {
+            iziToast.error({
+              message: "Plan not found",
+              position: "topRight",
+            });
+          }
+        }
+      })(jQuery);
+    </script>
+    <script>
+      (function ($) {
+        "use strict";
+        $(".custom-width").each(function (index, value) {
+          $(value).css("max-width", `${$(value).data("custom_width")}%`);
+        });
+      })(jQuery);
+    </script>
+    <script>
+      (function ($) {
+        "use strict";
+        $(".subscribe-form").on("submit", function (e) {
+          e.preventDefault();
+          var data = $(".subscribe-form").serialize();
+          $.ajax({
+            type: "POST",
+            url: "",
+            data: data,
+            success: function (response) {
+              if (response.status == "success") {
+                notify("success", response.message);
+                $("#email").val("");
+              } else {
+                notify("error", response.message);
+              }
+            },
+          });
+        });
+      })(jQuery);
+    </script>
+
+    <script>
+      (function ($) {
+        "use strict";
+
+        $(".language_switcher > .language_switcher__caption").on(
+          "click",
+          function () {
+            $(this).parent().toggleClass("open");
+          }
+        );
+        $(document).on("keyup", function (evt) {
+          if ((evt.keyCode || evt.which) === 27) {
+            $(".language_switcher").removeClass("open");
+          }
+        });
+        $(document).on("click", function (evt) {
+          if (
+            $(evt.target).closest(
+              ".language_switcher > .language_switcher__caption"
+            ).length === 0
+          ) {
+            $(".language_switcher").removeClass("open");
+          }
+        });
+      })(jQuery);
+    </script>
+  </body>
+</html>

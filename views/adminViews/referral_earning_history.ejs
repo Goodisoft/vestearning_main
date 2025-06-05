@@ -1,0 +1,1842 @@
+<!DOCTYPE html>
+<html lang="zxx" class="js">
+  <head>
+    <!-- ========Headers meta======== -->
+    <%- include('../snippets/adminSnippets/header_meta.ejs') %>
+
+    <title>EXNESTRADE | Referral Earnings & Management</title>
+    <!-- Additional Chart.js for visualizations -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/treant-js/1.0/Treant.css"
+    />
+    <style>
+      .node {
+        padding: 15px;
+        min-width: 200px;
+      }
+      .orgchart-container {
+        height: 400px;
+        width: 100%;
+        overflow: auto;
+        background-color: #f8f9fa;
+        border-radius: 5px;
+        padding: 20px 0;
+      }
+      .orgchart .node .title {
+        background-color: #6576ff;
+      }
+      .orgchart .node .content {
+        border: 1px solid #6576ff;
+      }
+      .level-badge {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-weight: 600;
+        margin-right: 5px;
+      }
+      .stat-card {
+        transition: all 0.3s ease;
+      }
+      .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(43, 55, 72, 0.15);
+      }
+      .user-search-results {
+        max-height: 250px;
+        overflow-y: auto;
+      }
+
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap");
+
+      .referral-tree-container {
+        width: 100%;
+        overflow-x: auto;
+        font-family: "Inter", sans-serif;
+        scrollbar-width: thin;
+        scrollbar-color: #ccc #f5f5f5;
+      }
+
+      .referral-tree-container::-webkit-scrollbar {
+        height: 6px;
+      }
+
+      .referral-tree-container::-webkit-scrollbar-track {
+        background: #f5f5f5;
+        border-radius: 10px;
+      }
+
+      .referral-tree-container::-webkit-scrollbar-thumb {
+        background: #ccc;
+        border-radius: 10px;
+      }
+
+      .tree {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 15px 0;
+      }
+
+      .tree-node {
+        padding: 10px;
+        margin: 5px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        min-width: 160px;
+        max-width: 240px;
+        transition: all 0.2s ease;
+      }
+
+      .tree-node:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+        transform: translateY(-2px);
+      }
+
+      .root-node {
+        background: linear-gradient(145deg, #e6f7ff 0%, #e1f1ff 100%);
+        border-left: 4px solid #6576ff;
+      }
+
+      .referral-node {
+        background: linear-gradient(145deg, #ffffff 0%, #f9f9f9 100%);
+        border-left: 3px solid #6576ff;
+      }
+
+      .node-name {
+        font-weight: 600;
+        font-size: 14px;
+        margin-bottom: 4px;
+        color: #111827;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .node-email {
+        color: #6b7280;
+        margin-bottom: 4px;
+        font-size: 12px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .node-details {
+        font-size: 12px;
+        color: #4b5563;
+        line-height: 1.4;
+      }
+
+      .node-details div {
+        display: flex;
+        align-items: center;
+        margin-bottom: 2px;
+      }
+
+      .node-details div:before {
+        content: "•";
+        margin-right: 4px;
+        color: #9ca3af;
+      }
+
+      .tree-level {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-top: 18px;
+        position: relative;
+      }
+
+      .tree-level:before {
+        content: "";
+        position: absolute;
+        top: -18px;
+        left: 50%;
+        height: 18px;
+        width: 1px;
+        background-color: #d1d5db;
+      }
+
+      .tree-level:after {
+        content: "";
+        position: absolute;
+        top: -5px;
+        left: 25%;
+        right: 25%;
+        height: 1px;
+        background-color: #d1d5db;
+      }
+
+      .tree-level:first-child:before,
+      .tree-level:first-child:after {
+        display: none;
+      }
+
+      .node-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 0 8px;
+      }
+
+      .collapsible-btn {
+        cursor: pointer;
+        color: #2563eb;
+        margin-top: 8px;
+        font-size: 11px;
+        font-weight: 500;
+        display: inline-block;
+        padding: 3px 8px;
+        background-color: #eff6ff;
+        border-radius: 4px;
+        transition: all 0.2s;
+        border: 1px solid #dbeafe;
+      }
+
+      .collapsible-btn:hover {
+        background-color: #dbeafe;
+        color: #1d4ed8;
+      }
+
+      .hidden-children {
+        display: none;
+      }
+
+      @media (max-width: 768px) {
+        .tree-level {
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .tree-level:after {
+          display: none;
+        }
+
+        .node-container {
+          margin: 10px 0;
+        }
+
+        .tree-node {
+          min-width: 140px;
+          max-width: 220px;
+        }
+      }
+    </style>
+  </head>
+
+  <body class="nk-body bg-lighter npc-general has-sidebar">
+    <div class="nk-app-root">
+      <div class="nk-main">
+        <!-- ==========Sidebar======= -->
+        <%- include('../snippets/adminSnippets/sidebar.ejs') %>
+
+        <div class="nk-wrap">
+          <!-- ============Navbar======== -->
+          <%- include('../snippets/adminSnippets/navbar.ejs') %>
+
+          <div class="nk-content">
+            <div class="container-fluid">
+              <div class="nk-content-inner">
+                <div class="nk-content-body">
+                  <!-- Page header -->
+                  <div class="nk-block-head nk-block-head-sm">
+                    <div class="nk-block-between g-3">
+                      <div class="nk-block-head-content">
+                        <h3 class="nk-block-title page-title">
+                          Referral System
+                        </h3>
+                        <div class="nk-block-des text-soft">
+                          <p class="mb-1">
+                            Manage referrals, earnings, and user requirements
+                          </p>
+                          <% if (!referralEnabled) { %>
+                          <div class="alert alert-warning">
+                            <strong>Warning:</strong> The referral system is
+                            currently disabled in application settings.
+                          </div>
+                          <% } %>
+                        </div>
+                      </div>
+                      <div class="nk-block-head-content">
+                        <div class="toggle-wrap nk-block-tools-toggle">
+                          <a
+                            href="#"
+                            class="btn btn-icon btn-trigger toggle-expand me-n1"
+                            data-target="pageMenu"
+                            ><em class="icon ni ni-menu-alt-r"></em
+                          ></a>
+                          <div
+                            class="toggle-expand-content"
+                            data-content="pageMenu"
+                          >
+                            <ul class="nk-block-tools g-3">
+                              <li class="nk-block-tools-opt">
+                                <a
+                                  href="#userSearchModal"
+                                  class="btn btn-outline-primary"
+                                  data-bs-toggle="modal"
+                                >
+                                  <em class="icon ni ni-search"></em>
+                                  <span>Find User</span>
+                                </a>
+                              </li>
+                              <li class="nk-block-tools-opt">
+                                <a
+                                  href="#updateRequirementModal"
+                                  class="btn btn-primary"
+                                  data-bs-toggle="modal"
+                                >
+                                  <em class="icon ni ni-setting"></em>
+                                  <span>Set Referral Requirements</span>
+                                </a>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Referral stats cards -->
+                  <div class="nk-block">
+                    <div class="row g-gs">
+                      <div class="col-sm-6 col-lg-3">
+                        <div class="card stat-card bg-lighter">
+                          <div class="card-inner">
+                            <div class="card-title-group mb-0">
+                              <div class="card-title">
+                                <h6 class="title">Total Commissions</h6>
+                              </div>
+                              <div class="card-tools">
+                                <em class="icon ni ni-coin-alt"></em>
+                              </div>
+                            </div>
+                            <div class="data-group">
+                              <div class="amount" id="totalCommission">
+                                $0.00
+                              </div>
+                              <div class="info text-end">
+                                <span
+                                  class="text-success change"
+                                  id="commissionChange"
+                                  >0%</span
+                                ><span> vs last month</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-sm-6 col-lg-3">
+                        <div class="card stat-card bg-lighter">
+                          <div class="card-inner">
+                            <div class="card-title-group mb-0">
+                              <div class="card-title">
+                                <h6 class="title">Total Referrals</h6>
+                              </div>
+                              <div class="card-tools">
+                                <em class="icon ni ni-users"></em>
+                              </div>
+                            </div>
+                            <div class="data-group">
+                              <div class="amount" id="totalReferrals">0</div>
+                              <div class="info text-end">
+                                <span
+                                  class="text-success change"
+                                  id="referralChange"
+                                  >0%</span
+                                ><span> vs last month</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-sm-6 col-lg-3">
+                        <div class="card stat-card bg-lighter">
+                          <div class="card-inner">
+                            <div class="card-title-group mb-0">
+                              <div class="card-title">
+                                <h6 class="title">Active Earners</h6>
+                              </div>
+                              <div class="card-tools">
+                                <em class="icon ni ni-user-check"></em>
+                              </div>
+                            </div>
+                            <div class="data-group">
+                              <div class="amount" id="activeEarners">0</div>
+                              <div class="info text-end">
+                                <span class="change" id="earnersChange">0%</span
+                                ><span> of total users</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-sm-6 col-lg-3">
+                        <div class="card stat-card bg-lighter">
+                          <div class="card-inner">
+                            <div class="card-title-group mb-0">
+                              <div class="card-title">
+                                <h6 class="title">Conversion Rate</h6>
+                              </div>
+                              <div class="card-tools">
+                                <em class="icon ni ni-swap-alt"></em>
+                              </div>
+                            </div>
+                            <div class="data-group">
+                              <div class="amount" id="conversionRate">0%</div>
+                              <div class="info text-end">
+                                <span
+                                  class="text-danger change"
+                                  id="conversionChange"
+                                  >0%</span
+                                ><span> vs last month</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Referral Settings -->
+                  <div class="nk-block mt-4">
+                    <div class="card card-bordered">
+                      <div class="card-inner">
+                        <h5 class="card-title">
+                          Referral System Configuration
+                        </h5>
+                        <div class="row g-3 mt-1">
+                          <div class="col-lg-6">
+                            <div class="form-group">
+                              <label class="form-label">System Status</label>
+                              <div class="form-control-wrap">
+                                <span
+                                  class="badge badge-dim rounded-pill px-3 py-2 <%= referralEnabled ? 'bg-success' : 'bg-danger' %>"
+                                >
+                                  <%= referralEnabled ? 'Enabled' : 'Disabled'
+                                  %>
+                                </span>
+                                <a
+                                  href="/admin/settings/"
+                                  class="btn btn-sm btn-outline-primary ms-2"
+                                >
+                                  <em class="icon ni ni-setting"></em>
+                                  <span>Configure</span>
+                                </a>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-lg-6">
+                            <div class="form-group">
+                              <label class="form-label"
+                                >Commission Levels</label
+                              >
+                              <div
+                                class="d-flex flex-wrap gap-2"
+                                id="commissionLevels"
+                              >
+                                <% referralLevels.forEach((level, index) => { %>
+                                <span
+                                  class="level-badge bg-primary-soft text-primary"
+                                >
+                                  Level <%= level.level %>: <%=
+                                  level.commissionRate %>%
+                                </span>
+                                <% }) %>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Top Performers & Search -->
+                  <div class="nk-block mt-4">
+                    <div class="row g-gs">
+                      <!-- Top Referrers -->
+                      <div class="col-md-6">
+                        <div class="card card-bordered h-100">
+                          <div class="card-inner">
+                            <div class="card-title-group align-start mb-3">
+                              <div class="card-title">
+                                <h6 class="title">Top Referrers</h6>
+                                <p class="text-soft">
+                                  Users who have referred the most people
+                                </p>
+                              </div>
+                            </div>
+                            <div class="table-responsive">
+                              <table class="table table-striped">
+                                <thead>
+                                  <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">User</th>
+                                    <th scope="col">Referrals</th>
+                                    <th scope="col">Action</th>
+                                  </tr>
+                                </thead>
+                                <tbody id="topReferrersTable">
+                                  <tr>
+                                    <td colspan="4" class="text-center">
+                                      Loading data...
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Top Earners -->
+                      <div class="col-md-6">
+                        <div class="card card-bordered h-100">
+                          <div class="card-inner">
+                            <div class="card-title-group align-start mb-3">
+                              <div class="card-title">
+                                <h6 class="title">Top Earners</h6>
+                                <p class="text-soft">
+                                  Users with highest referral earnings
+                                </p>
+                              </div>
+                            </div>
+                            <div class="table-responsive">
+                              <table class="table table-striped">
+                                <thead>
+                                  <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">User</th>
+                                    <th scope="col">Earnings</th>
+                                    <th scope="col">Action</th>
+                                  </tr>
+                                </thead>
+                                <tbody id="topEarnersTable">
+                                  <tr>
+                                    <td colspan="4" class="text-center">
+                                      Loading data...
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Referral Tree Visualization -->
+                  <div class="nk-block mt-4">
+                    <div class="card card-bordered">
+                      <div class="card-inner">
+                        <h5 class="card-title">Referral Tree Visualization</h5>
+                        <p class="text-soft">
+                          Select a user to visualize their referral network
+                        </p>
+
+                        <div class="form-group mt-3">
+                          <div class="form-control-wrap">
+                            <select
+                              id="userSelect"
+                              class="form-select js-select2"
+                              data-search="on"
+                              data-placeholder="Select a user"
+                            >
+                              <option value="">Select a user</option>
+                            </select>
+                          </div>
+                          <div class="mt-2">
+                            <button
+                              id="loadTreeBtn"
+                              class="btn btn-primary btn-sm"
+                              disabled
+                            >
+                              <em class="icon ni ni-reload"></em>
+                              <span>Load Referral Tree</span>
+                            </button>
+                          </div>
+                        </div>
+
+                        <div
+                          id="referralTreeContainer"
+                          class="orgchart-container mt-4"
+                          style="display: none"
+                        >
+                          <div id="referralTree" class="chart-container"></div>
+                        </div>
+
+                        <div
+                          id="noUserSelectedMessage"
+                          class="text-center py-5"
+                        >
+                          <em
+                            class="icon ni ni-users"
+                            style="font-size: 3rem"
+                          ></em>
+                          <p class="mt-2">
+                            Select a user to view their referral network
+                          </p>
+                        </div>
+
+                        <div
+                          id="noReferralsMessage"
+                          class="text-center py-5"
+                          style="display: none"
+                        >
+                          <em
+                            class="icon ni ni-users"
+                            style="font-size: 3rem"
+                          ></em>
+                          <p class="mt-2">
+                            This user doesn't have any referrals yet
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Transactions List -->
+                  <div class="nk-block mt-4">
+                    <div class="card card-bordered card-stretch">
+                      <div class="card-inner-group">
+                        <div class="card-inner">
+                          <div class="card-title-group">
+                            <div class="card-title">
+                              <h5 class="title">
+                                Recent Referral Transactions
+                              </h5>
+                            </div>
+                            <div class="card-tools me-n1">
+                              <ul class="btn-toolbar gx-1">
+                                <li>
+                                  <a
+                                    href="#"
+                                    class="search-toggle toggle-search btn btn-icon"
+                                    data-target="search"
+                                  >
+                                    <em class="icon ni ni-search"></em>
+                                  </a>
+                                </li>
+                                <li class="btn-toolbar-sep"></li>
+                                <li>
+                                  <div class="dropdown">
+                                    <a
+                                      href="#"
+                                      class="btn btn-trigger btn-icon dropdown-toggle"
+                                      data-bs-toggle="dropdown"
+                                    >
+                                      <em class="icon ni ni-filter-alt"></em>
+                                    </a>
+                                    <div
+                                      class="filter-wg dropdown-menu dropdown-menu-xl dropdown-menu-end"
+                                    >
+                                      <div class="dropdown-head">
+                                        <span class="sub-title dropdown-title"
+                                          >Filter Referrals</span
+                                        >
+                                      </div>
+                                      <div
+                                        class="dropdown-body dropdown-body-rg"
+                                      >
+                                        <div class="row gx-6 gy-3">
+                                          <div class="col-6">
+                                            <div class="form-group">
+                                              <label
+                                                class="overline-title overline-title-alt"
+                                                >Status</label
+                                              >
+                                              <select
+                                                id="statusFilter"
+                                                class="form-select js-select2"
+                                              >
+                                                <option value="">
+                                                  Any Status
+                                                </option>
+                                                <option value="pending">
+                                                  Pending
+                                                </option>
+                                                <option value="completed">
+                                                  Completed
+                                                </option>
+                                                <option value="cancelled">
+                                                  Cancelled
+                                                </option>
+                                              </select>
+                                            </div>
+                                          </div>
+                                          <div class="col-6">
+                                            <div class="form-group">
+                                              <label
+                                                class="overline-title overline-title-alt"
+                                                >Date Range</label
+                                              >
+                                              <div class="form-control-wrap">
+                                                <div
+                                                  class="form-icon form-icon-left"
+                                                >
+                                                  <em
+                                                    class="icon ni ni-calendar"
+                                                  ></em>
+                                                </div>
+                                                <input
+                                                  type="text"
+                                                  id="dateRangeFilter"
+                                                  class="form-control date-picker"
+                                                  placeholder="Date Range"
+                                                />
+                                              </div>
+                                            </div>
+                                          </div>
+                                          <div class="col-12">
+                                            <div class="form-group">
+                                              <button
+                                                id="applyFilters"
+                                                class="btn btn-secondary"
+                                              >
+                                                Apply Filter
+                                              </button>
+                                              <button
+                                                id="resetFilters"
+                                                class="btn btn-outline-secondary"
+                                              >
+                                                Reset
+                                              </button>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </li>
+                              </ul>
+                            </div>
+                            <div
+                              class="card-search search-wrap"
+                              data-search="search"
+                            >
+                              <div class="search-content">
+                                <a
+                                  href="#"
+                                  class="search-back btn btn-icon toggle-search"
+                                  data-target="search"
+                                >
+                                  <em class="icon ni ni-arrow-left"></em>
+                                </a>
+                                <input
+                                  type="text"
+                                  id="searchQuery"
+                                  class="form-control border-transparent form-focus-none"
+                                  placeholder="Search by user or transaction"
+                                />
+                                <button
+                                  id="searchButton"
+                                  class="search-submit btn btn-icon"
+                                >
+                                  <em class="icon ni ni-search"></em>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="card-inner p-0">
+                          <div class="nk-tb-list nk-tb-tnx">
+                            <div class="nk-tb-item nk-tb-head">
+                              <div class="nk-tb-col"><span>Details</span></div>
+                              <div class="nk-tb-col tb-col-xxl">
+                                <span>User</span>
+                              </div>
+                              <div class="nk-tb-col tb-col-lg">
+                                <span>Referral</span>
+                              </div>
+                              <div class="nk-tb-col text-end">
+                                <span>Amount</span>
+                              </div>
+                              <div class="nk-tb-col nk-tb-col-tools"></div>
+                            </div>
+
+                            <!-- Transactions will be loaded here via JS -->
+                            <div id="transactionsList">
+                              <!-- Template for a transaction row -->
+                              <!-- Will be populated via JavaScript -->
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="card-inner">
+                          <ul
+                            class="pagination justify-content-center justify-content-md-start"
+                            id="pagination"
+                          >
+                            <!-- Pagination will be generated via JS -->
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- User Search Modal -->
+          <div class="modal fade" tabindex="-1" id="userSearchModal">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Find User</h5>
+                  <a
+                    href="#"
+                    class="close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  >
+                    <em class="icon ni ni-cross"></em>
+                  </a>
+                </div>
+                <div class="modal-body">
+                  <div class="form-group">
+                    <label class="form-label" for="searchUserInput"
+                      >Search by name, email, or referral code</label
+                    >
+                    <div class="form-control-wrap">
+                      <div class="form-icon form-icon-left">
+                        <em class="icon ni ni-search"></em>
+                      </div>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="searchUserInput"
+                        placeholder="Enter name, email or code"
+                      />
+                    </div>
+                  </div>
+                  <div class="mt-3 user-search-results" id="userSearchResults">
+                    <div class="text-center py-3 text-muted">
+                      <small>Start typing to search for users</small>
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer bg-light">
+                  <span class="sub-text"
+                    >Search results will appear as you type</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Set Referral Requirements Modal -->
+          <div class="modal fade" tabindex="-1" id="updateRequirementModal">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Set Referral Requirements</h5>
+                  <a
+                    href="#"
+                    class="close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  >
+                    <em class="icon ni ni-cross"></em>
+                  </a>
+                </div>
+                <div class="modal-body">
+                  <form id="referralRequirementForm">
+                    <div class="form-group">
+                      <label class="form-label" for="userRequirementSelect"
+                        >Select User</label
+                      >
+                      <div class="form-control-wrap">
+                        <select
+                          id="userRequirementSelect"
+                          class="form-select js-select2"
+                          data-search="on"
+                          required
+                        >
+                          <option value="">Select a user</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-group mt-3">
+                      <label class="form-label" for="referralNeededInput"
+                        >Required Referrals</label
+                      >
+                      <div class="form-control-wrap">
+                        <input
+                          type="number"
+                          class="form-control"
+                          id="referralNeededInput"
+                          min="0"
+                          value="0"
+                          required
+                        />
+                        <div class="form-note">Set to 0 for no requirement</div>
+                      </div>
+                    </div>
+                    <div class="form-group mt-3">
+                      <button type="submit" class="btn btn-primary">
+                        Update Requirement
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-outline-light"
+                        data-bs-dismiss="modal"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </form>
+                </div>
+                <div class="modal-footer bg-light">
+                  <span class="sub-text"
+                    >This will update the number of referrals needed for the
+                    selected user</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Transaction Details Modal -->
+          <div class="modal fade" tabindex="-1" id="tranxDetails">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <a
+                  href="#"
+                  class="close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                >
+                  <em class="icon ni ni-cross"></em>
+                </a>
+                <div class="modal-body modal-body-md">
+                  <div class="nk-modal-head mb-2 mb-sm-5">
+                    <h4 class="nk-modal-title title">
+                      Referral Transaction
+                      <small class="text-primary" id="tranxId">#TNX67234</small>
+                    </h4>
+                  </div>
+                  <div class="nk-tnx-details">
+                    <div class="nk-block-between flex-wrap g-3">
+                      <div class="nk-tnx-type">
+                        <div class="nk-tnx-type-icon bg-primary text-white">
+                          <em class="icon ni ni-arrow-down-left"></em>
+                        </div>
+                        <div class="nk-tnx-type-text">
+                          <h5 class="title" id="tranxAmount">+ 0.004560 BTC</h5>
+                          <span class="sub-text mt-n1" id="tranxDate"
+                            >15 Oct, 2019 09:45 PM</span
+                          >
+                        </div>
+                      </div>
+                      <div class="align-center flex-wrap gx-3">
+                        <span id="tranxStatusBadge" class="badge bg-primary"
+                          >pending</span
+                        >
+                      </div>
+                    </div>
+                    <hr />
+                    <div class="row gy-3">
+                      <div class="col-lg-6">
+                        <span class="sub-text">Transaction ID</span>
+                        <span class="caption-text" id="tranxTxId"
+                          >YWLX52JG73</span
+                        >
+                      </div>
+                      <div class="col-lg-6">
+                        <span class="sub-text">Transaction Hash</span>
+                        <span class="caption-text text-break" id="tranxHash"
+                          >NIY9TB2JG73YWLXPYM2U8HR</span
+                        >
+                      </div>
+                      <div class="col-lg-6">
+                        <span class="sub-text">Commission Level</span>
+                        <span class="caption-text fw-bold" id="tranxLevel"
+                          >Level 1 (8%)</span
+                        >
+                      </div>
+                      <div class="col-lg-6">
+                        <span class="sub-text">Amount</span>
+                        <span
+                          class="caption-text fw-bold"
+                          id="tranxDetailAmount"
+                          >0.004560 BTC</span
+                        >
+                      </div>
+                      <div class="col-lg-6">
+                        <span class="sub-text">Earning User</span>
+                        <span class="caption-text" id="tranxUser"
+                          >John Doe</span
+                        >
+                      </div>
+                      <div class="col-lg-6">
+                        <span class="sub-text">Referral</span>
+                        <span class="caption-text" id="tranxReferral"
+                          >Jane Smith</span
+                        >
+                      </div>
+                    </div>
+                    <hr />
+                    <div class="nk-modal-head mt-sm-5 mb-4">
+                      <h5 class="title">Transaction Details</h5>
+                    </div>
+                    <div class="row gy-3">
+                      <div class="col-lg-6">
+                        <span class="sub-text">Transaction Type</span>
+                        <span class="caption-text">Referral Commission</span>
+                      </div>
+                      <div class="col-lg-6">
+                        <span class="sub-text">Created At</span>
+                        <span class="caption-text" id="tranxCreated"
+                          >2023-04-28 12:45:30</span
+                        >
+                      </div>
+                      <div class="col-lg-6">
+                        <span class="sub-text">Completed At</span>
+                        <span class="caption-text" id="tranxCompleted"
+                          >2023-04-28 14:30:15</span
+                        >
+                      </div>
+                      <div class="col-lg-12">
+                        <span class="sub-text">Description</span>
+                        <span class="caption-text" id="tranxDescription"
+                          >Referral commission for deposit</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ========Footer========== -->
+          <%- include('../snippets/adminSnippets/footer.ejs') %>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================Scripts========== -->
+    <%- include('../snippets/adminSnippets/scripts.ejs') %>
+    <script src="/apiClient/referralClient.js"></script>
+
+    <script>
+      $(document).ready(function () {
+        // Initialize select2
+        $(".js-select2").select2({
+          dropdownParent: $(this).parent(),
+        });
+
+        // Initialize date picker
+        $(".date-picker").datepicker({
+          format: "yyyy-mm-dd",
+          multidate: 2,
+          multidateSeparator: " to ",
+        });
+
+        let currentPage = 1;
+        const pageSize = 10;
+        let filters = {};
+
+        // Initialize the page
+        loadReferralStatistics();
+        loadTransactions(currentPage, pageSize, filters);
+        loadUsers();
+
+        // Event listeners
+        $("#searchButton").on("click", function (e) {
+          e.preventDefault();
+          const query = $("#searchQuery").val().trim();
+          if (query) {
+            filters.search = query;
+          } else {
+            delete filters.search;
+          }
+          currentPage = 1;
+          loadTransactions(currentPage, pageSize, filters);
+        });
+
+        $("#applyFilters").on("click", function () {
+          const status = $("#statusFilter").val();
+          const dateRange = $("#dateRangeFilter").val();
+
+          if (status) filters.status = status;
+          else delete filters.status;
+
+          if (dateRange) filters.dateRange = dateRange;
+          else delete filters.dateRange;
+
+          currentPage = 1;
+          loadTransactions(currentPage, pageSize, filters);
+        });
+
+        $("#resetFilters").on("click", function () {
+          $("#statusFilter").val("").trigger("change");
+          $("#dateRangeFilter").val("");
+          filters = {};
+          currentPage = 1;
+          loadTransactions(currentPage, pageSize, filters);
+        });
+
+        $("#searchUserInput").on("keyup", function () {
+          const query = $(this).val().trim();
+          if (query.length >= 2) {
+            searchUsers(query);
+          } else {
+            $("#userSearchResults").html(
+              '<div class="text-center py-3 text-muted"><small>Enter at least 2 characters</small></div>'
+            );
+          }
+        });
+
+        $("#userSelect").on("change", function () {
+          const userId = $(this).val();
+          if (userId) {
+            $("#loadTreeBtn").prop("disabled", false);
+          } else {
+            $("#loadTreeBtn").prop("disabled", true);
+          }
+        });
+
+        $("#loadTreeBtn").on("click", function () {
+          const userId = $("#userSelect").val();
+          if (userId) {
+            loadReferralTree(userId);
+          }
+        });
+
+        // Form submission for updating referral needed
+        $("#referralRequirementForm").on("submit", function (e) {
+          e.preventDefault();
+          const userId = $("#userRequirementSelect").val();
+          const referralNeeded = parseInt($("#referralNeededInput").val());
+
+          if (!userId) {
+            toastr.error("Please select a user");
+            return;
+          }
+
+          updateUserReferralNeeded(userId, referralNeeded);
+        });
+
+        // Load transactions function
+        function loadTransactions(page, limit, filters = {}) {
+          // Show loading state
+          $("#transactionsList").html(
+            '<div class="text-center py-4"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>'
+          );
+
+          // Filter object to query params
+          const queryParams = {
+            page,
+            limit,
+            ...filters,
+          };
+
+          getReferralEarnings(queryParams)
+            .then((response) => {
+              const { transactions, pagination, stats } = response.data;
+
+              if (transactions.length === 0) {
+                $("#transactionsList").html(
+                  '<div class="text-center py-4">No transactions found</div>'
+                );
+                $("#pagination").html("");
+                return;
+              }
+
+              // Render transactions
+              const transactionsHtml = transactions
+                .map((tx) => renderTransactionRow(tx))
+                .join("");
+              $("#transactionsList").html(transactionsHtml);
+
+              // Render pagination
+              const paginationHtml = generatePagination(
+                pagination.page,
+                pagination.pages
+              );
+              $("#pagination").html(paginationHtml);
+
+              // Attach pagination event listeners
+              $(".page-link").on("click", function (e) {
+                e.preventDefault();
+                const page = $(this).data("page");
+                if (page) {
+                  currentPage = page;
+                  loadTransactions(currentPage, pageSize, filters);
+                }
+              });
+
+              // Attach transaction detail viewers
+              $(".view-transaction").on("click", function () {
+                const txId = $(this).data("id");
+                const transaction = transactions.find((t) => t._id === txId);
+                if (transaction) {
+                  showTransactionDetails(transaction);
+                }
+              });
+            })
+            .catch((error) => {
+              console.error("Failed to load transactions:", error);
+              toastr.error("Failed to load transactions");
+              $("#transactionsList").html(
+                '<div class="text-center py-4">Failed to load transactions</div>'
+              );
+            });
+        }
+
+        // Load referral statistics
+        function loadReferralStatistics() {
+          getReferralStatistics()
+            .then((response) => {
+              const {
+                topReferrers,
+                topEarners,
+                totalEarnings,
+                usersWithReferrals,
+              } = response.data;
+
+              // Update statistics
+              $("#totalCommission").text(formatCurrency(totalEarnings));
+              $("#totalReferrals").text(usersWithReferrals);
+
+              // Render top referrers table
+              const referrersHtml = topReferrers
+                .map(
+                  (user, index) => `
+                <tr>
+                  <td>${index + 1}</td>
+                  <td>
+                    <div class="user-card">
+                      <div class="user-info">
+                        <span class="tb-lead">${user.fullName}</span>
+                        <span class="sub-text">${maskEmail(user.email)}</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>${user.referralsCount}</td>
+                  <td>
+                    <a href="#" class="btn btn-sm btn-icon btn-outline-primary view-tree" data-id="${
+                      user._id
+                    }">
+                      <em class="icon ni ni-eye"></em>
+                    </a>
+                  </td>
+                </tr>
+              `
+                )
+                .join("");
+
+              if (topReferrers.length === 0) {
+                $("#topReferrersTable").html(
+                  '<tr><td colspan="4" class="text-center">No data available</td></tr>'
+                );
+              } else {
+                $("#topReferrersTable").html(referrersHtml);
+              }
+
+              // Render top earners table
+              const earnersHtml = topEarners
+                .map(
+                  (user, index) => `
+                <tr>
+                  <td>${index + 1}</td>
+                  <td>
+                    <div class="user-card">
+                      <div class="user-info">
+                        <span class="tb-lead">${user.fullName}</span>
+                        <span class="sub-text">${maskEmail(user.email)}</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>${formatCurrency(user.referralBalance)}</td>
+                  <td>
+                    <a href="#" class="btn btn-sm btn-icon btn-outline-primary view-tree" data-id="${
+                      user._id
+                    }">
+                      <em class="icon ni ni-eye"></em>
+                    </a>
+                  </td>
+                </tr>
+              `
+                )
+                .join("");
+
+              if (topEarners.length === 0) {
+                $("#topEarnersTable").html(
+                  '<tr><td colspan="4" class="text-center">No data available</td></tr>'
+                );
+              } else {
+                $("#topEarnersTable").html(earnersHtml);
+              }
+
+              // Attach view tree event listeners
+              $(".view-tree").on("click", function (e) {
+                e.preventDefault();
+                const userId = $(this).data("id");
+                $("#userSelect").val(userId).trigger("change");
+                loadReferralTree(userId);
+                $("html, body").animate(
+                  {
+                    scrollTop: $("#referralTreeContainer").offset().top - 150,
+                  },
+                  500
+                );
+              });
+            })
+            .catch((error) => {
+              console.error("Failed to load statistics:", error);
+              toastr.error("Failed to load referral statistics");
+            });
+        }
+
+        // Load users for select dropdowns
+        function loadUsers() {
+          // Use the proper client function from referralClient.js
+          getUsersList()
+            .then((data) => {
+              const users = data.users;
+              if (!users || users.length === 0) {
+                return;
+              }
+
+              console.log("Loaded users:", users.length);
+              const userOptions = users
+                .map(
+                  (user) =>
+                    `<option value="${user._id}">${user.fullName} (${maskEmail(
+                      user.email
+                    )})</option>`
+                )
+                .join("");
+
+              // Clear existing options except the first default one
+              $("#userSelect").find("option:not(:first)").remove();
+              $("#userRequirementSelect").find("option:not(:first)").remove();
+
+              // Add new options
+              $("#userSelect").append(userOptions);
+              $("#userRequirementSelect").append(userOptions);
+
+              // Initialize select2 after populating options
+              $(".js-select2").select2();
+            })
+            .catch((error) => {
+              console.error("Failed to load users:", error);
+              toastr.error("Failed to load users for selection");
+            });
+        }
+
+        // Search users
+        function searchUsers(query) {
+          // This should be replaced with a proper API call to search users
+          // For now we'll use a placeholder method
+          fetch(`/admin/users/api/search?query=${encodeURIComponent(query)}`)
+            .then((response) => response.json())
+            .then((data) => {
+              const users = data.data.users;
+              if (users.length === 0) {
+                $("#userSearchResults").html(
+                  '<div class="text-center py-3 text-muted"><small>No users found</small></div>'
+                );
+                return;
+              }
+
+              const resultsHtml = users
+                .map(
+                  (user) => `
+                <div class="user-card p-2 border-bottom">
+                  <div class="d-flex justify-content-between">
+                    <div class="user-info">
+                      <span class="tb-lead">${user.fullName}</span>
+                      <span class="sub-text d-block">${maskEmail(
+                        user.email
+                      )}</span>
+                      <span class="sub-text d-block">Referrals: ${
+                        user.referralsCount || 0
+                      }</span>
+                    </div>
+                    <div class="dropdown">
+                      <a href="#" class="dropdown-toggle btn btn-icon btn-trigger" data-bs-toggle="dropdown">
+                        <em class="icon ni ni-more-h"></em>
+                      </a>
+                      <div class="dropdown-menu dropdown-menu-end">
+                        <ul class="link-list-opt">
+                          <li>
+                            <a href="#" class="view-user-tree" data-id="${
+                              user._id
+                            }" data-bs-dismiss="modal">
+                              <em class="icon ni ni-eye"></em>
+                              <span>View Referral Tree</span>
+                            </a>
+                          </li>
+                          <li>
+                            <a href="#" class="set-user-requirement" 
+                               data-id="${user._id}" 
+                               data-name="${user.fullName}"
+                               data-email="${user.email}"
+                               data-needed="${user.referralNeeded || 0}"
+                               data-bs-dismiss="modal">
+                              <em class="icon ni ni-setting"></em>
+                              <span>Set Referral Requirement</span>
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              `
+                )
+                .join("");
+
+              $("#userSearchResults").html(resultsHtml);
+
+              // Attach event listeners
+              $(".view-user-tree").on("click", function (e) {
+                e.preventDefault();
+                const userId = $(this).data("id");
+                $("#userSelect").val(userId).trigger("change");
+                loadReferralTree(userId);
+                $("#userSearchModal").modal("hide");
+
+                setTimeout(() => {
+                  $("html, body").animate(
+                    {
+                      scrollTop: $("#referralTreeContainer").offset().top - 150,
+                    },
+                    500
+                  );
+                }, 500);
+              });
+
+              $(".set-user-requirement").on("click", function (e) {
+                e.preventDefault();
+                const userId = $(this).data("id");
+                const userName = $(this).data("name");
+                const userEmail = $(this).data("email");
+                const referralNeeded = $(this).data("needed");
+
+                $("#userRequirementSelect").val(userId).trigger("change");
+                $("#referralNeededInput").val(referralNeeded);
+
+                $("#userSearchModal").modal("hide");
+                $("#updateRequirementModal").modal("show");
+              });
+            })
+            .catch((error) => {
+              console.error("Failed to search users:", error);
+              $("#userSearchResults").html(
+                '<div class="text-center py-3 text-danger">Error searching users</div>'
+              );
+            });
+        }
+
+        // Load referral tree function
+        function loadReferralTree(userId) {
+          $("#referralTreeContainer").hide();
+          $("#noUserSelectedMessage").hide();
+          $("#noReferralsMessage").hide();
+          $("#referralTree").html('<div class="loading">Loading...</div>');
+
+          getReferralTree(userId)
+            .then((response) => {
+              const { user, referralTree, earningsPerLevel } = response.data;
+
+              if (!referralTree || referralTree.length === 0) {
+                $("#referralTree").html("");
+                $("#noReferralsMessage").show();
+                return;
+              }
+
+              // Clear previous content
+              $("#referralTree").html("");
+
+              // Create the custom tree structure
+              const treeHTML = createCustomTree(user, referralTree);
+              $("#referralTree").html(treeHTML);
+
+              // Add event listeners for collapsible functionality
+              addTreeEventListeners();
+
+              $("#referralTreeContainer").show();
+            })
+            .catch((error) => {
+              console.error("Failed to load referral tree:", error);
+              toastr.error("Failed to load referral tree");
+              $("#referralTree").html(
+                '<div class="text-center py-4 text-danger">Failed to load referral tree</div>'
+              );
+            });
+        }
+
+        // Create custom tree HTML
+        function createCustomTree(user, referralTree) {
+          // Generate HTML for the root node
+          let treeHTML = `
+            <div class="referral-tree-container">
+              <div class="tree">
+                <div class="tree-level">
+                  <div class="node-container">
+                    <div class="tree-node root-node">
+                      <div class="node-name">${user.fullName}</div>
+                      <div class="node-details">
+                        ${
+                          user.referralCode
+                            ? `<div>Code: ${user.referralCode}</div>`
+                            : ""
+                        }
+                        ${
+                          referralTree.length > 0
+                            ? `<div>Referrals: ${referralTree.length}</div>`
+                            : ""
+                        }
+                      </div>
+                    </div>
+          `;
+
+          // If there are direct referrals of the root user
+          if (referralTree.length > 0) {
+            // Add a collapsible button if there are referrals
+            treeHTML += `<span class="collapsible-btn" data-action="toggle-children">
+                            Show Referrals (${referralTree.length})
+                        </span>`;
+
+            // Start the referrals container
+            treeHTML += `<div class="tree-level">`;
+
+            // Generate HTML for each referral
+            referralTree.forEach((referral) => {
+              treeHTML += `
+                <div class="node-container">
+                  <div class="tree-node referral-node">
+                    <div class="node-name">${referral.fullName}</div>
+                    <div class="node-details">
+                      ${
+                        referral.referralCode
+                          ? `<div>Code: ${referral.referralCode}</div>`
+                          : ""
+                      }
+                      ${
+                        referral.referralBalance
+                          ? `<div>Earnings: ${formatCurrency(
+                              referral.referralBalance
+                            )}</div>`
+                          : ""
+                      }
+                      ${
+                        referral.subReferralsCount > 0
+                          ? `<div>Referrals: ${referral.subReferralsCount}</div>`
+                          : ""
+                      }
+                      <div>Joined: ${formatDate(referral.createdAt)}</div>
+                    </div>
+                  </div>
+                </div>
+              `;
+            });
+
+            // Close the referrals container
+            treeHTML += `</div>`;
+          }
+
+          // Close all open divs
+          treeHTML += `
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+
+          return treeHTML;
+        }
+
+        // Add event listeners for collapsible functionality
+        function addTreeEventListeners() {
+          const toggleButtons = document.querySelectorAll(
+            '.collapsible-btn[data-action="toggle-children"]'
+          );
+
+          toggleButtons.forEach((button) => {
+            button.addEventListener("click", function () {
+              const childrenContainer = this.nextElementSibling;
+
+              if (childrenContainer.classList.contains("hidden-children")) {
+                childrenContainer.classList.remove("hidden-children");
+                this.textContent = this.textContent.replace("Show", "Hide");
+              } else {
+                childrenContainer.classList.add("hidden-children");
+                this.textContent = this.textContent.replace("Hide", "Show");
+              }
+            });
+          });
+        }
+
+        // Update user's referralNeeded value
+        function updateUserReferralNeeded(userId, referralNeeded) {
+          updateReferralNeeded(userId, referralNeeded)
+            .then((response) => {
+              toastr.success("Referral requirement updated successfully");
+              $("#updateRequirementModal").modal("hide");
+            })
+            .catch((error) => {
+              console.error("Failed to update referral needed:", error);
+              toastr.error("Failed to update referral requirement");
+            });
+        }
+
+        // Show transaction details
+        function showTransactionDetails(transaction) {
+          $("#tranxId").text(`#${transaction._id.substring(0, 8)}`);
+          $("#tranxAmount").text(
+            `${transaction.amount} ${transaction.currency}`
+          );
+          $("#tranxDate").text(formatDate(transaction.createdAt));
+          $("#tranxStatusBadge")
+            .removeClass()
+            .addClass(`badge ${getStatusBadgeClass(transaction.status)}`)
+            .text(transaction.status);
+          $("#tranxTxId").text(transaction._id);
+          $("#tranxHash").text(transaction.txHash || "N/A");
+          $("#tranxLevel").text(transaction.description);
+          $("#tranxDetailAmount").text(
+            `${transaction.amount} ${transaction.currency}`
+          );
+          $("#tranxUser").text(
+            transaction.userId ? transaction.userId.fullName : "N/A"
+          );
+          $("#tranxReferral").text(
+            transaction.referralId ? transaction.referralId.fullName : "N/A"
+          );
+          $("#tranxCreated").text(formatDate(transaction.createdAt, true));
+          $("#tranxCompleted").text(
+            transaction.completedAt
+              ? formatDate(transaction.completedAt, true)
+              : "N/A"
+          );
+          $("#tranxDescription").text(
+            transaction.description || "No description"
+          );
+
+          $("#tranxDetails").modal("show");
+        }
+
+        // Helper functions
+        function renderTransactionRow(transaction) {
+          const user = transaction.userId || {
+            fullName: "Unknown",
+            email: "unknown@example.com",
+          };
+          const referral = transaction.referralId || {
+            fullName: "Unknown",
+            email: "unknown@example.com",
+          };
+
+          return `
+            <div class="nk-tb-item">
+              <div class="nk-tb-col">
+                <div class="nk-tnx-type">
+                  <div class="nk-tnx-type-icon bg-primary-dim text-primary">
+                    <em class="icon ni ni-arrow-down-left"></em>
+                  </div>
+                  <div class="nk-tnx-type-text">
+                    <span class="tb-lead">Referral Commission</span>
+                    <span class="tb-date">${formatDate(
+                      transaction.createdAt
+                    )}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="nk-tb-col tb-col-xxl">
+                <span class="tb-lead-sub">${user.fullName}</span>
+                <span class="tb-sub">${maskEmail(user.email)}</span>
+              </div>
+              <div class="nk-tb-col tb-col-lg">
+                <span class="tb-lead-sub">${referral.fullName}</span>
+                <span class="badge badge-dot ${getStatusBadgeClass(
+                  transaction.status
+                )}">${transaction.status}</span>
+              </div>
+              <div class="nk-tb-col text-end">
+                <span class="tb-amount">
+                  ${transaction.amount} <span>${transaction.currency}</span>
+                </span>
+              </div>
+              <div class="nk-tb-col nk-tb-col-tools">
+                <ul class="nk-tb-actions gx-2">
+                  <li class="nk-tb-action-hidden">
+                    <a href="#" class="btn btn-sm btn-icon btn-outline-light view-transaction" data-id="${
+                      transaction._id
+                    }">
+                      <em class="icon ni ni-eye"></em>
+                    </a>
+                  </li>
+                  <li>
+                    <div class="dropdown">
+                      <a href="#" class="dropdown-toggle btn btn-icon btn-trigger" data-bs-toggle="dropdown">
+                        <em class="icon ni ni-more-h"></em>
+                      </a>
+                      <div class="dropdown-menu dropdown-menu-end">
+                        <ul class="link-list-opt">
+                          <li>
+                            <a href="#" class="view-transaction" data-id="${
+                              transaction._id
+                            }">
+                              <em class="icon ni ni-eye"></em>
+                              <span>View Details</span>
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          `;
+        }
+
+        function generatePagination(currentPage, totalPages) {
+          if (totalPages <= 1) return "";
+
+          let html = `
+            <li class="page-item ${currentPage === 1 ? "disabled" : ""}">
+              <a class="page-link" href="#" data-page="${
+                currentPage - 1
+              }">Prev</a>
+            </li>
+          `;
+
+          // First page
+          html += `
+            <li class="page-item ${currentPage === 1 ? "active" : ""}">
+              <a class="page-link" href="#" data-page="1">1</a>
+            </li>
+          `;
+
+          // Handle ellipsis
+          if (currentPage > 3) {
+            html += `<li class="page-item"><span class="page-link"><em class="icon ni ni-more-h"></em></span></li>`;
+          }
+
+          // Pages around current
+          for (
+            let i = Math.max(2, currentPage - 1);
+            i <= Math.min(totalPages - 1, currentPage + 1);
+            i++
+          ) {
+            if (i > 1 && i < totalPages) {
+              html += `
+                <li class="page-item ${currentPage === i ? "active" : ""}">
+                  <a class="page-link" href="#" data-page="${i}">${i}</a>
+                </li>
+              `;
+            }
+          }
+
+          // Handle ellipsis
+          if (currentPage < totalPages - 2) {
+            html += `<li class="page-item"><span class="page-link"><em class="icon ni ni-more-h"></em></span></li>`;
+          }
+
+          // Last page
+          if (totalPages > 1) {
+            html += `
+              <li class="page-item ${
+                currentPage === totalPages ? "active" : ""
+              }">
+                <a class="page-link" href="#" data-page="${totalPages}">${totalPages}</a>
+              </li>
+            `;
+          }
+
+          // Next button
+          html += `
+            <li class="page-item ${
+              currentPage === totalPages ? "disabled" : ""
+            }">
+              <a class="page-link" href="#" data-page="${
+                currentPage + 1
+              }">Next</a>
+            </li>
+          `;
+
+          return html;
+        }
+
+        function generateTreeChildren(referrals) {
+          if (!referrals || referrals.length === 0) return [];
+
+          return referrals.map((referral) => {
+            const node = {
+              name: referral.fullName,
+              title: maskEmail(referral.email),
+              id: referral._id,
+              email: referral.email,
+              referralCode: referral.referralCode,
+              referralBalance: referral.referralBalance,
+              subReferralsCount: referral.subReferralsCount,
+            };
+
+            if (referral.children && referral.children.length > 0) {
+              node.children = generateTreeChildren(referral.children);
+            }
+
+            return node;
+          });
+        }
+
+        function formatDate(dateString, withTime = false) {
+          const date = new Date(dateString);
+          const options = { year: "numeric", month: "short", day: "numeric" };
+
+          if (withTime) {
+            options.hour = "2-digit";
+            options.minute = "2-digit";
+          }
+
+          return date.toLocaleDateString("en-US", options);
+        }
+
+        function formatCurrency(amount) {
+          return new Intl.NumberFormat("en-US", {
+            style: "currency",
+            currency: "USD",
+            minimumFractionDigits: 2,
+          }).format(amount);
+        }
+
+        function maskEmail(email) {
+          if (!email) return "N/A";
+          const [username, domain] = email.split("@");
+          const maskedUsername =
+            username.substring(0, 3) +
+            "*".repeat(Math.max(0, username.length - 3));
+          return `${maskedUsername}@${domain}`;
+        }
+
+        function getStatusBadgeClass(status) {
+          switch (status) {
+            case "completed":
+              return "bg-success";
+            case "pending":
+              return "bg-warning";
+            case "processing":
+              return "bg-info";
+            case "failed":
+              return "bg-danger";
+            case "cancelled":
+              return "bg-secondary";
+            default:
+              return "bg-light";
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

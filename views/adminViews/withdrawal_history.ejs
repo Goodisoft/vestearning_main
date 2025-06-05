@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="zxx" class="js">
+  <head>
+    <!-- ========Headers meta======== -->
+    <%- include('../snippets/adminSnippets/header_meta.ejs') %>
+
+    <title>EXNESTRADE | Admin Dashboard</title>
+  </head>
+  <body class="nk-body bg-lighter npc-general has-sidebar">
+    <div class="nk-app-root">
+      <div class="nk-main">
+        <!-- ==========Sidebar======= -->
+        <%- include('../snippets/adminSnippets/sidebar.ejs') %>
+
+        <div class="nk-wrap">
+          <!-- ============Navbar======== -->
+          <%- include('../snippets/adminSnippets/navbar.ejs') %>
+
+          <div class="nk-content">
+            <div class="container-fluid">
+              <div class="nk-content-inner">
+                <div class="nk-content-body">
+                  <div class="nk-block-head nk-block-head-sm">
+                    <div class="nk-block-between g-3">
+                      <div class="nk-block-head-content">
+                        <h3 class="nk-block-title page-title">
+                          Withdrawal History
+                        </h3>
+                        <div class="nk-block-des text-soft">
+                          <p>
+                            You have total <%= pagination?.total || 0 %>
+                            withdrawals.
+                          </p>
+                        </div>
+                      </div>
+                      <div class="nk-block-head-content">
+                        <div class="toggle-wrap nk-block-tools-toggle">
+                          <a
+                            href="#"
+                            class="btn btn-icon btn-trigger toggle-expand me-n1"
+                            data-target="pageMenu"
+                            ><em class="icon ni ni-menu-alt-r"></em
+                          ></a>
+                          <div
+                            class="toggle-expand-content"
+                            data-content="pageMenu"
+                          >
+                            <ul class="nk-block-tools g-3">
+                              <li class="nk-block-tools-opt">
+                                <a
+                                  href="/admin/transaction/withdraw"
+                                  class="btn btn-primary"
+                                >
+                                  <em class="icon ni ni-clock"></em>
+                                  <span>Pending Withdrawals</span>
+                                </a>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="nk-block">
+                    <div class="card card-bordered card-stretch">
+                      <div class="card-inner-group">
+                        <div class="card-inner">
+                          <div class="card-title-group">
+                            <div class="card-title">
+                              <h5 class="title">All Withdrawals</h5>
+                            </div>
+                            <div class="card-tools me-n1">
+                              <ul class="btn-toolbar gx-1">
+                                <li>
+                                  <a
+                                    href="#"
+                                    class="search-toggle toggle-search btn btn-icon"
+                                    data-target="search"
+                                    ><em class="icon ni ni-search"></em
+                                  ></a>
+                                </li>
+                                <li class="btn-toolbar-sep"></li>
+                                <li>
+                                  <div class="dropdown">
+                                    <a
+                                      href="#"
+                                      class="btn btn-trigger btn-icon dropdown-toggle"
+                                      data-bs-toggle="dropdown"
+                                      ><em class="icon ni ni-filter-alt"></em
+                                    ></a>
+                                    <div
+                                      class="filter-wg dropdown-menu dropdown-menu-xl dropdown-menu-end"
+                                    >
+                                      <div class="dropdown-head">
+                                        <span class="sub-title dropdown-title"
+                                          >Filter Withdrawals</span
+                                        >
+                                        <div class="dropdown">
+                                          <a href="#" class="link link-light"
+                                            ><em class="icon ni ni-more-h"></em
+                                          ></a>
+                                        </div>
+                                      </div>
+                                      <div
+                                        class="dropdown-body dropdown-body-rg"
+                                      >
+                                        <div class="row gx-6 gy-4">
+                                          <div class="col-6">
+                                            <div class="form-group">
+                                              <label
+                                                class="overline-title overline-title-alt"
+                                                >Type</label
+                                              ><select
+                                                class="form-select js-select2"
+                                                id="filterType"
+                                              >
+                                                <option value="any">
+                                                  Any Type
+                                                </option>
+                                                <option value="wallet">
+                                                  Wallet Withdrawal
+                                                </option>
+                                                <option value="referral">
+                                                  Referral Withdrawal
+                                                </option>
+                                              </select>
+                                            </div>
+                                          </div>
+                                          <div class="col-6">
+                                            <div class="form-group">
+                                              <label
+                                                class="overline-title overline-title-alt"
+                                                >Status</label
+                                              ><select
+                                                class="form-select js-select2"
+                                                id="filterStatus"
+                                              >
+                                                <option value="any">
+                                                  Any Status
+                                                </option>
+                                                <option value="pending">
+                                                  Pending
+                                                </option>
+                                                <option value="completed">
+                                                  Completed
+                                                </option>
+                                                <option value="cancelled">
+                                                  Cancelled
+                                                </option>
+                                              </select>
+                                            </div>
+                                          </div>
+                                          <div class="col-6">
+                                            <div class="form-group">
+                                              <label
+                                                class="overline-title overline-title-alt"
+                                                >Currency</label
+                                              ><select
+                                                class="form-select js-select2"
+                                                id="filterCurrency"
+                                              >
+                                                <option value="any">
+                                                  Any Currency
+                                                </option>
+                                                <option value="BTC">
+                                                  Bitcoin
+                                                </option>
+                                                <option value="ETH">
+                                                  Ethereum
+                                                </option>
+                                                <option value="USDT">
+                                                  USDT
+                                                </option>
+                                              </select>
+                                            </div>
+                                          </div>
+                                          <div class="col-6">
+                                            <div class="form-group">
+                                              <label
+                                                class="overline-title overline-title-alt"
+                                                >Date Range</label
+                                              >
+                                              <div class="form-control-wrap">
+                                                <div
+                                                  class="form-icon form-icon-right"
+                                                >
+                                                  <em
+                                                    class="icon ni ni-calendar"
+                                                  ></em>
+                                                </div>
+                                                <input
+                                                  type="text"
+                                                  class="form-control date-picker"
+                                                  id="filterDateRange"
+                                                  data-date-format="yyyy-mm-dd"
+                                                  placeholder="Date range"
+                                                />
+                                              </div>
+                                            </div>
+                                          </div>
+                                          <div class="col-12">
+                                            <div class="form-group">
+                                              <button
+                                                type="button"
+                                                class="btn btn-secondary"
+                                                id="applyFilter"
+                                              >
+                                                Filter
+                                              </button>
+                                              <button
+                                                type="button"
+                                                class="btn btn-light"
+                                                id="resetFilter"
+                                              >
+                                                Reset
+                                              </button>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </li>
+                                <li>
+                                  <div class="dropdown">
+                                    <a
+                                      href="#"
+                                      class="btn btn-trigger btn-icon dropdown-toggle"
+                                      data-bs-toggle="dropdown"
+                                      ><em class="icon ni ni-setting"></em
+                                    ></a>
+                                    <div
+                                      class="dropdown-menu dropdown-menu-xs dropdown-menu-end"
+                                    >
+                                      <ul class="link-check">
+                                        <li><span>Show</span></li>
+                                        <li
+                                          class="<%= pagination?.limit === 10 ? 'active' : '' %>"
+                                        >
+                                          <a href="?limit=10">10</a>
+                                        </li>
+                                        <li
+                                          class="<%= pagination?.limit === 20 ? 'active' : '' %>"
+                                        >
+                                          <a href="?limit=20">20</a>
+                                        </li>
+                                        <li
+                                          class="<%= pagination?.limit === 50 ? 'active' : '' %>"
+                                        >
+                                          <a href="?limit=50">50</a>
+                                        </li>
+                                      </ul>
+                                      <ul class="link-check">
+                                        <li><span>Order</span></li>
+                                        <li
+                                          class="<%= !pagination?.sortOrder || pagination?.sortOrder === 'desc' ? 'active' : '' %>"
+                                        >
+                                          <a href="?sortOrder=desc">DESC</a>
+                                        </li>
+                                        <li
+                                          class="<%= pagination?.sortOrder === 'asc' ? 'active' : '' %>"
+                                        >
+                                          <a href="?sortOrder=asc">ASC</a>
+                                        </li>
+                                      </ul>
+                                    </div>
+                                  </div>
+                                </li>
+                              </ul>
+                            </div>
+                            <div
+                              class="card-search search-wrap"
+                              data-search="search"
+                            >
+                              <div class="search-content">
+                                <a
+                                  href="#"
+                                  class="search-back btn btn-icon toggle-search"
+                                  data-target="search"
+                                  ><em class="icon ni ni-arrow-left"></em></a
+                                ><input
+                                  type="text"
+                                  class="form-control border-transparent form-focus-none"
+                                  placeholder="Search by user or wallet address"
+                                  id="searchInput"
+                                /><button
+                                  class="search-submit btn btn-icon"
+                                  id="searchButton"
+                                >
+                                  <em class="icon ni ni-search"></em>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="card-inner p-0">
+                          <div class="nk-tb-list nk-tb-tnx">
+                            <div class="nk-tb-item nk-tb-head">
+                              <div class="nk-tb-col"><span>Details</span></div>
+                              <div class="nk-tb-col tb-col-xxl">
+                                <span>User</span>
+                              </div>
+                              <div class="nk-tb-col tb-col-lg">
+                                <span>Reference</span>
+                              </div>
+                              <div class="nk-tb-col text-end">
+                                <span>Amount</span>
+                              </div>
+                              <div class="nk-tb-col nk-tb-col-tools"></div>
+                            </div>
+
+                            <% if (withdrawals && withdrawals.length > 0) { %>
+                            <% withdrawals.forEach(function(withdrawal) { %>
+                            <div class="nk-tb-item">
+                              <div class="nk-tb-col">
+                                <div class="nk-tnx-type">
+                                  <div
+                                    class="nk-tnx-type-icon bg-danger-dim text-danger"
+                                  >
+                                    <em class="icon ni ni-arrow-up-right"></em>
+                                  </div>
+                                  <div class="nk-tnx-type-text">
+                                    <span class="tb-lead">Withdraw Funds</span>
+                                    <span class="tb-date"
+                                      ><%= new
+                                      Date(withdrawal.createdAt).toLocaleString()
+                                      %></span
+                                    >
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="nk-tb-col tb-col-xxl">
+                                <span class="tb-lead-sub"
+                                  ><%= withdrawal.userId.fullName %></span
+                                >
+                                <span class="tb-sub"
+                                  ><%= withdrawal.userId.email %></span
+                                >
+                              </div>
+                              <div class="nk-tb-col tb-col-lg">
+                                <span class="tb-lead-sub"
+                                  ><%= withdrawal._id.toString().substring(0,
+                                  10) %>...</span
+                                >
+                                <% let badgeClass = "bg-warning"; if
+                                (withdrawal.status === "completed") badgeClass =
+                                "bg-success"; if (withdrawal.status ===
+                                "cancelled" || withdrawal.status === "failed")
+                                badgeClass = "bg-danger"; %>
+                                <span class="badge badge-dot <%= badgeClass %>">
+                                  <%= withdrawal.status.charAt(0).toUpperCase()
+                                  + withdrawal.status.slice(1) %>
+                                </span>
+                              </div>
+                              <div class="nk-tb-col text-end">
+                                <span class="tb-amount">
+                                  - <%= withdrawal.amount.toFixed(2) %>
+                                  <span><%= withdrawal.currency %></span>
+                                </span>
+                                <span class="tb-amount-sm">
+                                  <%= withdrawal.type === 'wallet' ? 'Wallet' :
+                                  'Referral' %> Withdrawal
+                                </span>
+                              </div>
+                              <div class="nk-tb-col nk-tb-col-tools">
+                                <ul class="nk-tb-actions gx-2">
+                                  <% if (withdrawal.status === "pending") { %>
+                                  <li class="nk-tb-action-hidden">
+                                    <a
+                                      href="#"
+                                      class="bg-white btn btn-sm btn-outline-light btn-icon quick-approve-withdrawal"
+                                      data-bs-toggle="tooltip"
+                                      data-bs-placement="top"
+                                      title="Approve"
+                                      data-id="<%= withdrawal._id %>"
+                                    >
+                                      <em class="icon ni ni-done"></em>
+                                    </a>
+                                  </li>
+                                  <% } %>
+                                  <li class="nk-tb-action-hidden">
+                                    <a
+                                      href="#tranxDetails"
+                                      data-bs-toggle="modal"
+                                      class="bg-white btn btn-sm btn-outline-light btn-icon btn-tooltip view-withdrawal-details"
+                                      title="Details"
+                                      data-id="<%= withdrawal._id %>"
+                                    >
+                                      <em class="icon ni ni-eye"></em>
+                                    </a>
+                                  </li>
+                                  <li>
+                                    <div class="dropdown">
+                                      <a
+                                        href="#"
+                                        class="dropdown-toggle bg-white btn btn-sm btn-outline-light btn-icon"
+                                        data-bs-toggle="dropdown"
+                                      >
+                                        <em class="icon ni ni-more-h"></em>
+                                      </a>
+                                      <div
+                                        class="dropdown-menu dropdown-menu-end"
+                                      >
+                                        <ul class="link-list-opt">
+                                          <% if (withdrawal.status ===
+                                          "pending") { %>
+                                          <li>
+                                            <a
+                                              href="#"
+                                              class="quick-approve-withdrawal"
+                                              data-id="<%= withdrawal._id %>"
+                                            >
+                                              <em class="icon ni ni-done"></em>
+                                              <span>Approve</span>
+                                            </a>
+                                          </li>
+                                          <li>
+                                            <a
+                                              href="#"
+                                              class="quick-cancel-withdrawal"
+                                              data-id="<%= withdrawal._id %>"
+                                            >
+                                              <em
+                                                class="icon ni ni-cross-round"
+                                              ></em>
+                                              <span>Cancel</span>
+                                            </a>
+                                          </li>
+                                          <% } %>
+                                          <li>
+                                            <a
+                                              href="#tranxDetails"
+                                              data-bs-toggle="modal"
+                                              class="view-withdrawal-details"
+                                              data-id="<%= withdrawal._id %>"
+                                              ><em class="icon ni ni-eye"></em
+                                              ><span>View Details</span></a
+                                            >
+                                          </li>
+                                        </ul>
+                                      </div>
+                                    </div>
+                                  </li>
+                                </ul>
+                              </div>
+                            </div>
+                            <% }); %> <% } else { %>
+                            <div class="nk-tb-item">
+                              <div class="nk-tb-col text-center" colspan="5">
+                                <span class="text-muted"
+                                  >No withdrawals found</span
+                                >
+                              </div>
+                            </div>
+                            <% } %>
+                          </div>
+                        </div>
+
+                        <div class="card-inner">
+                          <% if (pagination && pagination.pages > 1) { %>
+                          <ul
+                            class="pagination justify-content-center justify-content-md-start"
+                          >
+                            <% if (pagination.page > 1) { %>
+                            <li class="page-item">
+                              <a
+                                class="page-link"
+                                href="?page=<%= pagination.page - 1 %>"
+                                >Prev</a
+                              >
+                            </li>
+                            <% } %> <% let startPage = Math.max(1,
+                            pagination.page - 2); let endPage =
+                            Math.min(pagination.pages, startPage + 4); if
+                            (endPage - startPage < 4) { startPage = Math.max(1,
+                            endPage - 4); } for (let i = startPage; i <=
+                            endPage; i++) { %>
+                            <li
+                              class="page-item <%= pagination.page === i ? 'active' : '' %>"
+                            >
+                              <a class="page-link" href="?page=<%= i %>"
+                                ><%= i %></a
+                              >
+                            </li>
+                            <% } %> <% if (pagination.page < pagination.pages) {
+                            %>
+                            <li class="page-item">
+                              <a
+                                class="page-link"
+                                href="?page=<%= pagination.page + 1 %>"
+                                >Next</a
+                              >
+                            </li>
+                            <% } %>
+                          </ul>
+                          <% } %>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ============Transaction details modals========== -->
+          <div class="modal fade" tabindex="-1" id="tranxDetails">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <a
+                  href="#"
+                  class="close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                  ><em class="icon ni ni-cross"></em
+                ></a>
+                <div class="modal-body modal-body-md">
+                  <div class="nk-modal-head mb-2 mb-sm-5">
+                    <h4 class="nk-modal-title title">
+                      Transaction
+                      <small class="text-primary transaction-id"
+                        >#WDR7234</small
+                      >
+                    </h4>
+                  </div>
+                  <div class="nk-tnx-details">
+                    <div class="nk-block-between flex-wrap g-3">
+                      <div class="nk-tnx-type">
+                        <div class="nk-tnx-type-icon bg-danger text-white">
+                          <em class="icon ni ni-arrow-up-right"></em>
+                        </div>
+                        <div class="nk-tnx-type-text">
+                          <h5 class="title transaction-amount">
+                            - 0.004560 BTC
+                          </h5>
+                          <span class="sub-text mt-n1" id="transactionDate">
+                            15 Oct, 2019 09:45 PM
+                          </span>
+                        </div>
+                      </div>
+                      <div class="align-center flex-wrap gx-3">
+                        <button class="btn transaction-status bg-warning">
+                          pending
+                        </button>
+                      </div>
+                    </div>
+                    <hr />
+                    <div class="row gy-3">
+                      <div class="col-lg-6">
+                        <span class="sub-text">Transaction ID</span>
+                        <span class="caption-text transaction-id-value"
+                          >YWLX52JG73</span
+                        >
+                      </div>
+                      <div class="col-lg-6">
+                        <span class="sub-text">Transaction Hash</span>
+                        <span
+                          class="caption-text text-break transaction-hash-value"
+                        >
+                          Not available yet
+                        </span>
+                      </div>
+                      <div class="col-lg-6">
+                        <span class="sub-text">Transaction Fee</span>
+                        <span class="caption-text fw-bold transaction-fee-value"
+                          >0.000002 BTC</span
+                        >
+                      </div>
+                      <div class="col-lg-6">
+                        <span class="sub-text">Amount</span>
+                        <span class="caption-text fw-bold amount-value"
+                          >0.004560 BTC</span
+                        >
+                      </div>
+
+                      <div class="col-lg-6">
+                        <span class="sub-text">User Account</span>
+                        <span class="caption-text user-account">John Doe</span>
+                      </div>
+                      <div class="col-lg-6">
+                        <span class="sub-text">Username</span>
+                        <span class="caption-text username">johndoe</span>
+                      </div>
+                    </div>
+                    <hr />
+                    <div class="nk-modal-head mt-sm-5 mb-4">
+                      <h5 class="title">Transaction Details</h5>
+                    </div>
+                    <div class="row gy-3">
+                      <div class="col-lg-6">
+                        <span class="sub-text">Transaction Type</span>
+                        <span class="caption-text transaction-type-value"
+                          >Withdrawal</span
+                        >
+                      </div>
+                      <div class="col-lg-6">
+                        <span class="sub-text">Wallet Address</span>
+                        <span
+                          class="caption-text align-center wallet-address-value"
+                        >
+                          1x0385c87d264A05810653734f93
+                        </span>
+                      </div>
+                      <div
+                        class="col-lg-12 text-center mt-4 withdrawal-action-btn"
+                      >
+                        <a
+                          href="#"
+                          class="btn btn-primary btn-approve-withdrawal"
+                          >Approve</a
+                        >
+                        <a href="#" class="btn btn-danger btn-cancel-withdrawal"
+                          >Cancel</a
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ========Footer========== -->
+          <%- include('../snippets/adminSnippets/footer.ejs') %>
+        </div>
+      </div>
+    </div>
+    <!-- ===================Scripts========== -->
+    <%- include('../snippets/adminSnippets/scripts.ejs') %>
+
+    <!-- Include API client for withdrawal management -->
+    <script src="/apiClient/apiClient.js"></script>
+    <script src="/apiClient/adminWithdrawalClient.js"></script>
+  </body>
+</html>

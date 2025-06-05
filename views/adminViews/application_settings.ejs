@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="zxx" class="js">
+  <head>
+    <!-- ========Headers meta======== -->
+    <%- include('../snippets/adminSnippets/header_meta.ejs') %>
+
+    <title>EXNESTRADE | Application Settings</title>
+
+  </head>
+  <body class="nk-body bg-lighter npc-general has-sidebar">
+    <div class="nk-app-root">
+      <div class="nk-main">
+        <!-- ==========Sidebar======= -->
+        <%- include('../snippets/adminSnippets/sidebar.ejs') %>
+
+        <div class="nk-wrap">
+          <!-- ============Navbar======== -->
+          <%- include('../snippets/adminSnippets/navbar.ejs') %>
+
+          <div class="nk-content">
+            <div class="container-fluid">
+              <div class="nk-content-inner">
+                <div class="nk-content-body">
+                  <div class="nk-block-head nk-block-head-sm">
+                    <div class="nk-block-between">
+                      <div class="nk-block-head-content">
+                        <h3 class="nk-block-title page-title">Application Settings</h3>
+                        <div class="nk-block-des text-soft">
+                          <p>Configure global application settings</p>
+                        </div>
+                      </div>
+                      <div class="nk-block-head-content">
+                        <div class="toggle-wrap nk-block-tools-toggle">
+                          <a
+                            href="#"
+                            class="btn btn-icon btn-trigger toggle-expand me-n1"
+                            data-target="pageMenu"
+                            ><em class="icon ni ni-menu-alt-r"></em
+                          ></a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <!-- Main Settings Content -->
+                  <div class="nk-block">
+                    <div class="card card-bordered">
+                      <div class="card-inner">
+                        <!-- Settings Tabs -->
+                        <ul class="nav nav-tabs">
+                          <li class="nav-item">
+                            <a class="nav-link active" data-bs-toggle="tab" href="#siteInfo">
+                              <em class="icon ni ni-home"></em>
+                              <span>Site Information</span>
+                            </a>
+                          </li>
+                          <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#contactInfo">
+                              <em class="icon ni ni-contact"></em>
+                              <span>Contact</span>
+                            </a>
+                          </li>
+                          <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#socialMedia">
+                              <em class="icon ni ni-share"></em>
+                              <span>Social Media</span>
+                            </a>
+                          </li>
+                          <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#referralSettings">
+                              <em class="icon ni ni-users"></em>
+                              <span>Referral System</span>
+                            </a>
+                          </li>
+                          <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#systemSettings">
+                              <em class="icon ni ni-setting"></em>
+                              <span>System</span>
+                            </a>
+                          </li>
+                        </ul>
+
+                        <!-- Tab Content -->
+                        <div class="tab-content mt-4">
+                          <!-- Site Information Tab -->
+                          <div class="tab-pane fade show active" id="siteInfo">
+                            <form id="siteInfoForm">
+                              <div class="row g-3">
+                                <div class="col-md-6">
+                                  <div class="form-group">
+                                    <label class="form-label" for="siteName">Site Name</label>
+                                    <input type="text" class="form-control" id="siteName" name="siteName" value="<%= settings.siteName %>" placeholder="Site Name">
+                                  </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                  <div class="form-group">
+                                    <label class="form-label" for="siteDescription">Site Description</label>
+                                    <input type="text" class="form-control" id="siteDescription" name="siteDescription" value="<%= settings.siteDescription %>" placeholder="Site Description">
+                                  </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                  <div class="form-group">
+                                    <label class="form-label" for="primaryColor">Primary Color</label>
+                                    <div class="form-control-wrap">
+                                      <div class="form-icon form-icon-right">
+                                        <div class="color-picker-box" style="background-color: <%= settings.primaryColor %>"></div>
+                                      </div>
+                                      <input type="text" class="form-control" id="primaryColor" name="primaryColor" value="<%= settings.primaryColor %>" placeholder="#000000">
+                                    </div>
+                                  </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                  <div class="form-group">
+                                    <label class="form-label" for="secondaryColor">Secondary Color</label>
+                                    <div class="form-control-wrap">
+                                      <div class="form-icon form-icon-right">
+                                        <div class="color-picker-box" style="background-color: <%= settings.secondaryColor %>"></div>
+                                      </div>
+                                      <input type="text" class="form-control" id="secondaryColor" name="secondaryColor" value="<%= settings.secondaryColor %>" placeholder="#000000">
+                                    </div>
+                                  </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                  <div class="form-group">
+                                    <label class="form-label">Site Logo</label>
+                                    <div class="form-control-wrap">
+                                      <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="siteLogo">
+                                        <label class="custom-file-label" for="siteLogo">Choose file</label>
+                                      </div>
+                                    </div>
+                                    <div class="form-note mt-2">Recommended size: 200x50 px</div>
+                                  </div>
+                                  <div class="mt-2">
+                                    <img src="<%= settings.siteLogo %>" alt="Site Logo" class="img-thumbnail" style="max-height: 50px;">
+                                  </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                  <div class="form-group">
+                                    <label class="form-label">Site Favicon</label>
+                                    <div class="form-control-wrap">
+                                      <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="siteFavicon">
+                                        <label class="custom-file-label" for="siteFavicon">Choose file</label>
+                                      </div>
+                                    </div>
+                                    <div class="form-note mt-2">Recommended size: 32x32 px</div>
+                                  </div>
+                                  <div class="mt-2">
+                                    <img src="<%= settings.siteFavicon %>" alt="Site Favicon" class="img-thumbnail" style="max-height: 32px;">
+                                  </div>
+                                </div>
+                                
+                                <div class="col-12">
+                                  <button type="submit" class="btn btn-primary">Save Site Information</button>
+                                </div>
+                              </div>
+                            </form>
+                          </div>
+                          
+                          <!-- Contact Information Tab -->
+                          <div class="tab-pane fade" id="contactInfo">
+                            <form id="contactForm">
+                              <div class="row g-3">
+                                <div class="col-md-6">
+                                  <div class="form-group">
+                                    <label class="form-label" for="contactEmail">Support Email</label>
+                                    <input type="email" class="form-control" id="contactEmail" name="contactEmail" value="<%= settings.contactEmail %>" placeholder="support@example.com">
+                                  </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                  <div class="form-group">
+                                    <label class="form-label" for="contactPhone">Support Phone</label>
+                                    <input type="text" class="form-control" id="contactPhone" name="contactPhone" value="<%= settings.contactPhone %>" placeholder="+1 234 5678 900">
+                                  </div>
+                                </div>
+                                
+                                <div class="col-md-12">
+                                  <div class="form-group">
+                                    <label class="form-label" for="contactAddress">Physical Address</label>
+                                    <textarea class="form-control" id="contactAddress" name="contactAddress" placeholder="Company Address"><%= settings.contactAddress %></textarea>
+                                  </div>
+                                </div>
+                                
+                                <div class="col-12">
+                                  <button type="submit" class="btn btn-primary">Save Contact Information</button>
+                                </div>
+                              </div>
+                            </form>
+                          </div>
+                          
+                          <!-- Social Media Tab -->
+                          <div class="tab-pane fade" id="socialMedia">
+                            <form id="socialMediaForm">
+                              <div class="row g-3">
+                                <div class="col-md-6">
+                                  <div class="form-group">
+                                    <label class="form-label" for="facebook">Facebook</label>
+                                    <div class="form-control-wrap">
+                                      <div class="form-icon form-icon-left">
+                                        <em class="icon ni ni-facebook-f"></em>
+                                      </div>
+                                      <input type="text" class="form-control" id="facebook" name="socialLinks[facebook]" value="<%= settings.socialLinks.facebook %>" placeholder="https://facebook.com/yourpage">
+                                    </div>
+                                  </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                  <div class="form-group">
+                                    <label class="form-label" for="twitter">Twitter</label>
+                                    <div class="form-control-wrap">
+                                      <div class="form-icon form-icon-left">
+                                        <em class="icon ni ni-twitter"></em>
+                                      </div>
+                                      <input type="text" class="form-control" id="twitter" name="socialLinks[twitter]" value="<%= settings.socialLinks.twitter %>" placeholder="https://twitter.com/yourhandle">
+                                    </div>
+                                  </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                  <div class="form-group">
+                                    <label class="form-label" for="instagram">Instagram</label>
+                                    <div class="form-control-wrap">
+                                      <div class="form-icon form-icon-left">
+                                        <em class="icon ni ni-instagram"></em>
+                                      </div>
+                                      <input type="text" class="form-control" id="instagram" name="socialLinks[instagram]" value="<%= settings.socialLinks.instagram %>" placeholder="https://instagram.com/yourpage">
+                                    </div>
+                                  </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                  <div class="form-group">
+                                    <label class="form-label" for="linkedin">LinkedIn</label>
+                                    <div class="form-control-wrap">
+                                      <div class="form-icon form-icon-left">
+                                        <em class="icon ni ni-linkedin"></em>
+                                      </div>
+                                      <input type="text" class="form-control" id="linkedin" name="socialLinks[linkedin]" value="<%= settings.socialLinks.linkedin %>" placeholder="https://linkedin.com/company/yourcompany">
+                                    </div>
+                                  </div>
+                                </div>
+                                
+                                <div class="col-12">
+                                  <button type="submit" class="btn btn-primary">Save Social Media Links</button>
+                                </div>
+                              </div>
+                            </form>
+                          </div>
+                          
+                          <!-- Referral System Tab -->
+                          <div class="tab-pane fade" id="referralSettings">
+                            <form id="referralForm">
+                              <div class="row g-3">
+                                <div class="col-md-12">
+                                  <div class="form-group">
+                                    <div class="custom-control custom-switch">
+                                      <input type="checkbox" class="custom-control-input" id="referralEnabled" name="referralSystem[enabled]" <%= settings.referralSystem.enabled ? 'checked' : '' %>>
+                                      <label class="custom-control-label" for="referralEnabled">Enable Referral System</label>
+                                    </div>
+                                  </div>
+                                </div>
+                                
+                                <div class="col-12">
+                                  <h6 class="title">Referral Commission Levels</h6>
+                                </div>
+                                
+                                <div class="col-12">
+                                  <table class="table table-bordered" id="referralLevelsTable">
+                                    <thead>
+                                      <tr>
+                                        <th>Level</th>
+                                        <th>Commission Rate</th>
+                                        <th>Commission Type</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <% settings.referralSystem.levels.forEach((level, index) => { %>
+                                      <tr>
+                                        <td>Level <%= level.level %></td>
+                                        <td>
+                                          <input type="number" class="form-control" name="referralSystem[levels][<%= index %>][commissionRate]" value="<%= level.commissionRate %>" step="0.01" min="0" max="100">
+                                          <input type="hidden" name="referralSystem[levels][<%= index %>][level]" value="<%= level.level %>">
+                                        </td>
+                                        <td>
+                                          <select class="form-select" name="referralSystem[levels][<%= index %>][commissionType]">
+                                            <option value="percentage" <%= level.commissionType === 'percentage' ? 'selected' : '' %>>Percentage (%)</option>
+                                            <option value="fixed" <%= level.commissionType === 'fixed' ? 'selected' : '' %>>Fixed Amount</option>
+                                          </select>
+                                        </td>
+                                      </tr>
+                                      <% }) %>
+                                    </tbody>
+                                  </table>
+                                </div>
+                                
+                                <div class="col-12">
+                                  <button type="submit" class="btn btn-primary">Save Referral Settings</button>
+                                </div>
+                              </div>
+                            </form>
+                          </div>
+                          
+                          <!-- System Settings Tab -->
+                          <div class="tab-pane fade" id="systemSettings">
+                            <form id="systemForm">
+                              <div class="row g-3">
+                                <div class="col-md-6">
+                                  <div class="form-group">
+                                    <div class="custom-control custom-switch">
+                                      <input type="checkbox" class="custom-control-input" id="maintenanceModeEnabled" name="maintenanceMode[enabled]" <%= settings.maintenanceMode.enabled ? 'checked' : '' %>>
+                                      <label class="custom-control-label" for="maintenanceModeEnabled">Maintenance Mode</label>
+                                    </div>
+                                  </div>
+                                </div>
+                                
+                                <div class="col-md-12 maintenance-message" style="<%= !settings.maintenanceMode.enabled ? 'display:none;' : '' %>">
+                                  <div class="form-group">
+                                    <label class="form-label" for="maintenanceMessage">Maintenance Message</label>
+                                    <textarea class="form-control" id="maintenanceMessage" name="maintenanceMode[message]" rows="3"><%= settings.maintenanceMode.message %></textarea>
+                                  </div>
+                                </div>
+                                
+                                <div class="col-md-12">
+                                  <hr class="preview-hr">
+                                  <h6 class="title">Registration & Login Settings</h6>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                  <div class="form-group">
+                                    <div class="custom-control custom-switch">
+                                      <input type="checkbox" class="custom-control-input" id="registrationEnabled" name="system[registrationEnabled]" <%= settings.system.registrationEnabled ? 'checked' : '' %>>
+                                      <label class="custom-control-label" for="registrationEnabled">Enable User Registration</label>
+                                    </div>
+                                  </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                  <div class="form-group">
+                                    <div class="custom-control custom-switch">
+                                      <input type="checkbox" class="custom-control-input" id="loginEnabled" name="system[loginEnabled]" <%= settings.system.loginEnabled ? 'checked' : '' %>>
+                                      <label class="custom-control-label" for="loginEnabled">Enable User Login</label>
+                                    </div>
+                                  </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                  <div class="form-group">
+                                    <div class="custom-control custom-switch">
+                                      <input type="checkbox" class="custom-control-input" id="emailVerificationRequired" name="system[emailVerificationRequired]" <%= settings.system.emailVerificationRequired ? 'checked' : '' %>>
+                                      <label class="custom-control-label" for="emailVerificationRequired">Require Email Verification</label>
+                                    </div>
+                                  </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                  <div class="form-group">
+                                    <div class="custom-control custom-switch">
+                                      <input type="checkbox" class="custom-control-input" id="kycRequired" name="system[kycRequired]" <%= settings.system.kycRequired ? 'checked' : '' %>>
+                                      <label class="custom-control-label" for="kycRequired">Require KYC Verification</label>
+                                    </div>
+                                  </div>
+                                </div>
+                                
+                                <div class="col-12">
+                                  <button type="submit" class="btn btn-primary">Save System Settings</button>
+                                </div>
+                              </div>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ========Footer========== -->
+          <%- include('../snippets/adminSnippets/footer.ejs') %>
+        </div>
+      </div>
+    </div>
+    
+    <!-- ===================Scripts========== -->
+    <%- include('../snippets/adminSnippets/scripts.ejs') %>
+    <script src="/apiClient/appSettingsClient.js"></script>
+    
+    <script>
+      $(document).ready(function() {
+        // Initialize color picker boxes
+        $('.color-picker-box').each(function() {
+          $(this).css('background-color', $(this).parent().siblings('input').val());
+        });
+        
+        // Show/hide maintenance message based on checkbox
+        $('#maintenanceModeEnabled').change(function() {
+          if($(this).is(':checked')) {
+            $('.maintenance-message').show();
+          } else {
+            $('.maintenance-message').hide();
+          }
+        });
+        
+        // Site Information Form Submit
+        $('#siteInfoForm').on('submit', function(e) {
+          e.preventDefault();
+          const formData = {
+            siteName: $('#siteName').val(),
+            siteDescription: $('#siteDescription').val(),
+            primaryColor: $('#primaryColor').val(),
+            secondaryColor: $('#secondaryColor').val()
+          };
+          
+          updateAppSettings(formData);
+        });
+        
+        // Contact Information Form Submit
+        $('#contactForm').on('submit', function(e) {
+          e.preventDefault();
+          const formData = {
+            contactEmail: $('#contactEmail').val(),
+            contactPhone: $('#contactPhone').val(),
+            contactAddress: $('#contactAddress').val()
+          };
+          
+          updateAppSettings(formData);
+        });
+        
+        // Social Media Form Submit
+        $('#socialMediaForm').on('submit', function(e) {
+          e.preventDefault();
+          const formData = {
+            socialLinks: {
+              facebook: $('#facebook').val(),
+              twitter: $('#twitter').val(),
+              instagram: $('#instagram').val(),
+              linkedin: $('#linkedin').val()
+            }
+          };
+          
+          updateAppSettings(formData);
+        });
+        
+        // Referral Settings Form Submit
+        $('#referralForm').on('submit', function(e) {
+          e.preventDefault();
+          
+          // Collect referral levels data
+          const levels = [];
+          $('#referralLevelsTable tbody tr').each(function(index) {
+            levels.push({
+              level: parseInt($(this).find('input[name^="referralSystem[levels]["][name$="][level]"]').val()),
+              commissionRate: parseFloat($(this).find('input[name^="referralSystem[levels]["][name$="][commissionRate]"]').val()),
+              commissionType: $(this).find('select[name^="referralSystem[levels]["][name$="][commissionType]"]').val()
+            });
+          });
+          
+          const formData = {
+            referralSystem: {
+              enabled: $('#referralEnabled').is(':checked'),
+              levels: levels
+            }
+          };
+          
+          updateReferralSettings(formData);
+        });
+        
+        // System Settings Form Submit
+        $('#systemForm').on('submit', function(e) {
+          e.preventDefault();
+          const formData = {
+            maintenanceMode: {
+              enabled: $('#maintenanceModeEnabled').is(':checked'),
+              message: $('#maintenanceMessage').val()
+            },
+            system: {
+              registrationEnabled: $('#registrationEnabled').is(':checked'),
+              loginEnabled: $('#loginEnabled').is(':checked'),
+              emailVerificationRequired: $('#emailVerificationRequired').is(':checked'),
+              kycRequired: $('#kycRequired').is(':checked')
+            }
+          };
+          
+          updateAppSettings(formData);
+        });
+        
+        // Logo Upload
+        $('#siteLogo').change(function() {
+          if (this.files && this.files[0]) {
+            uploadLogo(this.files[0]);
+          }
+        });
+        
+        // Favicon Upload
+        $('#siteFavicon').change(function() {
+          if (this.files && this.files[0]) {
+            uploadFavicon(this.files[0]);
+          }
+        });
+        
+        // Update App Settings function
+        function updateAppSettings(data) {
+          try {
+            window.updateAppSettings(data)
+              .then(response => {
+                showToast('Settings updated successfully', 'success');
+              })
+              .catch(error => {
+                showToast('Error: ' + error.message, 'error');
+              });
+          } catch (error) {
+            showToast('Error: ' + error.message, 'error');
+          }
+        }
+        
+        // Update Referral Settings function
+        function updateReferralSettings(data) {
+          try {
+            window.updateReferralSettings(data.referralSystem)
+              .then(response => {
+                showToast('Referral settings updated successfully', 'success');
+              })
+              .catch(error => {
+                showToast('Error: ' + error.message, 'error');
+              });
+          } catch (error) {
+            showToast('Error: ' + error.message, 'error');
+          }
+        }
+        
+        // Upload Logo function
+        function uploadLogo(file) {
+          try {
+            window.uploadLogo(file)
+              .then(response => {
+                showToast('Logo uploaded successfully', 'success');
+                // Update the logo preview
+                $('img[alt="Site Logo"]').attr('src', response.data.logo + '?v=' + new Date().getTime());
+              })
+              .catch(error => {
+                showToast('Error: ' + error.message, 'error');
+              });
+          } catch (error) {
+            showToast('Error: ' + error.message, 'error');
+          }
+        }
+        
+        // Upload Favicon function
+        function uploadFavicon(file) {
+          try {
+            window.uploadFavicon(file)
+              .then(response => {
+                showToast('Favicon uploaded successfully', 'success');
+                // Update the favicon preview
+                $('img[alt="Site Favicon"]').attr('src', response.data.favicon + '?v=' + new Date().getTime());
+              })
+              .catch(error => {
+                showToast('Error: ' + error.message, 'error');
+              });
+          } catch (error) {
+            showToast('Error: ' + error.message, 'error');
+          }
+        }
+      });
+    </script>
+    
+    <style>
+      .color-picker-box {
+        width: 20px;
+        height: 20px;
+        border-radius: 3px;
+        border: 1px solid #e5e9f2;
+      }
+    </style>
+  </body>
+</html>

@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="zxx" class="js">
+  <head>
+    <!-- ========Headers meta======== -->
+    <%- include('../snippets/adminSnippets/header_meta.ejs') %>
+
+    <title>EXNESTRADE | Admin Dashboard</title>
+  </head>
+  <body class="nk-body bg-lighter npc-general has-sidebar">
+    <div class="nk-app-root">
+      <div class="nk-main">
+        <!-- ==========Sidebar======= -->
+        <%- include('../snippets/adminSnippets/sidebar.ejs') %>
+
+        <div class="nk-wrap">
+          <!-- ============Navbar======== -->
+          <%- include('../snippets/adminSnippets/navbar.ejs') %>
+
+          <div class="nk-content nk-content-fluid">
+            <div class="container-xl wide-lg">
+              <div class="nk-content-body">
+                <div class="nk-block-head nk-block-head-sm">
+                  <div class="nk-block-between">
+                    <div class="nk-block-head-content">
+                      <h3 class="nk-block-title page-title">
+                        Active Investments
+                      </h3>
+                      <div class="nk-block-des text-soft">
+                        <p>Currently active investments in the platform.</p>
+                      </div>
+                    </div>
+                    <div class="nk-block-head-content">
+                      <div class="toggle-wrap nk-block-tools-toggle">
+                        <a
+                          href="#"
+                          class="btn btn-icon btn-trigger toggle-expand me-n1"
+                          data-target="pageMenu"
+                          ><em class="icon ni ni-menu-alt-r"></em
+                        ></a>
+                        <div
+                          class="toggle-expand-content"
+                          data-content="pageMenu"
+                        >
+                          <ul class="nk-block-tools g-3">
+                            <li>
+                              <a
+                                href="#"
+                                class="btn btn-white btn-dim btn-outline-light"
+                                data-bs-toggle="modal"
+                                data-bs-target="#filterModal"
+                                ><em class="icon ni ni-filter"></em
+                                ><span>Filter</span></a
+                              >
+                            </li>
+                            <li>
+                              <a
+                                href="/admin/investment/active"
+                                class="btn btn-white btn-dim btn-outline-light"
+                                ><em class="icon ni ni-reload"></em
+                                ><span>Refresh</span></a
+                              >
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Search Form -->
+                <div class="nk-block">
+                  <div class="card card-bordered card-stretch">
+                    <div class="card-inner-group">
+                      <div class="card-inner position-relative">
+                        <div class="card-title-group">
+                          <div class="card-tools">
+                            <form
+                              id="searchForm"
+                              class="search-wrap"
+                              data-search="search"
+                            >
+                              <div class="search-content">
+                                <input
+                                  type="text"
+                                  id="searchInput"
+                                  class="form-control form-control-sm border-transparent"
+                                  value="<%= filters.search || '' %>"
+                                  placeholder="Search by user, email, amount"
+                                />
+                                <button class="search-submit btn btn-sm">
+                                  <em class="icon ni ni-search"></em>
+                                </button>
+                              </div>
+                            </form>
+                          </div>
+                          <div class="card-tools me-n1">
+                            <ul class="btn-toolbar gx-1">
+                              <li>
+                                <a
+                                  href="#"
+                                  class="btn btn-icon search-toggle toggle-search"
+                                  data-target="search"
+                                  ><em class="icon ni ni-search"></em
+                                ></a>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Investment List Table -->
+                      <div class="card-inner p-0">
+                        <div
+                          class="nk-tb-list nk-tb-ulist border-bottom border-light"
+                        >
+                          <div class="nk-tb-item nk-tb-head">
+                            <div class="nk-tb-col">
+                              <span class="sub-text">User</span>
+                            </div>
+                            <div class="nk-tb-col tb-col-md">
+                              <span class="sub-text">Plan</span>
+                            </div>
+                            <div class="nk-tb-col tb-col-sm">
+                              <span class="sub-text">Amount</span>
+                            </div>
+                            <div class="nk-tb-col tb-col-md">
+                              <span class="sub-text">ROI</span>
+                            </div>
+                            <div class="nk-tb-col tb-col-md">
+                              <span class="sub-text">Start Date</span>
+                            </div>
+                            <div class="nk-tb-col tb-col-md">
+                              <span class="sub-text">End Date</span>
+                            </div>
+                            <div
+                              class="nk-tb-col nk-tb-col-tools text-end"
+                            ></div>
+                          </div>
+
+                          <% if (investments && investments.length > 0) { %> <%
+                          investments.forEach(function(investment) { %>
+                          <div class="nk-tb-item">
+                            <div class="nk-tb-col">
+                              <div class="user-card">
+                                <div class="user-avatar bg-primary">
+                                  <span
+                                    ><%= investment.userId &&
+                                    investment.userId.fullName ?
+                                    investment.userId.fullName.charAt(0).toUpperCase()
+                                    : 'U' %></span
+                                  >
+                                </div>
+                                <div class="user-info">
+                                  <span class="tb-lead"
+                                    ><%= investment.userId ?
+                                    investment.userId.fullName : 'Unknown User'
+                                    %></span
+                                  >
+                                  <span
+                                    ><%= investment.userId ?
+                                    investment.userId.email : 'No email'
+                                    %></span
+                                  >
+                                </div>
+                              </div>
+                            </div>
+                            <div class="nk-tb-col tb-col-md">
+                              <span class="tb-lead-sub"
+                                ><%= investment.planId ? investment.planId.name
+                                : 'Unknown Plan' %></span
+                              >
+                            </div>
+                            <div class="nk-tb-col tb-col-sm">
+                              <span class="tb-amount"
+                                >$<%= investment.amount.toFixed(2) %></span
+                              >
+                            </div>
+                            <div class="nk-tb-col tb-col-md">
+                              <span class="tb-amount"
+                                ><%= (investment.earningRate * 100).toFixed(1)
+                                %>%</span
+                              >
+                              <span class="tb-amount-sm"
+                                >per <%= investment.durationUnit || 'day'
+                                %></span
+                              >
+                            </div>
+                            <div class="nk-tb-col tb-col-md">
+                              <span
+                                ><%= investment.startDate ? new
+                                Date(investment.startDate).toLocaleDateString()
+                                : 'Not started' %></span
+                              >
+                            </div>
+                            <div class="nk-tb-col tb-col-md">
+                              <span
+                                ><%= investment.endDate ? new
+                                Date(investment.endDate).toLocaleDateString() :
+                                'Not set' %></span
+                              >
+                            </div>
+                            <div class="nk-tb-col nk-tb-col-tools">
+                              <ul class="nk-tb-actions gx-1">
+                                <li>
+                                  <div class="drodown">
+                                    <a
+                                      href="#"
+                                      class="dropdown-toggle btn btn-icon btn-trigger"
+                                      data-bs-toggle="dropdown"
+                                      ><em class="icon ni ni-more-h"></em
+                                    ></a>
+                                    <div
+                                      class="dropdown-menu dropdown-menu-end"
+                                    >
+                                      <ul class="link-list-opt no-bdr">
+                                        <li>
+                                          <a
+                                            href="#"
+                                            class="view-investment-btn"
+                                            data-investment-id="<%= investment._id %>"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#investmentDetailsModal"
+                                            ><em class="icon ni ni-eye"></em
+                                            ><span>View Details</span></a
+                                          >
+                                        </li>
+                                        <li>
+                                          <a
+                                            href="#"
+                                            class="cancel-investment-btn"
+                                            data-investment-id="<%= investment._id %>"
+                                            ><em
+                                              class="icon ni ni-cross-round"
+                                            ></em
+                                            ><span>Cancel Investment</span></a
+                                          >
+                                        </li>
+                                      </ul>
+                                    </div>
+                                  </div>
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+                          <% }); %> <% } else { %>
+                          <div class="nk-tb-item">
+                            <div class="nk-tb-col" colspan="7">
+                              <div class="text-center p-2">
+                                <span class="text-silent"
+                                  >No active investments found</span
+                                >
+                              </div>
+                            </div>
+                          </div>
+                          <% } %>
+                        </div>
+                      </div>
+
+                      <!-- Pagination Section -->
+                      <% if (pagination && pagination.pages > 1) { %>
+                      <div class="card-inner">
+                        <div class="nk-block-between-md g-3">
+                          <div class="g">
+                            <p>
+                              Page <%= pagination.page %> of <%=
+                              pagination.pages %>
+                            </p>
+                          </div>
+                          <ul
+                            class="pagination justify-content-center justify-content-md-end"
+                          >
+                            <% if (pagination.page > 1) { %>
+                            <li class="page-item">
+                              <a
+                                class="page-link pagination-link"
+                                href="#"
+                                data-page="<%= pagination.page - 1 %>"
+                                >Prev</a
+                              >
+                            </li>
+                            <% } %> <% for(let i = 1; i <= pagination.pages;
+                            i++) { %> <% if (i === pagination.page) { %>
+                            <li class="page-item active">
+                              <a class="page-link" href="#"><%= i %></a>
+                            </li>
+                            <% } else if (i === 1 || i === pagination.pages ||
+                            (i >= pagination.page - 1 && i <= pagination.page +
+                            1)) { %>
+                            <li class="page-item">
+                              <a
+                                class="page-link pagination-link"
+                                href="#"
+                                data-page="<%= i %>"
+                                ><%= i %></a
+                              >
+                            </li>
+                            <% } else if (i === pagination.page - 2 || i ===
+                            pagination.page + 2) { %>
+                            <li class="page-item">
+                              <span class="page-link">...</span>
+                            </li>
+                            <% } %> <% } %> <% if (pagination.page <
+                            pagination.pages) { %>
+                            <li class="page-item">
+                              <a
+                                class="page-link pagination-link"
+                                href="#"
+                                data-page="<%= pagination.page + 1 %>"
+                                >Next</a
+                              >
+                            </li>
+                            <% } %>
+                          </ul>
+                        </div>
+                      </div>
+                      <% } %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Filter Modal -->
+          <div class="modal fade" tabindex="-1" id="filterModal">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Filter Investments</h5>
+                  <a
+                    href="#"
+                    class="close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  >
+                    <em class="icon ni ni-cross"></em>
+                  </a>
+                </div>
+                <div class="modal-body">
+                  <form id="filterForm">
+                    <div class="row g-4">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="form-label" for="startDate"
+                            >Start Date</label
+                          >
+                          <div class="form-control-wrap">
+                            <input
+                              type="date"
+                              class="form-control"
+                              id="startDate"
+                              name="startDate"
+                              value="<%= filters.startDate || '' %>"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="form-label" for="endDate"
+                            >End Date</label
+                          >
+                          <div class="form-control-wrap">
+                            <input
+                              type="date"
+                              class="form-control"
+                              id="endDate"
+                              name="endDate"
+                              value="<%= filters.endDate || '' %>"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="form-label" for="minAmount"
+                            >Min Amount</label
+                          >
+                          <div class="form-control-wrap">
+                            <input
+                              type="number"
+                              class="form-control"
+                              id="minAmount"
+                              name="minAmount"
+                              placeholder="0.00"
+                              value="<%= filters.minAmount || '' %>"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="form-label" for="maxAmount"
+                            >Max Amount</label
+                          >
+                          <div class="form-control-wrap">
+                            <input
+                              type="number"
+                              class="form-control"
+                              id="maxAmount"
+                              name="maxAmount"
+                              placeholder="0.00"
+                              value="<%= filters.maxAmount || '' %>"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row g-4 mt-2">
+                      <div class="col-12">
+                        <div class="form-group text-center">
+                          <button type="submit" class="btn btn-primary me-2">
+                            Apply Filter
+                          </button>
+                          <button
+                            type="button"
+                            id="resetFilters"
+                            class="btn btn-dim btn-outline-light"
+                          >
+                            Reset
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Investment Details Modal -->
+          <div class="modal fade" tabindex="-1" id="investmentDetailsModal">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Investment Details</h5>
+                  <a
+                    href="#"
+                    class="close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  >
+                    <em class="icon ni ni-cross"></em>
+                  </a>
+                </div>
+                <div class="modal-body">
+                  <!-- Will be populated dynamically -->
+                  <div class="d-flex justify-content-center my-5">
+                    <div class="spinner-border text-primary" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer bg-light">
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Include Admin Investment Client JS -->
+          <script src="/apiClient/adminInvestedPlanClient.js"></script>
+
+          <%- include('../snippets/adminSnippets/footer.ejs') %>
+        </div>
+      </div>
+    </div>
+    <!-- ===================Scripts========== -->
+    <%- include('../snippets/adminSnippets/scripts.ejs') %>
+  </body>
+</html>

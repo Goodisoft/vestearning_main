@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="zxx" class="js">
+  <head>
+    <!-- ========Headers meta======== -->
+    <%- include('../snippets/adminSnippets/header_meta.ejs') %>
+
+    <title>EXNESTRADE | Admin Dashboard</title>
+  </head>
+  <body class="nk-body bg-lighter npc-general has-sidebar">
+    <div class="nk-app-root">
+      <div class="nk-main">
+        <!-- ==========Sidebar======= -->
+        <%- include('../snippets/adminSnippets/sidebar.ejs') %>
+
+        <div class="nk-wrap">
+          <!-- ============Navbar======== -->
+          <%- include('../snippets/adminSnippets/navbar.ejs') %>
+
+          <!-- ============Content======== -->
+          <div class="nk-content">
+            <div class="container-fluid">
+              <div class="nk-content-inner">
+                <div class="nk-content-body">
+                  <div class="nk-block-head nk-block-head-sm">
+                    <div class="nk-block-between">
+                      <div class="nk-block-head-content">
+                        <h3 class="nk-block-title page-title">
+                          Manage Currency
+                        </h3>
+                        <div class="nk-block-des text-soft">
+                          <p>
+                            Add and manage supported cryptocurrencies for your
+                            platform.
+                          </p>
+                        </div>
+                      </div>
+                      <div class="nk-block-head-content">
+                        <div class="toggle-wrap nk-block-tools-toggle">
+                          <a
+                            href="#"
+                            class="btn btn-icon btn-trigger toggle-expand me-n1"
+                            data-target="pageMenu"
+                            ><em class="icon ni ni-menu-alt-r"></em
+                          ></a>
+                          <div
+                            class="toggle-expand-content"
+                            data-content="pageMenu"
+                          >
+                            <ul class="nk-block-tools g-3">
+                              <li>
+                                <a
+                                  href="#addCurrencyModal"
+                                  data-bs-toggle="modal"
+                                  class="btn btn-primary"
+                                >
+                                  <span
+                                    ><em class="icon ni ni-plus"></em> Add
+                                    Currency</span
+                                  >
+                                </a>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="nk-block">
+                    <div class="row g-gs">
+                      <% if (currencies && currencies.length > 0) { %> <%
+                      currencies.forEach(currency => { %>
+                      <div class="col-lg-4 col-sm-6">
+                        <div class="card card-bordered pricing">
+                          <div class="card-inner-group">
+                            <div class="card-inner">
+                              <div class="card-title-group align-start">
+                                <div class="card-title">
+                                  <h5
+                                    class="title align-center"
+                                    id="<%= currency._id %>"
+                                  >
+                                    <%= currency.name %>
+                                    <span
+                                      class="mx-1 badge <%= currency.isActive ? 'bg-success-dim text-success' : 'bg-danger-dim text-danger' %>"
+                                    >
+                                      <%= currency.isActive ? 'Active' :
+                                      'Inactive' %>
+                                    </span>
+                                  </h5>
+                                  <p>(<%= currency.symbol %>)- (<%= currency.network %>)</p>
+                                </div>
+
+                                <div class="card-tools mt-n1 mr-n1">
+                                  <div class="dropdown">
+                                    <a
+                                      href="#"
+                                      class="dropdown-toggle btn btn-icon btn-trigger"
+                                      data-bs-toggle="dropdown"
+                                    >
+                                      <em class="icon ni ni-more-h"></em>
+                                    </a>
+                                    <div
+                                      class="dropdown-menu dropdown-menu-right"
+                                    >
+                                      <ul class="link-list-opt no-bdr">
+                                        <li>
+                                          <a
+                                            href="javascript:void(0)"
+                                            class="currency-edit-btn"
+                                            data-id="<%= currency._id %>"
+                                          >
+                                            <em
+                                              class="icon ni ni-edit-fill"
+                                            ></em>
+                                            <span>Edit Currency</span>
+                                          </a>
+                                        </li>
+
+                                        <li>
+                                          <a
+                                            href="javascript:void(0)"
+                                            class="currency-toggle-status-btn"
+                                            data-id="<%= currency._id %>"
+                                          >
+                                            <em
+                                              class="icon ni ni-<%= currency.isActive ? 'spark-off-fill' : 'spark-fill' %>"
+                                            ></em>
+                                            <span>
+                                              <%= currency.isActive ? 'Mark Inactive' : 'Mark Active' %>
+                                            </span>
+                                          </a>
+                                        </li>
+
+                                        <li>
+                                          <a
+                                            href="javascript:void(0)"
+                                            class="currency-delete-btn"
+                                            data-id="<%= currency._id %>"
+                                          >
+                                            <em
+                                              class="icon ni ni-trash-fill"
+                                            ></em>
+                                            <span>Delete Currency</span>
+                                          </a>
+                                        </li>
+                                      </ul>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="card-inner">
+                              <div class="row g-2">
+                                <div class="col-12">
+                                  <div class="plan-info">
+                                    <span class="title text-muted"
+                                      >Wallet Address</span
+                                    >
+                                    <br />
+                                    <span
+                                      class="info d-block text-truncate"
+                                      style="max-width: 100%"
+                                    >
+                                      <%= currency.walletAddress %>
+                                    </span>
+                                  </div>
+                                </div>
+                                <% if (currency.qrCode) { %>
+                                <div class="col-12 mt-3">
+                                  <div class="plan-info text-center">
+                                    <span class="title text-muted mb-2"
+                                      >QR Code</span
+                                    >
+                                    <br />
+                                    <img
+                                      src="<%= currency.qrCode %>"
+                                      alt="QR Code"
+                                      class="img-fluid"
+                                      style="
+                                        max-width: 150px;
+                                        max-height: 150px;
+                                      "
+                                    />
+                                  </div>
+                                </div>
+                                <% } %>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <% }); %> <% } else { %>
+                      <div class="col-12">
+                        <div class="card card-bordered">
+                          <div class="card-inner">
+                            <div class="nk-block-head">
+                              <div class="nk-block-head-content text-center">
+                                <h5 class="nk-block-title">
+                                  No currencies found
+                                </h5>
+                                <div class="nk-block-des">
+                                  <p>
+                                    Click the "Add Currency" button to create
+                                    your first cryptocurrency.
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <% } %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ===========Add Currency Modal======== -->
+          <div class="modal fade" tabindex="-1" id="addCurrencyModal">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <a
+                  href="#"
+                  class="close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                >
+                  <em class="icon ni ni-cross"></em>
+                </a>
+                <div class="modal-header">
+                  <h5 class="modal-title">Add New Currency</h5>
+                </div>
+                <div class="modal-body">
+                  <form
+                    id="addCurrencyForm"
+                    class="form-validate is-alter"
+                    enctype="multipart/form-data"
+                  >
+                    <div class="row g-3">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="form-label" for="name"
+                            >Currency Name</label
+                          >
+                          <div class="form-control-wrap">
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="name"
+                              name="name"
+                              placeholder="Bitcoin"
+                              required
+                            />
+                          </div>
+                          <div class="form-note">
+                            Full name of the cryptocurrency
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="form-label" for="symbol">Symbol</label>
+                          <div class="form-control-wrap">
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="symbol"
+                              name="symbol"
+                              placeholder="BTC"
+                              required
+                            />
+                          </div>
+                          <div class="form-note">
+                            Currency symbol (e.g., BTC, ETH, USDT)
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="form-label" for="network"
+                            >Network (Optional)</label
+                          >
+                          <div class="form-control-wrap">
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="network"
+                              name="network"
+                              placeholder="ERC20, BEP20, etc."
+                            />
+                          </div>
+                          <div class="form-note">
+                            Network type (e.g., ERC20, BEP20, TRC20)
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-12">
+                        <div class="form-group">
+                          <label class="form-label" for="walletAddress"
+                            >Wallet Address</label
+                          >
+                          <div class="form-control-wrap">
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="walletAddress"
+                              name="walletAddress"
+                              placeholder="Enter your wallet address"
+                              required
+                            />
+                          </div>
+                          <div class="form-note">
+                            Enter your wallet address for receiving payments
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-12">
+                        <div class="form-group">
+                          <label class="form-label" for="qrCode"
+                            >QR Code Image (Optional)</label
+                          >
+                          <div class="form-control-wrap">
+                            <div class="form-file">
+                              <input
+                                type="file"
+                                class="form-file-input"
+                                id="qrCode"
+                                name="qrCode"
+                                accept="image/png, image/jpeg, image/jpg"
+                              />
+                              <label class="form-file-label" for="qrCode"
+                                >Choose file</label
+                              >
+                            </div>
+                          </div>
+                          <div class="form-note">
+                            Upload QR code image for easier scanning (Max: 2MB)
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-12">
+                        <div class="form-group">
+                          <div class="custom-control custom-switch">
+                            <input
+                              type="checkbox"
+                              class="custom-control-input"
+                              id="isActive"
+                              name="isActive"
+                              checked
+                            />
+                            <label class="custom-control-label" for="isActive"
+                              >Mark as Active</label
+                            >
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-12">
+                        <div class="form-group">
+                          <button type="submit" class="btn btn-primary">
+                            Add Currency
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ===========Edit Currency Modal======== -->
+          <div class="modal fade" tabindex="-1" id="editCurrencyModal">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <a
+                  href="#"
+                  class="close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                >
+                  <em class="icon ni ni-cross"></em>
+                </a>
+                <div class="modal-header">
+                  <h5 class="modal-title">Edit Currency</h5>
+                </div>
+                <div class="modal-body">
+                  <form
+                    id="editCurrencyForm"
+                    class="form-validate is-alter"
+                    enctype="multipart/form-data"
+                  >
+                    <input
+                      type="hidden"
+                      id="edit-currency-id"
+                      name="currencyId"
+                    />
+
+                    <div class="row g-3">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="form-label" for="edit-name"
+                            >Currency Name</label
+                          >
+                          <div class="form-control-wrap">
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="edit-name"
+                              name="name"
+                              required
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="form-label" for="edit-symbol"
+                            >Symbol</label
+                          >
+                          <div class="form-control-wrap">
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="edit-symbol"
+                              name="symbol"
+                              required
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="form-label" for="edit-network"
+                            >Network (Optional)</label
+                          >
+                          <div class="form-control-wrap">
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="edit-network"
+                              name="network"
+                              placeholder="ERC20, BEP20, etc."
+                            />
+                          </div>
+                          <div class="form-note">
+                            Network type (e.g., ERC20, BEP20, TRC20)
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-12">
+                        <div class="form-group">
+                          <label class="form-label" for="edit-walletAddress"
+                            >Wallet Address</label
+                          >
+                          <div class="form-control-wrap">
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="edit-walletAddress"
+                              name="walletAddress"
+                              required
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-12">
+                        <div class="form-group">
+                          <label class="form-label" for="edit-qrCode"
+                            >QR Code Image (Optional)</label
+                          >
+                          <div class="form-control-wrap">
+                            <div class="form-file">
+                              <input
+                                type="file"
+                                class="form-file-input"
+                                id="edit-qrCode"
+                                name="qrCode"
+                                accept="image/png, image/jpeg, image/jpg"
+                              />
+                              <label class="form-file-label" for="edit-qrCode"
+                                >Choose file</label
+                              >
+                            </div>
+                          </div>
+                          <div class="form-note">
+                            Upload QR code image for easier scanning (Max: 2MB)
+                          </div>
+                          <div
+                            id="current-qr-preview"
+                            class="mt-2"
+                            style="display: none"
+                          >
+                            <label class="form-label">Current QR Code:</label>
+                            <img
+                              id="current-qr-image"
+                              src=""
+                              alt="Current QR Code"
+                              style="max-width: 150px; max-height: 150px"
+                            />
+                            <input
+                              type="hidden"
+                              id="current-qr-path"
+                              name="currentQrPath"
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-12">
+                        <div class="form-group">
+                          <div class="custom-control custom-switch">
+                            <input
+                              type="checkbox"
+                              class="custom-control-input"
+                              id="edit-isActive"
+                              name="isActive"
+                            />
+                            <label
+                              class="custom-control-label"
+                              for="edit-isActive"
+                              >Mark as Active</label
+                            >
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-12">
+                        <div class="form-group">
+                          <button type="submit" class="btn btn-primary">
+                            Update Currency
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ===========Footer=========== -->
+          <%- include('../snippets/adminSnippets/footer.ejs') %>
+        </div>
+      </div>
+    </div>
+    <!-- =========Scripts========= -->
+    <%- include('../snippets/adminSnippets/scripts.ejs') %>
+    <script src="/apiClient/currencyClient.js"></script>
+    <script src="/apiClient/apiClient.js"></script>
+
+    <script>
+      // Initialize the page when loaded
+      document.addEventListener("DOMContentLoaded", function () {
+        // We'll use the initialization function from currencyClient.js
+        if (typeof initCurrencyManagement === "function") {
+          initCurrencyManagement();
+        }
+      });
+    </script>
+  </body>
+</html>

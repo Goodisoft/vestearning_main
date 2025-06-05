@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en" itemscope itemtype="http://schema.org/WebPage">
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+  <head>
+    <%- include('./snippets/header_meta.ejs') %>
+    <title><%= appSettings.siteName %> - Contact Us</title>
+  </head>
+
+  <style>
+    /* language */
+    .language_switcher {
+      position: relative;
+      padding-right: 20px;
+      min-width: max-content;
+    }
+
+    @media (max-width: 991px) {
+      .language_switcher {
+        padding-block: 6px;
+        display: inline-flex;
+      }
+
+      .language_switcher_wrapper {
+        flex: 1;
+        text-align: right;
+      }
+    }
+
+    .language_switcher::after {
+      font-family: "Line Awesome Free";
+      content: "\f107";
+      font-weight: 900;
+      font-size: 14px;
+      position: absolute;
+      margin: 0;
+      color: #fff;
+      top: 50%;
+      right: 0;
+      -webkit-transform: translateY(-50%);
+      transform: translateY(-50%);
+      transition: all ease 350ms;
+      -webkit-transition: all ease 350ms;
+      -moz-transition: all ease 350ms;
+    }
+
+    .language_switcher.open:after {
+      -webkit-transform: translateY(-50%) rotate(180deg);
+      transform: translateY(-50%) rotate(180deg);
+    }
+
+    .language_switcher__caption {
+      cursor: pointer;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-wrap: nowrap;
+    }
+
+    .language_switcher__caption .icon {
+      position: relative;
+      height: 20px;
+      width: 20px;
+      display: flex;
+    }
+
+    .language_switcher__caption .icon img {
+      height: 100%;
+      width: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .language_switcher__caption .text {
+      font-size: 0.875rem;
+      font-weight: 500;
+      flex: 1;
+      color: #fff;
+      line-height: 1;
+    }
+
+    .language_switcher__list {
+      width: 100px;
+      border-radius: 4px;
+      padding: 0;
+      max-height: 105px;
+      overflow-y: auto !important;
+      background: hsl(var(--base));
+      -webkit-box-shadow: 0px 12px 24px rgba(21, 18, 51, 0.13);
+      opacity: 0;
+      overflow: hidden;
+      -webkit-transition: all 0.15s cubic-bezier(0.25, 0, 0.25, 1.75),
+        opacity 0.1s linear;
+      transition: all 0.15s cubic-bezier(0.25, 0, 0.25, 1.75),
+        opacity 0.1s linear;
+      -webkit-transform: scale(0.85);
+      transform: scale(0.85);
+      -webkit-transform-origin: 50% 0;
+      transform-origin: 50% 0;
+      position: absolute;
+      top: calc(100% + 18px);
+      z-index: -1;
+      visibility: hidden;
+    }
+
+    .language_switcher__list::-webkit-scrollbar-track {
+      border-radius: 3px;
+      background-color: hsl(var(--base) / 0.3);
+    }
+
+    .language_switcher__list::-webkit-scrollbar {
+      width: 3px;
+    }
+
+    .language_switcher__list::-webkit-scrollbar-thumb {
+      border-radius: 3px;
+      background-color: hsl(var(--base) / 0.8);
+    }
+
+    .language_switcher__list .text {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #fff;
+    }
+
+    .language_switcher.open .language_switcher__list {
+      -webkit-transform: scale(1);
+      transform: scale(1);
+      opacity: 1;
+      z-index: 1;
+      visibility: visible;
+    }
+
+    .language_switcher__item a {
+      cursor: pointer;
+      padding: 5px;
+      border-bottom: 1px solid hsl(var(--heading-color) / 0.2);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .language_switcher__item img {
+      height: 20px;
+      width: 20px;
+      display: block;
+      border-radius: 50%;
+    }
+
+    .language_switcher__item:last-of-type {
+      border-bottom: 0;
+    }
+    .language_switcher__item:hover {
+      background-color: hsl(var(--dark) / 0.1);
+    }
+    .language_switcher__item.selected {
+      background: rgba(36, 60, 187, 0.02);
+      pointer-events: none;
+    }
+  </style>
+  <body>
+    <div class="preloader"><%- include('./snippets/preloader_logo.ejs') %></div>
+
+    <!-- scroll-to-top start -->
+    <div class="scroll-to-top">
+      <span class="scroll-icon">
+        <i class="fa fa-rocket" aria-hidden="true"></i>
+      </span>
+    </div>
+    <!-- scroll-to-top end -->
+
+    <div class="full-wh">
+      <!-- STAR ANIMATION -->
+      <div class="bg-animation">
+        <div id="stars"></div>
+        <div id="stars2"></div>
+        <div id="stars3"></div>
+        <div id="stars4"></div>
+      </div>
+      <!-- / STAR ANIMATION -->
+    </div>
+
+    <div class="page-wrapper">
+      <!-- header-section start  -->
+      <%- include('./snippets/navbar.ejs') %>
+      <!-- header-section end  -->
+      <section class="inner-hero bg_img">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-6">
+              <h2 class="page-title">Terms and Conditions</h2>
+            </div>
+          </div>
+        </div>
+      </section>
+      <div class="section-wrapper">
+        <!-- contact section start -->
+        <section class="pt-120 pb-120">
+          <div class="container">
+            <div class="contact-wrapper">
+              <div class="row">
+                <!-- <div class="col-lg-6 contact-thumb bg_img"></div> -->
+                <div class="col-lg-6 mx-auto contact-form-wrapper">
+                  <ul>
+                    <li class="h4 fw-bold">Acceptance of Terms</li>
+                    <p class="font-weight-bold">
+                      By using Rollexcoins' services, you agree to comply with
+                      these Terms and Conditions. If you do not agree, you must
+                      refrain from using our platform.
+                    </p>
+                    <li class="h4 fw-bold">Investment Plans & Returns</li>
+                    <ul>
+                      <li>
+                        Rollexcoins offers various investment plans with
+                        different profit rates and durations.
+                      </li>
+                      <li>
+                        Profits are calculated based on the selected plan and
+                        are subject to change without prior notice.
+                      </li>
+                      <li>
+                        The company reserves the right to modify, suspend, or
+                        terminate any investment plan at any time.
+                      </li>
+                    </ul>
+                    <li class="h4 fw-bold">Deposits & Withdrawals</li>
+                    <ul>
+                      <li>
+                        All deposits must be made through approved payment
+                        methods.
+                      </li>
+                      <li>
+                        Withdrawal requests are processed within the stipulated
+                        time frame (varies by plan).
+                      </li>
+                      <li>
+                        Rollexcoins may impose withdrawal limits or fees as
+                        deemed necessary.
+                      </li>
+                    </ul>
+
+                    <li class="h4 fw-bold">Risk Disclosure</li>
+                    <ul>
+                      <li>
+                        Cryptocurrency investments are highly volatile and
+                        involve substantial risk.
+                      </li>
+                      <li>
+                        Past performance does not guarantee future results.
+                      </li>
+                      <li>
+                        Investors may lose part or all of their invested
+                        capital.
+                      </li>
+                    </ul>
+
+                    <li class="h4 fw-bold">Account Security</li>
+                    <ul>
+                      <li>
+                        Users are responsible for securing their account
+                        credentials.
+                      </li>
+                      <li>
+                        ollexcoins is not liable for unauthorized access or
+                        losses due to negligence.
+                      </li>
+                    </ul>
+
+                    <li class="h4 fw-bold">Prohibited Activities</li>
+                    <ul>
+                      <li>
+                        Money laundering, fraud, or any illegal activity is
+                        strictly prohibited.
+                      </li>
+                      <li>
+                        Rollexcoins may freeze or terminate accounts involved in
+                        suspicious transactions.
+                      </li>
+                    </ul>
+
+                    <li class="h4 fw-bold">Disclaimer of Liability</li>
+                    <ul>
+                      <li>
+                        Rollexcoins does not guarantee profits and shall not be
+                        held liable for financial losses.
+                      </li>
+                      <li>
+                        The company is not responsible for technical issues,
+                        market fluctuations, or third-party actions affecting
+                        investments.
+                      </li>
+                    </ul>
+
+                    <li class="h4 fw-bold">Amendments</li>
+                    <p class="font-weight-bold">
+                      Rollexcoins reserves the right to update these Terms and
+                      Conditions without prior notice. Continued use of the
+                      platform constitutes acceptance of the revised terms.
+                    </p>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <!-- contact-wrapper end -->
+          </div>
+       
+        </section>
+        <!-- contact section end -->
+      </div>
+
+      <!-- Footer -->
+      <%- include("./snippets/footer.ejs") %>
+    </div>
+
+    <!-- Scripts -->
+    <%- include("./snippets/scripts.ejs") %> <%-
+    include('./snippets/live_chat.ejs') %>
+
+    <script>
+      (function ($) {
+        "use strict";
+
+        $(".language_switcher > .language_switcher__caption").on(
+          "click",
+          function () {
+            $(this).parent().toggleClass("open");
+          }
+        );
+        $(document).on("keyup", function (evt) {
+          if ((evt.keyCode || evt.which) === 27) {
+            $(".language_switcher").removeClass("open");
+          }
+        });
+        $(document).on("click", function (evt) {
+          if (
+            $(evt.target).closest(
+              ".language_switcher > .language_switcher__caption"
+            ).length === 0
+          ) {
+            $(".language_switcher").removeClass("open");
+          }
+        });
+      })(jQuery);
+    </script>
+  </body>
+</html>

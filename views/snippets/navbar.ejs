@@ -1,0 +1,75 @@
+<!-- header-section start  -->
+<header class="header">
+  <div class="header__bottom">
+    <div class="container">
+      <nav class="navbar navbar-expand-xl p-0 align-items-center">
+        <a class="site-logo site-title" href="/">
+          <img src="<%= appSettings.siteLogo %>" alt="site-logo" />
+          <span><%= appSettings.siteName %></span>
+        </a>
+        <ul class="account-menu responsive-account-menu ms-3">
+          <li class="icon">
+            <a href="/login"><i class="las la-user"></i></a>
+          </li>
+        </ul>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="menu-toggle"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav main-menu ms-auto">
+            <li>
+              <a href="/">Home</a>
+            </li>
+            <li><a href="/about">About</a></li>
+            <li><a href="/plans">Plan</a></li>
+            <li><a href="/contact">Contact</a></li>
+          </ul>
+          <div class="nav-right">
+            <ul class="account-menu ms-3">
+              <li class="icon">
+                <a href="/auth/login"><i class="las la-user"></i></a>
+              </li>
+            </ul>
+            <div class="language_switcher ms-3">
+              <div class="language_switcher__caption">
+                <span class="icon">
+                  <img
+                    src="/images/language/66a9ddbb526ff1722408379.jpg"
+                    alt="image"
+                  />
+                </span>
+                <span class="text"> English </span>
+              </div>
+              <div class="language_switcher__list">
+                <div id="google_translate_element">
+                  <script type="text/javascript">
+                    function googleTranslateElementInit() {
+                      new google.translate.TranslateElement(
+                        {
+                          pageLanguage: "en",
+                          includedLanguages:
+                            "af,am,ar,az,be,bg,bn,bs,ca,ceb,co,cs,cy,da,de,el,en,eo,es,et,eu,fa,fi,fr,fy,ga,gd,gl,gu,ha,haw,hi,hmn,hr,ht,hu,hy,id,ig,is,it,ja,jw,ka,kk,km,kn,ko,ku,ky,la,lb,lo,lt,lv,mg,mi,mk,ml,mn,mr,ms,mt,my,ne,nl,no,ny,or,pa,pl,ps,pt,ro,ru,sa,sd,si,sk,sl,sm,sq,sr,su,sv,sw,ta,te,tg,th,tl,tr,uk,ur,uz,vi,xh,yi,yo,zh-CN,zh-TW,zu",
+                        },
+                        "google_translate_element"
+                      );
+                    }
+                  </script>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </div>
+  <!-- header__bottom end -->
+</header>
+<!-- header-section end  -->

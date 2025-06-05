@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="zxx" class="js">
+  <head>
+    <!-- ========Headers meta======== -->
+    <%- include('../snippets/adminSnippets/header_meta.ejs') %>
+
+    <title>EXNESTRADE | Confirmed Investments</title>
+  </head>
+  <body class="nk-body bg-lighter npc-general has-sidebar">
+    <div class="nk-app-root">
+      <div class="nk-main">
+        <!-- ==========Sidebar======= -->
+        <%- include('../snippets/adminSnippets/sidebar.ejs') %>
+
+        <div class="nk-wrap">
+          <!-- ============Navbar======== -->
+          <%- include('../snippets/adminSnippets/navbar.ejs') %>
+
+          <div class="nk-content">
+            <div class="container-fluid">
+              <div class="nk-content-inner">
+                <div class="nk-content-body">
+                  <div class="nk-block-head nk-block-head-sm">
+                    <div class="nk-block-between g-3">
+                      <div class="nk-block-head-content">
+                        <h5 class="nk-block-title page-title">
+                          Confirmed Investments
+                        </h5>
+                        <div class="nk-block-des text-soft">
+                          <p>
+                            You have total <%= investments ? investments.length
+                            : 0 %> confirmed investments.
+                          </p>
+                        </div>
+                      </div>
+                      <div class="nk-block-head-content">
+                        <div class="toggle-wrap nk-block-tools-toggle">
+                          <a
+                            href="#"
+                            class="btn btn-icon btn-trigger toggle-expand me-n1"
+                            data-target="pageMenu"
+                            ><em class="icon ni ni-menu-alt-r"></em
+                          ></a>
+                          <div
+                            class="toggle-expand-content"
+                            data-content="pageMenu"
+                          >
+                            <ul class="nk-block-tools g-3">
+                              <li class="nk-block-tools-opt">
+                                <a
+                                  href="#addTranxModal"
+                                  class="btn btn-primary"
+                                  data-bs-toggle="modal"
+                                  ><span>Add Investment</span></a
+                                >
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="nk-block">
+                    <div class="card card-bordered card-stretch">
+                      <div class="card-inner-group">
+                        <div class="card-inner">
+                          <div class="card-title-group">
+                            <div class="card-title">
+                              <h6 class="title">Active Investments</h6>
+                            </div>
+                            <div class="card-tools me-n1">
+                              <ul class="btn-toolbar gx-1">
+                                <li>
+                                  <a
+                                    href="#"
+                                    class="search-toggle toggle-search btn btn-icon"
+                                    data-target="search"
+                                    ><em class="icon ni ni-search"></em
+                                  ></a>
+                                </li>
+                                <li class="btn-toolbar-sep"></li>
+                                <li>
+                                  <div class="dropdown">
+                                    <a
+                                      href="#"
+                                      class="btn btn-trigger btn-icon dropdown-toggle"
+                                      data-bs-toggle="dropdown"
+                                      ><div
+                                        class="badge badge-circle bg-primary"
+                                      >
+                                        4
+                                      </div>
+                                      <em class="icon ni ni-filter-alt"></em
+                                    ></a>
+                                    <div
+                                      class="filter-wg dropdown-menu dropdown-menu-xl dropdown-menu-end"
+                                    >
+                                      <div class="dropdown-head">
+                                        <span class="sub-title dropdown-title"
+                                          >Filter Investments</span
+                                        >
+                                        <div class="dropdown">
+                                          <a href="#" class="link link-light"
+                                            ><em class="icon ni ni-more-h"></em
+                                          ></a>
+                                        </div>
+                                      </div>
+                                      <div
+                                        class="dropdown-body dropdown-body-rg"
+                                      >
+                                        <div class="row gx-6 gy-4">
+                                          <div class="col-6">
+                                            <div class="form-group">
+                                              <label
+                                                class="overline-title overline-title-alt"
+                                                >Status</label
+                                              >
+                                              <select
+                                                class="form-select js-select2"
+                                                id="filterStatus"
+                                              >
+                                                <option value="active">
+                                                  Active
+                                                </option>
+                                                <option value="completed">
+                                                  Completed
+                                                </option>
+                                              </select>
+                                            </div>
+                                          </div>
+                                          <div class="col-6">
+                                            <div class="form-group">
+                                              <label
+                                                class="overline-title overline-title-alt"
+                                                >Date Range</label
+                                              >
+                                              <div class="form-control-wrap">
+                                                <div
+                                                  class="form-icon form-icon-left"
+                                                >
+                                                  <em
+                                                    class="icon ni ni-calendar"
+                                                  ></em>
+                                                </div>
+                                                <input
+                                                  type="text"
+                                                  class="form-control date-picker"
+                                                  id="filterDateRange"
+                                                  data-date-format="yyyy-mm-dd"
+                                                  placeholder="Start date - End date"
+                                                />
+                                              </div>
+                                            </div>
+                                          </div>
+                                          <div class="col-12">
+                                            <div class="form-group">
+                                              <button
+                                                type="button"
+                                                class="btn btn-secondary"
+                                                id="applyFilter"
+                                              >
+                                                Filter
+                                              </button>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="dropdown-foot between">
+                                        <a
+                                          class="clickable"
+                                          href="#"
+                                          id="resetFilter"
+                                          >Reset Filter</a
+                                        >
+                                      </div>
+                                    </div>
+                                  </div>
+                                </li>
+                              </ul>
+                            </div>
+                            <div
+                              class="card-search search-wrap"
+                              data-search="search"
+                            >
+                              <div class="search-content">
+                                <a
+                                  href="#"
+                                  class="search-back btn btn-icon toggle-search"
+                                  data-target="search"
+                                  ><em class="icon ni ni-arrow-left"></em
+                                ></a>
+                                <input
+                                  type="text"
+                                  class="form-control border-transparent form-focus-none"
+                                  placeholder="Quick search by user or plan"
+                                  id="searchInput"
+                                />
+                                <button
+                                  class="search-submit btn btn-icon"
+                                  id="searchButton"
+                                >
+                                  <em class="icon ni ni-search"></em>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="card-inner p-0">
+                          <div
+                            class="nk-tb-list nk-tb-tnx"
+                            id="investmentsList"
+                          >
+                            <div class="nk-tb-item nk-tb-head">
+                              <div class="nk-tb-col"><span>Details</span></div>
+                              <div class="nk-tb-col tb-col-xxl">
+                                <span>User</span>
+                              </div>
+                              <div class="nk-tb-col tb-col-lg">
+                                <span>Plan</span>
+                              </div>
+                              <div class="nk-tb-col text-end">
+                                <span>Amount</span>
+                              </div>
+                              <div class="nk-tb-col nk-tb-col-tools"></div>
+                            </div>
+
+                            <% if (investments && investments.length > 0) { %>
+                            <% investments.forEach(investment => { %>
+                            <div
+                              class="nk-tb-item"
+                              data-investment-id="<%= investment._id %>"
+                            >
+                              <div class="nk-tb-col">
+                                <div class="nk-tnx-type">
+                                  <div
+                                    class="nk-tnx-type-icon bg-success-dim text-success"
+                                  >
+                                    <em class="icon ni ni-invest"></em>
+                                  </div>
+                                  <div class="nk-tnx-type-text">
+                                    <span class="tb-lead"
+                                      >Active Investment</span
+                                    >
+                                    <span class="tb-date"
+                                      ><%= new
+                                      Date(investment.startDate).toLocaleDateString()
+                                      %> to <%= new
+                                      Date(investment.endDate).toLocaleDateString()
+                                      %></span
+                                    >
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="nk-tb-col tb-col-xxl">
+                                <span class="tb-lead-sub"
+                                  ><%= investment.userId?.fullName || 'User'
+                                  %></span
+                                >
+                                <span class="tb-sub"
+                                  ><%= investment.userId?.email || 'No email'
+                                  %></span
+                                >
+                              </div>
+                              <div class="nk-tb-col tb-col-lg">
+                                <span class="tb-lead-sub">
+                                  <%= investment.planId?.name || 'Investment Plan' %>
+                                </span>
+                                <span class="badge badge-dot bg-success"
+                                  >Active</span
+                                >
+                              </div>
+                              <div class="nk-tb-col text-end">
+                                <span class="tb-amount">
+                                  $<%= investment.amount.toFixed(2) %>
+                                </span>
+                                <span class="tb-amount-sm">
+                                  ROI: <%= (investment.earningRate *
+                                  100).toFixed(1) %>% / <%= investment.duration
+                                  %> <%= investment.durationUnit %><%=
+                                  investment.duration > 1 ? 's' : '' %>
+                                </span>
+                              </div>
+                              <div class="nk-tb-col nk-tb-col-tools">
+                                <ul class="nk-tb-actions gx-2">
+                                  <li class="nk-tb-action-hidden">
+                                    <a
+                                      href="#investmentDetails"
+                                      data-bs-toggle="modal"
+                                      class="bg-white btn btn-sm btn-outline-light btn-icon btn-show-details"
+                                      title="Details"
+                                      data-id="<%= investment._id %>"
+                                    >
+                                      <em class="icon ni ni-eye"></em>
+                                    </a>
+                                  </li>
+                                  <li>
+                                    <div class="dropdown">
+                                      <a
+                                        href="#"
+                                        class="dropdown-toggle bg-white btn btn-sm btn-outline-light btn-icon"
+                                        data-bs-toggle="dropdown"
+                                      >
+                                        <em class="icon ni ni-more-h"></em>
+                                      </a>
+                                      <div
+                                        class="dropdown-menu dropdown-menu-end"
+                                      >
+                                        <ul class="link-list-opt">
+                                          <li>
+                                            <a
+                                              href="#investmentDetails"
+                                              class="btn-show-details"
+                                              data-bs-toggle="modal"
+                                              data-id="<%= investment._id %>"
+                                            >
+                                              <em class="icon ni ni-eye"></em>
+                                              <span>View Details</span>
+                                            </a>
+                                          </li>
+                                        </ul>
+                                      </div>
+                                    </div>
+                                  </li>
+                                </ul>
+                              </div>
+                            </div>
+                            <% }); %> <% } else { %>
+                            <div class="nk-tb-item">
+                              <div class="nk-tb-col" colspan="5">
+                                <div class="text-center">
+                                  <p>No active investments found</p>
+                                </div>
+                              </div>
+                            </div>
+                            <% } %>
+                          </div>
+                        </div>
+
+                        <% if (pagination && pagination.pages > 1) { %>
+                        <div class="card-inner">
+                          <ul
+                            class="pagination justify-content-center justify-content-md-start"
+                            id="paginationContainer"
+                          >
+                            <% if (pagination.page > 1) { %>
+                            <li class="page-item">
+                              <a
+                                class="page-link"
+                                href="?page=<%= pagination.page - 1 %>"
+                                >Prev</a
+                              >
+                            </li>
+                            <% } %> <% for (let i = 1; i <= pagination.pages;
+                            i++) { %> <% if (i === pagination.page) { %>
+                            <li class="page-item active">
+                              <a class="page-link" href="?page=<%= i %>"
+                                ><%= i %></a
+                              >
+                            </li>
+                            <% } else if (i <= 2 || i >= pagination.pages - 1 ||
+                            Math.abs(i - pagination.page) <= 1) { %>
+                            <li class="page-item">
+                              <a class="page-link" href="?page=<%= i %>"
+                                ><%= i %></a
+                              >
+                            </li>
+                            <% } else if (i === 3 && pagination.page > 4) { %>
+                            <li class="page-item">
+                              <span class="page-link">
+                                <em class="icon ni ni-more-h"></em>
+                              </span>
+                            </li>
+                            <% } %> <% } %> <% if (pagination.page <
+                            pagination.pages) { %>
+                            <li class="page-item">
+                              <a
+                                class="page-link"
+                                href="?page=<%= pagination.page + 1 %>"
+                                >Next</a
+                              >
+                            </li>
+                            <% } %>
+                          </ul>
+                        </div>
+                        <% } %>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Investment details modal -->
+          <div class="modal fade" tabindex="-1" id="investmentDetails">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <a
+                  href="#"
+                  class="close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                >
+                  <em class="icon ni ni-cross"></em>
+                </a>
+                <div class="modal-body modal-body-md">
+                  <div class="nk-modal-head mb-2 mb-sm-5">
+                    <h4 class="nk-modal-title title">
+                      Investment Details
+                      <small class="text-primary investment-id"></small>
+                    </h4>
+                  </div>
+                  <div class="nk-tnx-details">
+                    <div class="nk-block-between flex-wrap g-3">
+                      <div class="nk-tnx-type">
+                        <div
+                          class="nk-tnx-type-icon bg-success-dim text-success"
+                        >
+                          <em class="icon ni ni-invest"></em>
+                        </div>
+                        <div class="nk-tnx-type-text">
+                          <h5 class="title investment-amount"></h5>
+                          <span class="sub-text mt-n1 investment-date"></span>
+                        </div>
+                      </div>
+                      <div class="align-center flex-wrap gx-3">
+                        <span class="badge bg-success investment-status"
+                          >Active</span
+                        >
+                      </div>
+                    </div>
+                    <hr />
+                    <div class="row gy-3">
+                      <div class="col-lg-6">
+                        <span class="sub-text">Investor</span>
+                        <span class="caption-text investor-name"></span>
+                      </div>
+                      <div class="col-lg-6">
+                        <span class="sub-text">Email</span>
+                        <span class="caption-text investor-email"></span>
+                      </div>
+                      <div class="col-lg-6">
+                        <span class="sub-text">Investment Plan</span>
+                        <span class="caption-text fw-bold plan-name"></span>
+                      </div>
+                      <div class="col-lg-6">
+                        <span class="sub-text">Amount</span>
+                        <span
+                          class="caption-text fw-bold investment-amount-detail"
+                        ></span>
+                      </div>
+                      <div class="col-lg-6">
+                        <span class="sub-text">ROI</span>
+                        <span class="caption-text investment-roi"></span>
+                      </div>
+                      <div class="col-lg-6">
+                        <span class="sub-text">Duration</span>
+                        <span class="caption-text investment-duration"></span>
+                      </div>
+                      <div class="col-lg-6">
+                        <span class="sub-text">Start Date</span>
+                        <span class="caption-text investment-start-date"></span>
+                      </div>
+                      <div class="col-lg-6">
+                        <span class="sub-text">End Date</span>
+                        <span class="caption-text investment-end-date"></span>
+                      </div>
+                      <div class="col-lg-6">
+                        <span class="sub-text">Expected Return</span>
+                        <span class="caption-text investment-return"></span>
+                      </div>
+                      <div class="col-lg-6">
+                        <span class="sub-text">Progress</span>
+                        <div class="progress">
+                          <div
+                            class="progress-bar progress-bar-striped bg-success investment-progress"
+                            role="progressbar"
+                            style="width: 0%"
+                            aria-valuenow="0"
+                            aria-valuemin="0"
+                            aria-valuemax="100"
+                          ></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Add Investment Modal -->
+          <div class="modal fade" tabindex="-1" id="addTranxModal">
+            <div class="modal-dialog modal-md" role="document">
+              <div class="modal-content">
+                <a
+                  href="#"
+                  class="close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                >
+                  <em class="icon ni ni-cross"></em>
+                </a>
+                <div class="modal-body modal-body-md">
+                  <h4 class="title nk-modal-title mb-3">
+                    Manually Add Transaction
+                  </h4>
+
+                  <form action="">
+                    <div class="row gy-3">
+                      <div class="col-lg-6">
+                        <label>
+                          Amount <span class="text-danger">*</span>
+                        </label>
+                        <div class="form-control-wrap">
+                          <div class="form-text-hint">
+                            <span class="overline-title">USD</span>
+                          </div>
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="tnx-amount"
+                            name="amount"
+                            required=""
+                          />
+                        </div>
+                      </div>
+
+                      <div class="col-lg-6">
+                        <label>
+                          Add to Account <span class="text-danger">*</span>
+                        </label>
+                        <div class="form-control-wrap">
+                          <select
+                            name="account"
+                            class="form-control form-select js-select2-search"
+                            required
+                          >
+                            <option value="">Select an account</option>
+                            <option value="1">Abdul (Abdul Emmanuel)</option>
+                            <option value="2">James (Caleb James)</option>
+                            <option value="3">John (Johnson Dion)</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-6">
+                        <label>
+                          Transaction Type <span class="text-danger">*</span>
+                        </label>
+                        <div class="form-control-wrap">
+                          <select
+                            name=""
+                            id="tranxType"
+                            class="form-control form-select js-select2"
+                            required
+                          >
+                            <option value="">Transaction type</option>
+                            <option value="1">Direct Deposit</option>
+                            <option value="2">Add Bonus</option>
+                            <option value="3">Add Charges</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-lg-6">
+                        <label>
+                          Method <span class="text-danger">*</span>
+                        </label>
+                        <div class="form-control-wrap">
+                          <select
+                            name=""
+                            id="tranxMethod"
+                            class="form-control form-select js-select2"
+                            required
+                          >
+                            <option value="1">Manual/Direct</option>
+                            <option value="2">System Default</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-lg-12">
+                        <label>
+                          Description <span class="text-danger">*</span>
+                        </label>
+                        <div class="form-control-wrap">
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="description"
+                          />
+                        </div>
+                        <p class="text-muted small fst-italic">
+                          Reason for the transaction. The description will
+                          display to user.
+                        </p>
+                      </div>
+                      <div class="col-lg-12">
+                        <button class="btn btn-primary">Add Transaction</button>
+                        <button
+                          class="btn btn-light"
+                          data-bs-dismiss="modal"
+                          aria-label="Close"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                      <hr />
+                      <div class="col-lg-12">
+                        <label class="small">
+                          Add Charge:
+                          <span class="text-muted"
+                            >Amount will be deducted/debitedfrom the account
+                            balance</span
+                          >
+                        </label>
+                        <label class="small">
+                          Add Bonus:
+                          <span class="text-muted"
+                            >Amount will add/credit into the account
+                            balance</span
+                          >
+                        </label>
+                        <label class="small">
+                          Add Deposit:
+                          <span class="text-muted"
+                            >Amount will add/credit into the mining Account
+                          </span>
+                        </label>
+                        <label class="text-muted small">
+                          Leaving blank description will add 'Debited Balance'
+                          or 'Credited Balance' based on type.
+                        </label>
+                        <label class="text-danger small">
+                          You can not undo this action once you confirmed to
+                          add.
+                        </label>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ========Footer========== -->
+          <%- include('../snippets/adminSnippets/footer.ejs') %>
+        </div>
+      </div>
+    </div>
+    <!-- ===================Scripts========== -->
+    <%- include('../snippets/adminSnippets/scripts.ejs') %>
+    <script src="/apiClient/transactionClient.js"></script>
+
+    <script>
+      $(document).ready(function () {
+        $(".js-select2-search").select2({
+          dropdownParent: $("#addTranxModal"),
+          placeholder: "Search and select an account",
+          allowClear: true,
+          width: "100%",
+        });
+
+        // Initialize JavaScript components
+        $(".js-select2").select2({
+          dropdownParent: $("#addTranxModal"),
+        });
+
+        // Initialize date picker
+        $(".date-picker").datepicker({
+          format: "yyyy-mm-dd",
+          autoclose: true,
+          todayHighlight: true,
+        });
+
+        // Show investment details
+        $(".btn-show-details").on("click", function () {
+          const investmentId = $(this).data("id");
+
+          // Fetch investment details
+          TransactionClient.getInvestmentDetails(investmentId)
+            .then((response) => {
+              if (response.success) {
+                const investment = response.investment;
+                const user = investment.userId;
+                const plan = investment.planId;
+
+                // Populate modal data
+                $(".investment-id").text("#" + investmentId);
+                $(".investment-amount").text(
+                  "$" + investment.amount.toFixed(2)
+                );
+                $(".investment-date").text(
+                  new Date(investment.startDate).toLocaleString() +
+                    " to " +
+                    new Date(investment.endDate).toLocaleString()
+                );
+                $(".investor-name").text(user?.fullName || "Unknown");
+                $(".investor-email").text(user?.email || "Unknown");
+                $(".plan-name").text(plan?.name || "Unknown Plan");
+                $(".investment-amount-detail").text(
+                  "$" + investment.amount.toFixed(2)
+                );
+                $(".investment-roi").text(
+                  (investment.earningRate * 100).toFixed(1) + "%"
+                );
+                $(".investment-duration").text(
+                  investment.duration +
+                    " " +
+                    investment.durationUnit +
+                    (investment.duration > 1 ? "s" : "")
+                );
+                $(".investment-start-date").text(
+                  new Date(investment.startDate).toLocaleDateString()
+                );
+                $(".investment-end-date").text(
+                  new Date(investment.endDate).toLocaleDateString()
+                );
+
+                // Calculate expected returns
+                const totalEarningRate = investment.earningRate * investment.duration;
+                const expectedReturn = investment.amount * (1 + totalEarningRate);
+                $(".investment-return").text("$" + expectedReturn.toFixed(2));
+
+
+                // Calculate progress percentage
+                const startDate = new Date(investment.startDate).getTime();
+                const endDate = new Date(investment.endDate).getTime();
+                const currentDate = new Date().getTime();
+
+                let progressPercentage = Math.round(
+                  ((currentDate - startDate) / (endDate - startDate)) * 100
+                );
+                progressPercentage = Math.max(
+                  0,
+                  Math.min(100, progressPercentage)
+                ); // Ensure between 0-100
+
+                $(".investment-progress").css(
+                  "width",
+                  progressPercentage + "%"
+                );
+                $(".investment-progress").attr(
+                  "aria-valuenow",
+                  progressPercentage
+                );
+              } else {
+                toastr.error("Failed to load investment details");
+              }
+            })
+            .catch((err) => {
+              console.error("Error:", err);
+              toastr.error(
+                "An error occurred while fetching investment details"
+              );
+            });
+        });
+
+        // Filter functionality
+        $("#applyFilter").on("click", function () {
+          const status = $("#filterStatus").val();
+          const dateRange = $("#filterDateRange").val();
+
+          // Build query parameters
+          let queryParams = new URLSearchParams(window.location.search);
+
+          if (status) {
+            queryParams.set("status", status);
+          }
+
+          if (dateRange) {
+            const dates = dateRange.split(" - ");
+            if (dates.length === 2) {
+              queryParams.set("startDate", dates[0]);
+              queryParams.set("endDate", dates[1]);
+            }
+          }
+
+          // Redirect with filter parameters
+          window.location.href =
+            window.location.pathname + "?" + queryParams.toString();
+        });
+
+        // Reset filter
+        $("#resetFilter").on("click", function () {
+          window.location.href = window.location.pathname;
+        });
+
+        // Search functionality
+        $("#searchButton").on("click", function () {
+          const searchQuery = $("#searchInput").val().trim();
+
+          if (searchQuery) {
+            let queryParams = new URLSearchParams(window.location.search);
+            queryParams.set("search", searchQuery);
+            window.location.href =
+              window.location.pathname + "?" + queryParams.toString();
+          }
+        });
+
+        // Allow search on Enter key
+        $("#searchInput").on("keypress", function (e) {
+          if (e.which === 13) {
+            // Enter key
+            $("#searchButton").click();
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
