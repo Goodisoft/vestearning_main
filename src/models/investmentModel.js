@@ -50,7 +50,7 @@ const investmentSchema = new mongoose.Schema(
     },
     type: {
       type: String,
-      enum: ["investment", "promo", "loan"],
+      enum: ["investment", "promo", "loan", "reinvestment"],
       required: [true, "Transaction type is required"], 
     },
     startDate: {

@@ -215,8 +215,8 @@ class KycRepository extends BaseRepository {
    */
   async getKycDetails(id) {
     return await KYC.findById(id)
-      .populate("user", "email username firstName lastName")
-      .populate("requestedBy", "email username");
+      .populate("user", "email fullName")
+      .populate("requestedBy", "email");
   }
 
   /**

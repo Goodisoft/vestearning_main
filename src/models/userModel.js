@@ -35,7 +35,7 @@ const userSchema = new mongoose.Schema(
     referredBy: { type: Schema.Types.ObjectId, ref: "User" },
     kycStatus: {
       type: String,
-      enum: ["not_required", "pending", "approved", "rejected"],
+      enum: ["not_required", "pending", "submitted", "approved", "rejected"],
       default: "not_required",
     },
     withdrawalLimit: { type: Number, default: 0 },

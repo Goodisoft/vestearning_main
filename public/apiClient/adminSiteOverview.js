@@ -549,13 +549,13 @@ class AdminSiteOverviewClient {
                     </div>
                   </div>
                 </div>
-                <div class="nk-tb-col tb-col-lg">
+                <div class="nk-tb-col tb-col-md">
                   <span class="tb-sub">${date}</span>
                 </div>
                 <div class="nk-tb-col">
                   <span class="tb-sub tb-amount">${amount} <span>${currency}</span></span>
                 </div>
-                <div class="nk-tb-col tb-col-sm">
+                <div class="nk-tb-col tb-col-md">
                   ${statusText}
                 </div>
                 <div class="nk-tb-col nk-tb-col-action">
@@ -563,9 +563,7 @@ class AdminSiteOverviewClient {
                     <a class="text-soft dropdown-toggle btn btn-sm btn-icon btn-trigger" data-bs-toggle="dropdown"><em class="icon ni ni-chevron-right"></em></a>
                     <div class="dropdown-menu dropdown-menu-end dropdown-menu-xs">
                       <ul class="link-list-plain">
-                        <li><a href="/admin/investments/${
-                          investment._id
-                        }">View</a></li>
+                        <li><a href="/admin/transaction/confirmed">View</a></li>
                         <li><a href="#">Print</a></li>
                       </ul>
                     </div>

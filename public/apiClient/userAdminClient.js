@@ -1,12 +1,89 @@
 /**
- * ExNestrade User Admin API Client
+ *  User Admin API Client
  * Handles all admin user-related API operations
  */
 
 /**
  * Get all users with optional filters
- * @param {Object} queryParams - Query parameters to filter users
- * @returns {Promise<Object>} Response containing users data
+ * @param {Object} queryParams - Query parameters to filte/**
+ * Get investment plans
+ * @returns {Promise<Object>} Response containing plans data
+ */
+async function getInvestmentPlans() {
+  try {
+    return await apiGet("/admin/plans/api");
+  } catch (error) {
+    showToast(error.message, "error");
+    throw error;
+  }
+}
+
+/**
+ * Update a user's personal information
+ * @param {string} userId - The user ID to update
+ * @param {Object} userData - Personal information data to update
+ * @returns {Promise<Object>} Response containing updated user data
+ */
+async function updateUserPersonalInfo(userId, userData) {
+  try {
+    return await apiPatch(`/admin/users/api/${userId}/personal-info`, userData);
+  } catch (error) {
+    showToast(error.message, "error");
+    throw error;
+  }
+}
+
+/**
+ * Update a user's wallet information
+ * @param {string} userId - The user ID to update
+ * @param {Object} walletData - Wallet data to update
+ * @returns {Promise<Object>} Response containing updated wallet data
+ */
+async function updateUserWallet(userId, walletData) {
+  try {
+    return await apiPatch(`/admin/users/api/${userId}/wallet`, walletData);
+  } catch (error) {
+    showToast(error.message, "error");
+    throw error;
+  }
+}
+
+/**
+ * Add or update a withdrawal address for a user
+ * @param {string} userId - The user ID to update
+ * @param {Object} addressData - Address data with currency, address, network, and label
+ * @returns {Promise<Object>} Response containing updated wallet data
+ */
+async function updateWithdrawalAddress(userId, addressData) {
+  try {
+    return await apiPost(
+      `/admin/users/api/${userId}/withdrawal-address`,
+      addressData
+    );
+  } catch (error) {
+    showToast(error.message, "error");
+    throw error;
+  }
+}
+
+/**
+ * Delete a withdrawal address for a user
+ * @param {string} userId - The user ID
+ * @param {string} addressId - The ID of the address to delete
+ * @returns {Promise<Object>} Response containing updated wallet data
+ */
+async function deleteWithdrawalAddress(userId, addressId) {
+  try {
+    return await apiDelete(`/admin/users/api/${userId}/withdrawal-address`, {
+      addressId,
+    });
+  } catch (error) {
+    showToast(error.message, "error");
+    throw error;
+  }
+}
+/*
+returns {Promise<Object>} Response containing users data
  */
 async function getUsers(queryParams = {}) {
   try {
@@ -268,7 +345,7 @@ async function loadUserTable(tableId, fetchFunction, page = 1, limit = 10) {
       response.users.forEach((user) => {
         const row = document.createElement("tr");
         row.innerHTML = `
-          <td class="nk-tb-col nk-tb-col-check">
+          <td class="nk-tb-col nk-tb-col-check" data-label="">
             <div class="custom-control custom-control-sm custom-checkbox notext">
               <input type="checkbox" class="custom-control-input user-select" value="${
                 user._id
@@ -276,18 +353,20 @@ async function loadUserTable(tableId, fetchFunction, page = 1, limit = 10) {
               <label class="custom-control-label" for="uid${user._id}"></label>
             </div>
           </td>
-          <td>${user.fullName}</td>
-          <td>${user.email}</td>
-          <td>${user.country || "N/A"}</td>
-          <td>${new Date(user.createdAt).toLocaleDateString()}</td>
-          <td>
+          <td data-label="Full Name" >${user.fullName}</td>
+          <td data-label="Email" class="tb-col-md">${user.email}</td>
+          <td data-label="Country" class="tb-col-md">${user.country || "N/A"}</td>
+          <td data-label="Registered Date" class="tb-col-md">${new Date(
+            user.createdAt
+          ).toLocaleDateString()}</td>
+          <td data-label="Status">
             <span class="badge ${
               user.isEmailVerified ? "bg-success" : "bg-warning"
             }">
               ${user.isEmailVerified ? "Verified" : "Unverified"}
             </span>
           </td>
-          <td>
+          <td data-label="Action">
             <div class="dropdown">
               <a class="dropdown-toggle btn btn-icon btn-trigger" data-bs-toggle="dropdown">
                 <em class="icon ni ni-more-h"></em>
@@ -566,7 +645,6 @@ function initMultiSelectFunctions() {
         console.log("userIds", userIds);
         console.log("emailSubject", emailSubject);
         console.log("emailBody", emailBody);
-        
 
         try {
           const response = await sendBulkEmail(userIds, {
@@ -595,10 +673,10 @@ function initMultiSelectFunctions() {
         if (!planSelect || planSelect.options.length > 1) return;
 
         try {
-          const response = await getInvestmentPlans();          
+          const response = await getInvestmentPlans();
           if (response.success && response.plans) {
             planSelect.innerHTML = '<option value="">Select a plan</option>';
-            response.plans.forEach((plan) => {                
+            response.plans.forEach((plan) => {
               const option = document.createElement("option");
               option.value = plan._id;
               option.textContent = `${plan.name} - (${plan.type})`;

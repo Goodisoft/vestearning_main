@@ -98,10 +98,10 @@ class KycController {
   /**
    * Update KYC status
    */
-  static async updateKycStatus(req, res) {
+  static async updateKycStatus(req, res) {    
     try {
       const { id } = req.params;
-      const { status, rejectReason } = req.body;
+      const { status, comment } = req.body;
       const adminId = req.user.id;
 
       // Validate status
@@ -113,7 +113,7 @@ class KycController {
       }
 
       // If rejecting, require a reason
-      if (status === "rejected" && !rejectReason) {
+      if (status === "rejected" && !comment) {
         return res.status(400).json({
           success: false,
           message: "Rejection reason is required",
@@ -124,7 +124,7 @@ class KycController {
         id,
         status,
         adminId,
-        rejectReason
+        comment
       );
 
       res.json({

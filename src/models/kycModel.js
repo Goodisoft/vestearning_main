@@ -11,7 +11,7 @@ const KycSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["pending", "approved", "rejected"],
+      enum: ["pending", "submitted", "approved", "rejected"],
       default: "pending",
     },
     documents: [

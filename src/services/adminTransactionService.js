@@ -518,8 +518,6 @@ async function confirmInvestment(investmentId) {
       investment.duration,
       investment.durationUnit
     );
-    console.log("investment: ", investment);
-
     // Total roi percentage
     const expectedEarnings =
       investment.amount * investment.earningRate * investment.duration;

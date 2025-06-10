@@ -65,7 +65,7 @@ async function getUsersWithKycStatus({
  * @returns {Promise<Object>} KYC application details
  */
 async function getKycDetails(kycId) {
-  return apiGet(`/api/admin/kyc/applications/${kycId}`);
+  return apiGet(`/admin/kyc/applications/${kycId}`);
 }
 
 /**
@@ -76,7 +76,7 @@ async function getKycDetails(kycId) {
  * @returns {Promise<Object>} Updated KYC application
  */
 async function updateKycStatus(kycId, status, comment = "") {
-  return apiPut(`/api/admin/kyc/applications/${kycId}/status`, {
+  return apiPut(`/admin/kyc/applications/${kycId}/status`, {
     status,
     comment,
   });

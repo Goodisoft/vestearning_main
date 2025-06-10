@@ -70,12 +70,12 @@
                           <div class="nk-tb-item nk-tb-head">
                             <div class="nk-tb-col"><span class="sub-text">User</span></div>
                             <div class="nk-tb-col tb-col-md"><span class="sub-text">Plan</span></div>
-                            <div class="nk-tb-col tb-col-sm"><span class="sub-text">Amount</span></div>
+                            <div class="nk-tb-col"><span class="sub-text">Amount</span></div>
                             <div class="nk-tb-col tb-col-md"><span class="sub-text">ROI</span></div>
-                            <div class="nk-tb-col tb-col-md"><span class="sub-text">Status</span></div>
+                            <div class="nk-tb-col"><span class="sub-text">Status</span></div>
                             <div class="nk-tb-col tb-col-md"><span class="sub-text">Start Date</span></div>
                             <div class="nk-tb-col tb-col-md"><span class="sub-text">End Date</span></div>
-                            <div class="nk-tb-col nk-tb-col-tools text-end"></div>
+                            <div class="nk-tb-col text-end"></div>
                           </div>
                           
                           <% if (investments && investments.length > 0) { %>
@@ -95,7 +95,7 @@
                                 <div class="nk-tb-col tb-col-md">
                                   <span class="tb-lead-sub"><%= investment.planId ? investment.planId.name : 'Unknown Plan' %></span>
                                 </div>
-                                <div class="nk-tb-col tb-col-sm">
+                                <div class="nk-tb-col">
                                   <span class="tb-amount">$<%= investment.amount.toFixed(2) %></span>
                                 </div>
                                 <div class="nk-tb-col tb-col-md">

@@ -8,6 +8,7 @@ const Withdrawal = require("../models/withdrawalModel");
 const User = require("../models/userModel");
 const Wallet = require("../models/walletModel");
 const Transaction = require("../models/transactionModel");
+const mongoose = require("mongoose");
 
 const { validationResult } = require("express-validator");
 
@@ -460,60 +461,63 @@ class UserController {
     }
   }
 
- /**
- * Submit KYC information
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
- */
-static async submitKyc(req, res) {
-  try {
-    // Validate request
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
+  /**
+   * Submit KYC information
+   * @param {Object} req - Express request object
+   * @param {Object} res - Express response object
+   */
+  static async submitKyc(req, res) {
+    try {
+      // Validate request
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({
+          success: false,
+          errors: errors.array(),
+        });
+      }
+
+      const userId = req.user._id;
+
+      // Handle the req.files structure properly
+      const documents = [];
+
+      if (req.files) {
+        // Iterate through each field (like utilityBill)
+        Object.keys(req.files).forEach((fieldName) => {
+          const files = req.files[fieldName];
+          if (Array.isArray(files)) {
+            // Add each file path to documents
+            files.forEach((file) => {
+              // documents.push(file.path);
+              const relativePath = `/uploads/kyc/${userId}/${file.filename}`;
+              documents.push(relativePath); // Use full relative path
+            });
+          }
+        });
+      }
+
+      const kycData = {
+        ...req.body,
+        documents,
+      };
+
+      // Submit the KYC data
+      const result = await userService.submitKyc(userId, kycData);
+
+      if (!result.success) {
+        return res.status(400).json(result);
+      }
+
+      return res.status(200).json(result);
+    } catch (error) {
+      console.error("Error submitting KYC:", error);
+      return res.status(500).json({
         success: false,
-        errors: errors.array(),
+        message: "An error occurred while submitting KYC information.",
       });
     }
-
-    const userId = req.user._id;
-
-    // Handle the req.files structure properly
-    const documents = [];
-    if (req.files) {
-      // Iterate through each field (like utilityBill)
-      Object.keys(req.files).forEach(fieldName => {
-        const files = req.files[fieldName];
-        if (Array.isArray(files)) {
-          // Add each file path to documents
-          files.forEach(file => {
-            documents.push(file.path);
-          });
-        }
-      });
-    }
-
-    const kycData = {
-      ...req.body,
-      documents
-    };
-
-    // Submit the KYC data
-    const result = await userService.submitKyc(userId, kycData);
-
-    if (!result.success) {
-      return res.status(400).json(result);
-    }
-
-    return res.status(200).json(result);
-  } catch (error) {
-    console.error("Error submitting KYC:", error);
-    return res.status(500).json({
-      success: false,
-      message: "An error occurred while submitting KYC information.",
-    });
   }
-}
 
   /**
    * Render withdrawal page for both wallet and referral withdrawals
@@ -1158,7 +1162,7 @@ static async submitKyc(req, res) {
       const result = await notificationService.markNotificationAsRead(
         userId,
         notificationId
-      );      
+      );
 
       if (!result.success) {
         return res.status(400).json(result);
@@ -1197,6 +1201,189 @@ static async submitKyc(req, res) {
       return res.status(500).json({
         success: false,
         message: "An error occurred while updating your notifications",
+      });
+    }
+  }
+
+  /**
+   * Get available investment plans via API
+   * @param {Object} req - Express request object
+   * @param {Object} res - Express response object
+   */
+  static async getInvestmentPlansApi(req, res) {
+    try {
+      // Get all active investment plans
+      const result = await planService.getAllPlans({ active: true });
+
+      if (!result.success) {
+        return res.status(400).json(result);
+      }
+
+      return res.status(200).json({
+        success: true,
+        plans: result.plans,
+      });
+    } catch (error) {
+      console.error("Error loading investment plans:", error);
+      return res.status(500).json({
+        success: false,
+        message: "An error occurred while loading investment plans.",
+      });
+    }
+  }
+
+  /**
+   * Process a reinvestment from wallet balance
+   * @param {Object} req - Express request object
+   * @param {Object} res - Express response object
+   */
+  static async reinvestWalletBalance(req, res) {
+    try {
+      const userId = req.user._id;
+      const { planId, amount } = req.body;
+
+      // Validate the request
+      if (!planId || !mongoose.Types.ObjectId.isValid(planId)) {
+        return res.status(400).json({
+          success: false,
+          message: "Valid plan ID is required",
+        });
+      }
+
+      if (!amount || isNaN(amount) || amount <= 0) {
+        return res.status(400).json({
+          success: false,
+          message: "Valid amount is required",
+        });
+      }
+
+      // Check if the user has enough balance
+      const walletData = await walletService.getUserWallet(userId);      
+
+      if (!walletData.success) {
+        return res.status(400).json({
+          success: false,
+          message: "Failed to retrieve wallet data",
+        });
+      }
+
+      if (walletData.walletBalance < amount) {
+        return res.status(400).json({
+          success: false,
+          message: "Insufficient wallet balance for this reinvestment",
+        });
+      }
+
+      // Get the plan details
+      const planResult = await planService.getPlanById(planId);
+
+      if (!planResult.success) {
+        return res.status(400).json({
+          success: false,
+          message: "Investment plan not found",
+        });
+      }
+
+      const plan = planResult.plan;
+
+      // Validate the amount against plan limits
+      if (
+        amount < plan.minAmount ||
+        (plan.maxAmount && amount > plan.maxAmount)
+      ) {
+        return res.status(400).json({
+          success: false,
+          message: `Investment amount must be between $${plan.minAmount} and $${
+            plan.maxAmount || "unlimited"
+          }`,
+        });
+      }
+      // Total roi percentage
+      const expectedEarnings =
+        ((amount * plan.roiPercentage) / 100) * plan.term;
+      // Create an investment directly with 'active' status (similar to confirmInvestment)
+      const investment = new Investment({
+        userId,
+        planId,
+        amount,
+        status: "active", // Set as active immediately since we're confirming it directly
+        startDate: new Date(),
+        earningRate: plan.roiPercentage / 100,
+        expectedEarning: expectedEarnings,
+        duration: plan.term,
+        durationUnit: plan.termPeriod,
+        type: "reinvestment", // Mark as a reinvestment
+      });
+
+      // Calculate end date based on the plan's term and period
+      let endDate = new Date(investment.startDate);
+      switch (plan.termPeriod) {
+        case "hours":
+          endDate.setHours(endDate.getHours() + plan.term);
+          break;
+        case "days":
+          endDate.setDate(endDate.getDate() + plan.term);
+          break;
+        case "weeks":
+          endDate.setDate(endDate.getDate() + plan.term * 7);
+          break;
+        case "months":
+          endDate.setMonth(endDate.getMonth() + plan.term);
+          break;
+        case "years":
+          endDate.setFullYear(endDate.getFullYear() + plan.term);
+          break;
+        default:
+          endDate.setDate(endDate.getDate() + plan.term);
+      }
+      investment.endDate = endDate;
+
+      // Save the investment
+      await investment.save();
+
+      // Deduct the amount from the user's wallet
+      await Wallet.findOneAndUpdate(
+        { user: userId },
+        { $inc: { walletBalance: -amount } }
+      );
+
+      // Create a transaction record
+      const transaction = new Transaction({
+        userId,
+        planId,
+        type: "reinvestment",
+        amount,
+        currency: "USD",
+        status: "completed",
+        description: `Reinvestment in ${plan.name} plan`,
+      });
+
+      await transaction.save();
+
+      // Create a notification for the user
+      await notificationService.createNotification({
+        userId,
+        title: "Reinvestment Successful",
+        message: `You have successfully reinvested $${amount} into the ${plan.name} plan.`,
+        type: "investment",
+      });
+
+      return res.status(200).json({
+        success: true,
+        message: "Reinvestment processed successfully",
+        investment: {
+          id: investment._id,
+          amount,
+          planName: plan.name,
+          startDate: investment.startDate,
+          endDate: investment.endDate,
+        },
+      });
+    } catch (error) {
+      console.error("Error processing reinvestment:", error);
+      return res.status(500).json({
+        success: false,
+        message: "An error occurred while processing your reinvestment",
       });
     }
   }

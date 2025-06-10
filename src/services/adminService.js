@@ -673,6 +673,256 @@ async function getSimplifiedUsersList() {
   }
 }
 
+/**
+ * Update a user's personal information
+ * @param {string} userId - The ID of the user
+ * @param {Object} userData - User data to update
+ * @returns {Promise<{success: boolean, user?: Object, message: string}>}
+ */
+async function updateUserPersonalInfo(userId, userData) {
+  try {
+    if (!userId) {
+      return {
+        success: false,
+        message: "User ID is required",
+      };
+    }
+
+    // Only allow specific fields to be updated
+    const allowedFields = [
+      "fullName",
+      "country",
+      "email",
+      "isEmailVerified",
+    ];
+    const updateData = {};
+
+    allowedFields.forEach((field) => {
+      if (userData[field] !== undefined) {
+        updateData[field] = userData[field];
+      }
+    });
+
+    // Handle password update separately
+    if (userData.password) {
+      const bcrypt = require("bcryptjs");
+      if(!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(userData.password)) {
+        return {
+          success: false,
+          message: "Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character.",
+        };
+      }
+      updateData.password = await bcrypt.hash(userData.password, 10);
+    }
+
+    if (Object.keys(updateData).length === 0) {
+      return {
+        success: false,
+        message: "No valid fields to update",
+      };
+    }
+
+    // Update the user's personal information
+    const user = await User.findByIdAndUpdate(userId, updateData, {
+      new: true,
+    }).select("-password");
+
+    if (!user) {
+      return {
+        success: false,
+        message: "User not found",
+      };
+    }
+
+    return {
+      success: true,
+      user,
+      message: "User information updated successfully",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: `Failed to update user information: ${error.message}`,
+    };
+  }
+}
+
+/**
+ * Update a user's wallet information
+ * @param {string} userId - The ID of the user
+ * @param {Object} walletData - Wallet data to update
+ * @returns {Promise<{success: boolean, wallet?: Object, message: string}>}
+ */
+async function updateUserWallet(userId, walletData) {
+  try {
+    if (!userId) {
+      return {
+        success: false,
+        message: "User ID is required",
+      };
+    }
+
+    // Find the user's wallet
+    let wallet = await Wallet.findOne({ user: userId });
+
+    if (!wallet) {
+      return {
+        success: false,
+        message: "Wallet not found for this user",
+      };
+    }
+
+    // Only allow specific fields to be updated
+    const allowedFields = ["walletBalance", "referralBalance"];
+    const updateData = {};
+
+    allowedFields.forEach((field) => {
+      if (walletData[field] !== undefined) {
+        // Convert to number and validate
+        const value = Number(walletData[field]);
+        if (!isNaN(value) && value >= 0) {
+          updateData[field] = value;
+        }
+      }
+    });
+
+    if (Object.keys(updateData).length === 0) {
+      return {
+        success: false,
+        message: "No valid fields to update",
+      };
+    }
+
+    // Update the wallet
+    wallet = await Wallet.findOneAndUpdate({ user: userId }, updateData, {
+      new: true,
+    });
+
+    return {
+      success: true,
+      wallet,
+      message: "Wallet information updated successfully",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: `Failed to update wallet information: ${error.message}`,
+    };
+  }
+}
+
+/**
+ * Add or update withdrawal address for a user
+ * @param {string} userId - The ID of the user
+ * @param {Object} addressData - Withdrawal address data
+ * @returns {Promise<{success: boolean, wallet?: Object, message: string}>}
+ */
+async function updateWithdrawalAddress(userId, addressData) {
+  try {
+    if (!userId) {
+      return {
+        success: false,
+        message: "User ID is required",
+      };
+    }
+
+    if (
+      !addressData ||
+      !addressData.currency ||
+      !addressData.address ||
+      !addressData.network
+    ) {
+      return {
+        success: false,
+        message: "Address currency, network, and address are required",
+      };
+    }
+
+    // Find the user's wallet
+    let wallet = await Wallet.findOne({ user: userId });
+
+    if (!wallet) {
+      return {
+        success: false,
+        message: "Wallet not found for this user",
+      };
+    }
+
+    // Check if an address for this currency/network already exists
+    const addressIndex = wallet.withdrawalAddresses.findIndex(
+      (addr) =>
+        addr.currency === addressData.currency &&
+        addr.network === addressData.network
+    );
+
+    if (addressIndex >= 0) {
+      // Update existing address
+      wallet.withdrawalAddresses[addressIndex] = {
+        ...wallet.withdrawalAddresses[addressIndex],
+        ...addressData,
+      };
+    } else {
+      // Add new address
+      wallet.withdrawalAddresses.push(addressData);
+    }
+
+    await wallet.save();
+
+    return {
+      success: true,
+      wallet,
+      message: "Withdrawal address updated successfully",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: `Failed to update withdrawal address: ${error.message}`,
+    };
+  }
+}
+
+/**
+ * Delete a withdrawal address from a user's wallet
+ * @param {string} userId - The ID of the user
+ * @param {string} addressId - The ID of the address to delete
+ * @returns {Promise<{success: boolean, wallet?: Object, message: string}>}
+ */
+async function deleteWithdrawalAddress(userId, addressId) {
+  try {
+    if (!userId || !addressId) {
+      return {
+        success: false,
+        message: "User ID and address ID are required",
+      };
+    }
+
+    // Find the user's wallet and pull the address from the array
+    const wallet = await Wallet.findOneAndUpdate(
+      { user: userId },
+      { $pull: { withdrawalAddresses: { _id: addressId } } },
+      { new: true }
+    );
+
+    if (!wallet) {
+      return {
+        success: false,
+        message: "Wallet not found for this user",
+      };
+    }
+
+    return {
+      success: true,
+      wallet,
+      message: "Withdrawal address deleted successfully",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: `Failed to delete withdrawal address: ${error.message}`,
+    };
+  }
+}
+
 module.exports = {
   getUserDetailsWithWallet,
   getUsers,
@@ -686,4 +936,8 @@ module.exports = {
   sendBulkEmail,
   sendPlanInvitation,
   getSimplifiedUsersList,
+  updateUserPersonalInfo,
+  updateUserWallet,
+  updateWithdrawalAddress,
+  deleteWithdrawalAddress,
 };

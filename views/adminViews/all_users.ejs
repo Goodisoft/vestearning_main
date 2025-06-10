@@ -3,7 +3,6 @@
   <head>
     <!-- ========Headers meta======== -->
     <%- include('../snippets/adminSnippets/header_meta.ejs') %>
-
   </head>
   <body class="nk-body bg-lighter npc-general has-sidebar">
     <div class="nk-app-root">
@@ -91,7 +90,7 @@
                                           ><span>Unblock Selected</span>
                                         </a>
                                       </li>
-                                     
+
                                       <li>
                                         <a
                                           href="#"
@@ -139,9 +138,7 @@
                               <thead>
                                 <tr>
                                   <th>
-                                    <div
-                                      class="custom-control custom-control-sm custom-checkbox notext"
-                                    >
+                                    <div class="custom-control custom-control-sm custom-checkbox notext">
                                       <input
                                         type="checkbox"
                                         class="custom-control-input"
@@ -153,12 +150,12 @@
                                       ></label>
                                     </div>
                                   </th>
-                                  <th>Full Name</th>
-                                  <th>Email</th>
-                                  <th>Country</th>
-                                  <th>Registered Date</th>
-                                  <th>Status</th>
-                                  <th>Action</th>
+                                  <th data-label="Full Name" class="nk-tb-col">Full Name</th>
+                                  <th data-label="Email" class="nk-tb-col tb-col-md">Email</th>
+                                  <th data-label="Country" class="nk-tb-col tb-col-md">Country</th>
+                                  <th data-label="Registered Date" class="nk-tb-col tb-col-md">Registered Date</th>
+                                  <th data-label="Status" class="nk-tb-col">Status</th>
+                                  <th data-label="Action" class="nk-tb-col">Action</th>
                                 </tr>
                               </thead>
                               <tbody>

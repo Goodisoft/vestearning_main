@@ -40,7 +40,7 @@ exports.protect = async (req, res, next) => {
     }
 
     // Check if user still exists
-    const currentUser = await User.findById(decoded.userId);
+    const currentUser = await User.findById(decoded.userId);    
     if (!currentUser) {
       return res.redirect('/auth/login');
     }

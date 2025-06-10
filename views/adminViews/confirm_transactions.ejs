@@ -206,21 +206,23 @@
                         </div>
                         <div class="card-inner p-0">
                           <div
-                            class="nk-tb-list nk-tb-tnx"
+                            class="nk-tb-list nk-tb-tnxs"
                             id="investmentsList"
                           >
                             <div class="nk-tb-item nk-tb-head">
-                              <div class="nk-tb-col"><span>Details</span></div>
-                              <div class="nk-tb-col tb-col-xxl">
+                              <div class="nk-tb-col tb-col-md"><span>Details</span></div>
+                              <div class="nk-tb-col">
                                 <span>User</span>
                               </div>
-                              <div class="nk-tb-col tb-col-lg">
+                              <div class="nk-tb-col tb-col-md">
                                 <span>Plan</span>
                               </div>
                               <div class="nk-tb-col text-end">
                                 <span>Amount</span>
                               </div>
-                              <div class="nk-tb-col nk-tb-col-tools"></div>
+                              <div class="nk-tb-col text-end">
+                                <span>Actions</span>
+                              </div>
                             </div>
 
                             <% if (investments && investments.length > 0) { %>
@@ -229,7 +231,7 @@
                               class="nk-tb-item"
                               data-investment-id="<%= investment._id %>"
                             >
-                              <div class="nk-tb-col">
+                              <div class="nk-tb-col tb-col-md">
                                 <div class="nk-tnx-type">
                                   <div
                                     class="nk-tnx-type-icon bg-success-dim text-success"
@@ -250,7 +252,7 @@
                                   </div>
                                 </div>
                               </div>
-                              <div class="nk-tb-col tb-col-xxl">
+                              <div class="nk-tb-col">
                                 <span class="tb-lead-sub"
                                   ><%= investment.userId?.fullName || 'User'
                                   %></span
@@ -260,7 +262,7 @@
                                   %></span
                                 >
                               </div>
-                              <div class="nk-tb-col tb-col-lg">
+                              <div class="nk-tb-col tb-col-md">
                                 <span class="tb-lead-sub">
                                   <%= investment.planId?.name || 'Investment Plan' %>
                                 </span>
@@ -279,7 +281,7 @@
                                   investment.duration > 1 ? 's' : '' %>
                                 </span>
                               </div>
-                              <div class="nk-tb-col nk-tb-col-tools">
+                              <div class="nk-tb-col">
                                 <ul class="nk-tb-actions gx-2">
                                   <li class="nk-tb-action-hidden">
                                     <a

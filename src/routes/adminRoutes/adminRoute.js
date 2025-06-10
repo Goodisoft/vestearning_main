@@ -49,11 +49,11 @@ router.get(
 );
 
 router.get(
-    "/api/overview/wallet-balances",
-    AdminOverviewController.getWalletBalances
-  );
+  "/api/overview/wallet-balances",
+  AdminOverviewController.getWalletBalances
+);
 
-// API routes for user management
+// ========API routes for user management=========
 router.get("/users/api", AdminController.getUsersApi);
 // Users API route for dropdowns
 router.get("/users/api/list", AdminController.getUsersListForDropdown);
@@ -67,6 +67,22 @@ router.patch(
   "/users/api/:id/block-status",
   AdminController.toggleBlockStatusApi
 );
+
+// User information and wallet update endpoints
+router.patch(
+  "/users/api/:id/personal-info",
+  AdminController.updateUserPersonalInfoApi
+);
+router.patch("/users/api/:id/wallet", AdminController.updateUserWalletApi);
+router.post(
+  "/users/api/:id/withdrawal-address",
+  AdminController.updateWithdrawalAddressApi
+);
+router.delete(
+  "/users/api/:id/withdrawal-address",
+  AdminController.deleteWithdrawalAddressApi
+);
+
 // This dynamic route should come after the more specific routes
 router.get(
   "/users/:id",

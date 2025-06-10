@@ -3,8 +3,6 @@
   <head>
     <!-- ========Headers meta======== -->
     <%- include('../snippets/adminSnippets/header_meta.ejs') %>
-
-    <title>EXNESTRADE | User Profile</title>
   </head>
   <body class="nk-body bg-lighter npc-general has-sidebar">
     <div class="nk-app-root">
@@ -308,9 +306,6 @@
 
                                   <div class="kyc-status mb-4">
                                     <div class="d-flex align-items-center mb-3">
-                                      <span class="flex-grow-1 mr-2"
-                                        >KYC Status:</span
-                                      >
                                       <div>
                                         <% if (user.kycStatus === 'approved') {
                                         %>
@@ -348,7 +343,9 @@
                                       <p>
                                         Your KYC verification is pending review.
                                         This process typically takes 1-3
-                                        business days.
+                                        business days. If you need to make
+                                        changes, you can resubmit your documents
+                                        below.
                                       </p>
                                     </div>
                                     <% } else if (user.kycStatus === 'approved')
@@ -363,8 +360,7 @@
                                     <% } %>
                                   </div>
 
-                                  <% if (user.kycStatus !== 'approved' &&
-                                  user.kycStatus !== 'pending') { %>
+                                  <% if (user.kycStatus !== 'approved') { %>
                                   <div
                                     id="kyc-requirements-loading"
                                     class="text-center"
@@ -567,7 +563,11 @@
                                         type="submit"
                                         class="btn btn-primary"
                                       >
-                                        Submit KYC
+                                        <% if (user.kycStatus === 'pending') {
+                                        %> Resubmit KYC <% } else if
+                                        (user.kycStatus === 'rejected') { %>
+                                        Resubmit KYC <% } else { %> Submit KYC
+                                        <% } %>
                                       </button>
                                     </div>
                                   </form>
@@ -632,9 +632,8 @@
     </div>
 
     <!-- ===================Scripts========== -->
-    <%- include('../snippets/adminSnippets/scripts.ejs') %>
-
-    <%- include('../snippets/live_chat.ejs') %>
+    <%- include('../snippets/adminSnippets/scripts.ejs') %> <%-
+    include('../snippets/live_chat.ejs') %>
 
     <script src="/apiClient/apiClient.js"></script>
     <script src="/apiClient/profileClient.js"></script>
@@ -709,10 +708,7 @@
 
         // Load KYC settings and requirements
         $('a[href="#kyc"]').on("shown.bs.tab", function (e) {
-          if (
-            "<%= user.kycStatus %>" !== "approved" &&
-            "<%= user.kycStatus %>" !== "pending"
-          ) {
+          if ("<%= user.kycStatus %>" !== "approved") {
             loadKycSettings();
           }
         });
@@ -723,6 +719,7 @@
             .then((response) => {
               if (response.success) {
                 kycSettings = response;
+                console.log("KYC Settings:", kycSettings);
 
                 // Display KYC description and instructions
                 $("#kyc-description").text(

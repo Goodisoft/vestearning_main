@@ -112,7 +112,7 @@
                                         </div>
                                     </div>
                                     <div class="data">
-                                        <div class="amount">
+                                        <div class="amount fs-5 fw-bold text-white">
                                             <%= typeof usersByKycStatus !== 'undefined' ? (usersByKycStatus.pending || 0) + (usersByKycStatus.approved || 0) + (usersByKycStatus.rejected || 0) : 0 %>
                                         </div>
                                         <div class="info">
@@ -136,7 +136,7 @@
                                         </div>
                                     </div>
                                     <div class="data">
-                                        <div class="amount text-warning">
+                                        <div class="amount text-white fs-5 fw-bold">
                                             <%= typeof usersByKycStatus !== 'undefined' ? usersByKycStatus.pending || 0 : 0 %>
                                         </div>
                                         <div class="info">
@@ -160,7 +160,7 @@
                                         </div>
                                     </div>
                                     <div class="data">
-                                        <div class="amount text-success">
+                                        <div class="amount text-white fs-5 fw-bold">
                                             <%= typeof usersByKycStatus !== 'undefined' ? usersByKycStatus.approved || 0 : 0 %>
                                         </div>
                                         <div class="info">
@@ -184,7 +184,7 @@
                                         </div>
                                     </div>
                                     <div class="data">
-                                        <div class="amount text-danger">
+                                        <div class="amount text-white fs-5 fw-bold">
                                             <%= typeof usersByKycStatus !== 'undefined' ? usersByKycStatus.rejected || 0 : 0 %>
                                         </div>
                                         <div class="info">
@@ -270,103 +270,105 @@
                       <!-- Users with KYC Status View -->
                       <div class="card card-bordered card-preview">
                         <div class="card-inner">
-                          <table class="datatable-init nowrap table">
-                            <thead>
-                              <tr>
-                                <th>User</th>
-                                <th>Status</th>
-                                <th>Country</th>
-                                <th>Date Registered</th>
-                                <th>Documents</th>
-                                <th>Actions</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <% if (typeof data !== 'undefined' && data.docs && data.docs.length > 0) { %>
-                                <% data.docs.forEach(function(user) { %>
-                                  <tr>
-                                    <td>
-                                      <div class="user-card">
-                                        <div class="user-avatar <%= user.isBlocked ? 'bg-danger' : 'bg-primary' %> sm">
-                                          <% if (user.fullName) { %>
-                                            <span><%= user.fullName.charAt(0) %></span>
-                                          <% } else { %>
-                                            <span>U</span>
-                                          <% } %>
+                          <div class="nk-tb-list nk-tb-ulist">
+                            <table class="datatable-init nowrap table">
+                              <thead>
+                                <tr>
+                                  <th class="nk-tb-col">User</th>
+                                  <th class="nk-tb-col">Status</th>
+                                  <th class="nk-tb-col tb-col-md">Country</th>
+                                  <th class="nk-tb-col tb-col-md">Date Registered</th>
+                                  <th class="nk-tb-col tb-col-md">Documents</th>
+                                  <th class="nk-tb-col">Actions</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <% if (typeof data !== 'undefined' && data.docs && data.docs.length > 0) { %>
+                                  <% data.docs.forEach(function(user) { %>
+                                    <tr>
+                                      <td class="nk-tb-col">
+                                        <div class="user-card">
+                                          <div class="user-avatar <%= user.isBlocked ? 'bg-danger' : 'bg-primary' %> sm">
+                                            <% if (user.fullName) { %>
+                                              <span><%= user.fullName.charAt(0) %></span>
+                                            <% } else { %>
+                                              <span>U</span>
+                                            <% } %>
+                                          </div>
+                                          <div class="user-info">
+                                            <span class="tb-lead"><%= user.fullName %></span>
+                                            <span><%= user.email %></span>
+                                          </div>
                                         </div>
-                                        <div class="user-info">
-                                          <span class="tb-lead"><%= user.fullName %></span>
-                                          <span><%= user.email %></span>
-                                        </div>
-                                      </div>
-                                    </td>
-                                    <td>
-                                      <span class="tb-status text-<%= 
-                                        user.kycStatus === 'approved' ? 'success' : 
-                                        (user.kycStatus === 'rejected' ? 'danger' : 
-                                        (user.kycStatus === 'pending' ? 'warning' : 'gray')) 
-                                      %>">
-                                        <%= user.kycStatus === 'not_required' ? 'Not Required' : 
-                                           (user.kycStatus.charAt(0).toUpperCase() + user.kycStatus.slice(1)) %>
-                                      </span>
-                                    </td>
-                                    <td><%= user.country || 'Not specified' %></td>
-                                    <td><%= user.formattedDate || new Date(user.createdAt).toLocaleDateString() %></td>
-                                    <td>
-                                      <% if (user.hasKycSubmission) { %>
-                                        <span class="badge bg-success">Submitted</span>
-                                      <% } else { %>
-                                        <span class="badge bg-light text-dark">Not Submitted</span>
-                                      <% } %>
-                                    </td>
-                                    <td>
-                                      <div class="dropdown">
-                                        <a class="dropdown-toggle btn btn-icon btn-trigger" data-bs-toggle="dropdown">
-                                          <em class="icon ni ni-more-h"></em>
-                                        </a>
-                                        <div class="dropdown-menu dropdown-menu-end">
-                                          <ul class="link-list-opt no-bdr">
-                                            <% if (user.hasKycSubmission) { %>
+                                      </td>
+                                      <td class="nk-tb-col">
+                                        <span class="tb-status text-<%= 
+                                          user.kycStatus === 'approved' ? 'success' : 
+                                          (user.kycStatus === 'rejected' ? 'danger' : 
+                                          (user.kycStatus === 'pending' ? 'warning' : 'gray')) 
+                                        %>">
+                                          <%= user.kycStatus === 'not_required' ? 'Not Required' : 
+                                            (user.kycStatus.charAt(0).toUpperCase() + user.kycStatus.slice(1)) %>
+                                        </span>
+                                      </td>
+                                      <td class="nk-tb-col tb-col-md"><%= user.country || 'Not specified' %></td>
+                                      <td class="nk-tb-col tb-col-md"><%= user.formattedDate || new Date(user.createdAt).toLocaleDateString() %></td>
+                                      <td class="nk-tb-col tb-col-md">
+                                        <% if (user.hasKycSubmission) { %>
+                                          <span class="badge bg-success">Submitted</span>
+                                        <% } else { %>
+                                          <span class="badge bg-light text-dark">Not Submitted</span>
+                                        <% } %>
+                                      </td>
+                                      <td class="nk-tb-col">
+                                        <div class="dropdown">
+                                          <a class="dropdown-toggle btn btn-icon btn-trigger" data-bs-toggle="dropdown">
+                                            <em class="icon ni ni-more-h"></em>
+                                          </a>
+                                          <div class="dropdown-menu dropdown-menu-end">
+                                            <ul class="link-list-opt no-bdr">
+                                              <% if (user.hasKycSubmission) { %>
+                                                <li>
+                                                  <a href="#" class="view-kyc-btn" data-kyc-id="<%= user.kyc._id %>">
+                                                    <em class="icon ni ni-eye"></em>
+                                                    <span>View KYC Documents</span>
+                                                  </a>
+                                                </li>
+                                                <% if (user.kycStatus === 'pending') { %>
+                                                  <li>
+                                                    <a href="#" class="approve-kyc-btn" data-kyc-id="<%= user.kyc._id %>">
+                                                      <em class="icon ni ni-check"></em>
+                                                      <span>Approve</span>
+                                                    </a>
+                                                  </li>
+                                                  <li>
+                                                    <a href="#" class="reject-kyc-btn" data-kyc-id="<%= user.kyc._id %>">
+                                                      <em class="icon ni ni-cross"></em>
+                                                      <span>Reject</span>
+                                                    </a>
+                                                  </li>
+                                                <% } %>
+                                              <% } %>
                                               <li>
-                                                <a href="#" class="view-kyc-btn" data-kyc-id="<%= user.kyc._id %>">
-                                                  <em class="icon ni ni-eye"></em>
-                                                  <span>View KYC Documents</span>
+                                                <a href="/admin/users/<%= user._id %>">
+                                                  <em class="icon ni ni-user"></em>
+                                                  <span>View User Profile</span>
                                                 </a>
                                               </li>
-                                              <% if (user.kycStatus === 'pending') { %>
-                                                <li>
-                                                  <a href="#" class="approve-kyc-btn" data-kyc-id="<%= user.kyc._id %>">
-                                                    <em class="icon ni ni-check"></em>
-                                                    <span>Approve</span>
-                                                  </a>
-                                                </li>
-                                                <li>
-                                                  <a href="#" class="reject-kyc-btn" data-kyc-id="<%= user.kyc._id %>">
-                                                    <em class="icon ni ni-cross"></em>
-                                                    <span>Reject</span>
-                                                  </a>
-                                                </li>
-                                              <% } %>
-                                            <% } %>
-                                            <li>
-                                              <a href="/admin/users/<%= user._id %>">
-                                                <em class="icon ni ni-user"></em>
-                                                <span>View User Profile</span>
-                                              </a>
-                                            </li>
-                                          </ul>
+                                            </ul>
+                                          </div>
                                         </div>
-                                      </div>
-                                    </td>
+                                      </td>
+                                    </tr>
+                                  <% }); %>
+                                <% } else { %>
+                                  <tr>
+                                    <td colspan="6" class="text-center">No users found matching the criteria.</td>
                                   </tr>
-                                <% }); %>
-                              <% } else { %>
-                                <tr>
-                                  <td colspan="6" class="text-center">No users found matching the criteria.</td>
-                                </tr>
-                              <% } %>
-                            </tbody>
-                          </table>
+                                <% } %>
+                              </tbody>
+                            </table>
+                          </div>
                         </div>
                       </div>
                     <% } else { %>
@@ -376,19 +378,19 @@
                           <table class="datatable-init nowrap table">
                             <thead>
                               <tr>
-                                <th>User</th>
-                                <th>KYC Status</th>
-                                <th>Documents</th>
-                                <th>Country</th>
-                                <th>Submitted At</th>
-                                <th>Actions</th>
+                                <th class="nk-tb-col">User</th>
+                                <th class="nk-tb-col">KYC Status</th>
+                                <th class="nk-tb-col tb-col-md">Documents</th>
+                                <th class="nk-tb-col tb-col-md">Country</th>
+                                <th class="nk-tb-col tb-col-md">Submitted At</th>
+                                <th class="nk-tb-col ">Actions</th>
                               </tr>
                             </thead>
                             <tbody>
                               <% if (typeof data !== 'undefined' && data.docs && data.docs.length > 0) { %>
                                 <% data.docs.forEach(function(kyc) { %>
-                                  <tr>
-                                    <td>
+                                  <tr >
+                                    <td class="nk-tb-col">
                                       <div class="user-card">
                                         <div class="user-avatar <%= kyc.user && kyc.user.isBlocked ? 'bg-danger' : 'bg-primary' %> sm">
                                           <% if (kyc.user && kyc.user.fullName) { %>
@@ -403,18 +405,18 @@
                                         </div>
                                       </div>
                                     </td>
-                                    <td>
+                                    <td class="nk-tb-col">
                                       <span class="tb-status text-<%= kyc.status === 'approved' ? 'success' : (kyc.status === 'rejected' ? 'danger' : 'warning') %>">
                                         <%= kyc.status.charAt(0).toUpperCase() + kyc.status.slice(1) %>
                                       </span>
                                     </td>
-                                    <td>
+                                    <td class="nk-tb-col tb-col-md">
                                       <% let docCount = kyc.documents ? kyc.documents.length : 0; %>
                                       <span class="badge bg-primary"><%= docCount %> Document<%= docCount !== 1 ? 's' : '' %></span>
                                     </td>
-                                    <td><%= kyc.user && kyc.user.country ? kyc.user.country : 'Not specified' %></td>
-                                    <td><%= kyc.formattedDate || (kyc.requestedAt ? new Date(kyc.requestedAt).toLocaleDateString() : 'Unknown') %></td>
-                                    <td>
+                                    <td class="nk-tb-col tb-col-md"><%= kyc.user && kyc.user.country ? kyc.user.country : 'Not specified' %></td>
+                                    <td class="nk-tb-col tb-col-md"><%= kyc.formattedDate || (kyc.requestedAt ? new Date(kyc.requestedAt).toLocaleDateString() : 'Unknown') %></td>
+                                    <td class="nk-tb-col">
                                       <div class="dropdown">
                                         <a class="dropdown-toggle btn btn-icon btn-trigger" data-bs-toggle="dropdown">
                                           <em class="icon ni ni-more-h"></em>

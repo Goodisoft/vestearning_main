@@ -3,8 +3,6 @@
   <head>
     <!-- ========Headers meta======== -->
     <%- include('../snippets/adminSnippets/header_meta.ejs') %>
-
-    <title>EXNESTRADE | User Dashboard</title>
   </head>
   <body class="nk-body bg-lighter npc-general has-sidebar">
     <div class="nk-app-root">
@@ -81,7 +79,8 @@
                       Attention:
                       <span class="text-muted fw-normal">
                         Your KYC verification is <%= user.kycStatus ||
-                        'pending'%>. <%= user.kycStatus === 'rejected' ? 'Please submit valid documents.' : 'Please complete your verification to unlock all features.' %>
+                        'pending'%>. <%= user.kycStatus === 'rejected' 
+                        ? 'Please submit valid documents.' : 'Please complete your verification to unlock all features.' %>
                       </span>
                       <span class="float-end ms-4">
                         <a
@@ -112,8 +111,12 @@
                     <!-- Display notifications from backend -->
                     <% if (notifications && notifications.length > 0) { %> <%
                     notifications.forEach(function(notification) { %>
-                    <div class="alert alert-info alert-dismissible fade show mb-2 p-2">
-                      <strong><%= notification.title || 'Notification' %></strong>
+                    <div
+                      class="alert alert-info alert-dismissible fade show mb-2 p-2"
+                    >
+                      <strong
+                        ><%= notification.title || 'Notification' %></strong
+                      >
                       <p class="mb-0"><%= notification.message %></p>
                       <button
                         type="button"
@@ -386,10 +389,16 @@
                               </a>
                               <a
                                 href="/user/withdrawal"
-                                class="btn btn-outline-primary"
+                                class="btn btn-outline-primary me-2"
                               >
                                 Withdraw
                               </a>
+                              <button
+                                id="reinvest-btn"
+                                class="btn btn-outline-success"
+                              >
+                                Reinvest
+                              </button>
                             </div>
                             <hr />
 
@@ -565,7 +574,6 @@
 
           <!-- ========Footer========== -->
           <%- include('../snippets/adminSnippets/footer.ejs') %>
-
         </div>
       </div>
     </div>
@@ -575,8 +583,6 @@
 
     <!-- Live chat -->
     <%- include('../snippets/live_chat.ejs') %>
-
-
 
     <!-- Add our investment tracker script -->
     <script src="/apiClient/apiClient.js"></script>
@@ -597,8 +603,197 @@
           initInvestmentTracker(investmentsData);
         <% } %>
 
-       
+
       });
+
+      // Reinvestment functionality
+      document.getElementById('reinvest-btn').addEventListener('click', function() {
+        // Get the available balance from the UI
+        const availableBalance = parseFloat('<%= walletData && walletData.walletBalance ? walletData.walletBalance : 0 %>');
+
+        if (availableBalance <= 0) {
+          showToast("You need funds in your wallet to reinvest.", "error");
+          return;
+        }
+
+        // Fetch available plans
+        fetch('/user/api/investment-plans')
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              // Filter plans that match the available balance
+              const eligiblePlans = data.plans.filter(plan =>
+                plan.minAmount <= availableBalance &&
+                (!plan.maxAmount || plan.maxAmount >= availableBalance)
+              );
+
+              if (eligiblePlans.length === 0) {
+                showToast("No eligible investment plans found for your balance.", "error");
+                return;
+              }
+
+              // Build modal content with available plans
+              let planOptions = '';
+              eligiblePlans.forEach(plan => {
+                planOptions += `
+                  <div class="form-check mb-3">
+                    <input class="form-check-input" type="radio" name="planId" id="plan-${plan._id}" value="${plan._id}"
+                           data-min="${plan.minAmount}" data-max="${plan.maxAmount || Infinity}" data-name="${plan.name}">
+                    <label class="form-check-label" for="plan-${plan._id}">
+                      ${plan.name} - ROI: ${plan.roiPercentage}% over ${plan.term} ${plan.termPeriod}
+                      (Min: $${plan.minAmount}${plan.maxAmount ? `, Max: $${plan.maxAmount}` : ''})
+                    </label>
+                  </div>
+                `;
+              });
+
+              // Create modal HTML
+              const modalContent = `
+                <div class="modal fade" id="reinvestModal" tabindex="-1" role="dialog" aria-labelledby="reinvestModalLabel" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="reinvestModalLabel">Reinvest Wallet Balance</h5>
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <p>Available Balance: <strong>$${availableBalance.toFixed(2)}</strong></p>
+
+                        <form id="reinvest-form">
+                          <div class="form-group">
+                            <label for="reinvest-amount">Amount to Reinvest</label>
+                            <div class="input-group">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text">$</span>
+                              </div>
+                              <input type="number" class="form-control" id="reinvest-amount"
+                                     value="${availableBalance.toFixed(2)}" max="${availableBalance.toFixed(2)}" min="0" step="0.01" required>
+                            </div>
+                            <small class="form-text text-muted">Maximum amount is your available balance.</small>
+                          </div>
+
+                          <div class="form-group mt-3">
+                            <label>Select Investment Plan</label>
+                            ${planOptions}
+                          </div>
+                        </form>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-success" id="confirm-reinvest-btn">Confirm Reinvestment</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              `;
+
+              // Add modal to DOM
+              const modalContainer = document.createElement('div');
+              modalContainer.innerHTML = modalContent;
+              document.body.appendChild(modalContainer);
+
+              // Show modal
+              const reinvestModal = new bootstrap.Modal(document.getElementById('reinvestModal'));
+              reinvestModal.show();
+
+              // Set up amount change handler to validate against plan limits
+              const amountInput = document.getElementById('reinvest-amount');
+              const planRadios = document.querySelectorAll('input[name="planId"]');
+
+              amountInput.addEventListener('input', function() {
+                const amount = parseFloat(this.value);
+                let validPlan = false;
+
+                planRadios.forEach(radio => {
+                  const min = parseFloat(radio.dataset.min);
+                  const max = parseFloat(radio.dataset.max);
+
+                  if (amount >= min && amount <= max && amount <= availableBalance) {
+                    radio.disabled = false;
+                    if (!validPlan) {
+                      radio.checked = true;
+                      validPlan = true;
+                    }
+                  } else {
+                    radio.disabled = true;
+                    if (radio.checked) radio.checked = false;
+                  }
+                });
+              });
+
+              // Set up form submission
+              document.getElementById('confirm-reinvest-btn').addEventListener('click', function() {
+                const form = document.getElementById('reinvest-form');
+                const amount = parseFloat(document.getElementById('reinvest-amount').value);
+                const selectedPlan = document.querySelector('input[name="planId"]:checked');
+
+                if (!selectedPlan) {
+                  showToast("Please select an investment plan", "error");
+                  return;
+                }
+
+                if (amount <= 0 || amount > availableBalance) {
+                  showToast("Please enter a valid amount", "error");
+                  return;
+                }
+
+                // Show loading state
+                const confirmBtn = this;
+                const originalText = confirmBtn.textContent;
+                confirmBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...';
+                confirmBtn.disabled = true;
+
+                // Submit reinvestment request
+                fetch('/user/api/reinvest', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({
+                    planId: selectedPlan.value,
+                    amount: amount
+                  })
+                })
+                .then(response => response.json())
+                .then(data => {
+                  if (data.success) {
+                    showToast("Reinvestment successful!", "success");
+                    setTimeout(() => {
+                      window.location.reload();
+                    }, 1500);
+                  } else {
+                    showToast(data.message || "Reinvestment failed", "error");
+                    confirmBtn.textContent = originalText;
+                    confirmBtn.disabled = false;
+                  }
+                })
+                .catch(error => {
+                  console.error("Error:", error);
+                  showToast("An error occurred during reinvestment", "error");
+                  confirmBtn.textContent = originalText;
+                  confirmBtn.disabled = false;
+                });
+              });
+            } else {
+              showToast("Failed to load investment plans", "error");
+            }
+          })
+          .catch(error => {
+            console.error("Error:", error);
+            showToast("An error occurred while fetching investment plans", "error");
+          });
+      });
+
+      // Helper function to show toast notifications
+      function showToast(message, type = "info") {
+        if (window.NioApp && window.NioApp.Toast) {
+          window.NioApp.Toast(message, type);
+        } else {
+          alert(message);
+        }
+      }
     </script>
   </body>
 </html>

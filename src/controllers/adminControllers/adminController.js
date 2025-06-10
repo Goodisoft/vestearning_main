@@ -187,6 +187,112 @@ class AdminController {
     }
   }
 
+   /**
+     * Update user personal information via API
+     * @param {Object} req - Request object
+     * @param {Object} res - Response object
+     */
+    static async updateUserPersonalInfoApi(req, res) {
+      try {
+        const userId = req.params.id;
+        const userData = req.body;
+        
+        const response = await adminService.updateUserPersonalInfo(userId, userData);
+        
+        if (!response.success) {
+          const statusCode = response.message.includes("not found") ? 404 : 400;
+          return res.status(statusCode).json(response);
+        }
+        
+        return res.status(200).json(response);
+      } catch (error) {
+        return res.status(500).json({
+          success: false,
+          message: error.message || "Failed to update user information",
+        });
+      }
+    }
+    
+    /**
+     * Update user wallet information via API
+     * @param {Object} req - Request object
+     * @param {Object} res - Response object
+     */
+    static async updateUserWalletApi(req, res) {
+      try {
+        const userId = req.params.id;
+        const walletData = req.body;
+        
+        const response = await adminService.updateUserWallet(userId, walletData);
+        
+        if (!response.success) {
+          const statusCode = response.message.includes("not found") ? 404 : 400;
+          return res.status(statusCode).json(response);
+        }
+        
+        return res.status(200).json(response);
+      } catch (error) {
+        return res.status(500).json({
+          success: false,
+          message: error.message || "Failed to update wallet information",
+        });
+      }
+    }
+    
+    /**
+     * Add or update withdrawal address via API
+     * @param {Object} req - Request object
+     * @param {Object} res - Response object
+     */
+    static async updateWithdrawalAddressApi(req, res) {
+      try {
+        const userId = req.params.id;
+        const addressData = req.body;
+        
+        const response = await adminService.updateWithdrawalAddress(userId, addressData);
+        
+        if (!response.success) {
+          const statusCode = response.message.includes("not found") ? 404 : 400;
+          return res.status(statusCode).json(response);
+        }
+        
+        return res.status(200).json(response);
+      } catch (error) {
+        return res.status(500).json({
+          success: false,
+          message: error.message || "Failed to update withdrawal address",
+        });
+      }
+    }
+    
+    /**
+     * Delete withdrawal address via API
+     * @param {Object} req - Request object
+     * @param {Object} res - Response object
+     */
+    static async deleteWithdrawalAddressApi(req, res) {
+      try {
+        const userId = req.params.id;
+        const { addressId } = req.body;
+        
+        const response = await adminService.deleteWithdrawalAddress(userId, addressId);
+        
+        if (!response.success) {
+          const statusCode = response.message.includes("not found") ? 404 : 400;
+          return res.status(statusCode).json(response);
+        }
+        
+        return res.status(200).json(response);
+      } catch (error) {
+        return res.status(500).json({
+          success: false,
+          message: error.message || "Failed to delete withdrawal address",
+        });
+      }
+    }
+
+
+
   /**
    * Toggle user block status via API
    * @param {Object} req - Request object
@@ -310,7 +416,7 @@ class AdminController {
   static async bulkToggleBlockStatusApi(req, res) {
     try {
       const { userIds, action } = req.body;
-      const blocked = action === "block" ? true : false;
+      const blocked = action === "block" ? true : false; 
 
       if (
         !Array.isArray(userIds) ||

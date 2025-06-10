@@ -31,7 +31,7 @@ const transactionSchema = new mongoose.Schema(
     },
     type: {
       type: String,
-      enum: ["investment", "withdrawal", "promo", "loan", "referral", "trading", "bonus", "charge"],
+      enum: ["investment", "withdrawal", "promo", "loan", "referral", "trading", "bonus", "charge", "reinvestment"],
       required: [true, "Transaction type is required"],
     },
     amount: {
